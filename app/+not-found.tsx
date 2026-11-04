@@ -5,12 +5,12 @@ import { Text } from '@/components/ui/text';
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
+      <Stack.Screen options={{ title: 'Page introuvable' }} />
       <View>
-        <Text>This screen doesn't exist.</Text>
+        <Text>Cet écran n’existe pas.</Text>
 
         <Link href="/">
-          <Text>Go to home screen!</Text>
+          <Text>Retour à l’accueil</Text>
         </Link>
       </View>
     </>

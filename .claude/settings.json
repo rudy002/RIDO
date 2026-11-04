@@ -1,5 +1,15 @@
 {
   "enabledPlugins": {
     "expo@expo-plugins": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(./node_modules/**)",
+      "Read(./.expo/**)",
+      "Read(./dist/**)",
+      "Read(./ios/**)",
+      "Read(./android/**)",
+      "Read(./package-lock.json)"
+    ]
   }
 }
