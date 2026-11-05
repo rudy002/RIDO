@@ -1,0 +1,48 @@
+import type { Language } from './index';
+
+const LOCALES: Record<Language, string> = {
+  fr: 'fr-FR',
+  he: 'he-IL',
+  en: 'en-US',
+};
+
+function pad(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+/** Heure selon la langue : « 19h30 » en français, format local ailleurs (« 7:30 PM », « 19:30 »). */
+export function formatTime(date: Date, language: Language): string {
+  if (language === 'fr') return `${pad(date.getHours())}h${pad(date.getMinutes())}`;
+  return new Intl.DateTimeFormat(LOCALES[language], {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(date);
+}
+
+/** Heure courte, sans minutes pile : « 18h », « 01h », « 19h30 » ; « 6 PM » en anglais. */
+export function formatShortTime(date: Date, language: Language): string {
+  if (date.getMinutes() !== 0 || language === 'he') return formatTime(date, language);
+  if (language === 'fr') return `${pad(date.getHours())}h`;
+  return new Intl.DateTimeFormat(LOCALES[language], { hour: 'numeric' }).format(date);
+}
+
+/** Créneau horaire court : « 18h–19h30 ». */
+export function formatTimeWindow(from: Date, to: Date, language: Language): string {
+  return `${formatShortTime(from, language)}–${formatShortTime(to, language)}`;
+}
+
+/** Jour de la semaine et date (« Samedi 14 juin »), avec majuscule initiale. */
+export function formatDay(date: Date, language: Language): string {
+  const locale = LOCALES[language];
+  const day = new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(date);
+  return day.charAt(0).toLocaleUpperCase(locale) + day.slice(1);
+}
+
+/** « Samedi 14 juin · 19h30 – 01h00 » */
+export function formatSchedule(start: Date, end: Date, language: Language): string {
+  return `${formatDay(start, language)} · ${formatTime(start, language)} – ${formatTime(end, language)}`;
+}

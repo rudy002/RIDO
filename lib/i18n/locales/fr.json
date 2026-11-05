@@ -1,12 +1,81 @@
 {
-  "home": {
-    "title": "Rido",
-    "subtitle": "Le covoiturage de ton événement.",
-    "cta": "Commencer"
+  "app": {
+    "name": "Rido"
+  },
+  "common": {
+    "back": "Retour",
+    "step": "Étape {{current}} sur {{total}}"
   },
   "notFound": {
     "title": "Page introuvable",
     "message": "Cet écran n’existe pas.",
     "back": "Retour à l’accueil"
+  },
+  "event": {
+    "types": {
+      "wedding": "Mariage",
+      "barMitzvah": "Bar mitzvah",
+      "birthday": "Anniversaire",
+      "festival": "Festival",
+      "other": "Événement"
+    },
+    "organizedBy": "Covoiturage organisé par {{name}}",
+    "seatsOffered_one": "place proposée",
+    "seatsOffered_other": "places proposées",
+    "guests_one": "invité inscrit",
+    "guests_other": "invités inscrits",
+    "notFound": "Cet événement est introuvable. Vérifie le lien reçu."
+  },
+  "invitation": {
+    "howItWorks": "Comment ça marche",
+    "step1": "Dis si tu as une voiture ou si tu cherches une place",
+    "step2": "Indique d’où tu pars",
+    "step3": "Appelle ou écris directement aux personnes de ta zone",
+    "join": "Je rejoins le covoiturage",
+    "joinHint": "Sans créer de compte · 1 minute"
+  },
+  "join": {
+    "title": "Comment viens-tu ?",
+    "roles": "Ton rôle",
+    "driver": {
+      "title": "J’ai une voiture",
+      "description": "Je peux emmener des gens"
+    },
+    "passenger": {
+      "title": "Je cherche une place",
+      "description": "Je n’ai pas de voiture"
+    },
+    "trips": {
+      "label": "Pour quel trajet ?",
+      "outbound": "Aller · {{window}}",
+      "return": "Retour · vers {{time}}"
+    },
+    "zone": {
+      "label": "D’où pars-tu ?",
+      "placeholder": "Ville ou quartier",
+      "active": "Déjà actives : {{zones}}"
+    },
+    "lastName": {
+      "label": "Nom",
+      "placeholder": "Nom"
+    },
+    "firstName": {
+      "label": "Prénom",
+      "placeholder": "Prénom"
+    },
+    "phone": {
+      "label": "Téléphone",
+      "countryLabel": "Indicatif"
+    },
+    "continue": "Continuer"
+  },
+  "phone": {
+    "picker": {
+      "title": "Choisis ton pays",
+      "search": "Rechercher un pays",
+      "close": "Fermer",
+      "empty": "Aucun pays trouvé",
+      "selected": "Indicatif : {{country}} {{code}}"
+    }
   }
 }

@@ -1,12 +1,83 @@
 {
-  "home": {
-    "title": "Rido",
-    "subtitle": "הסעות משותפות לאירוע שלך.",
-    "cta": "להתחיל"
+  "app": {
+    "name": "Rido"
+  },
+  "common": {
+    "back": "חזרה",
+    "step": "שלב {{current}} מתוך {{total}}"
   },
   "notFound": {
     "title": "הדף לא נמצא",
     "message": "המסך הזה לא קיים.",
     "back": "חזרה לדף הבית"
+  },
+  "event": {
+    "types": {
+      "wedding": "חתונה",
+      "barMitzvah": "בר מצווה",
+      "birthday": "יום הולדת",
+      "festival": "פסטיבל",
+      "other": "אירוע"
+    },
+    "organizedBy": "ההסעות מאורגנות על ידי {{name}}",
+    "seatsOffered_one": "מקום פנוי",
+    "seatsOffered_two": "מקומות פנויים",
+    "seatsOffered_other": "מקומות פנויים",
+    "guests_one": "אורח רשום",
+    "guests_two": "אורחים רשומים",
+    "guests_other": "אורחים רשומים",
+    "notFound": "האירוע לא נמצא. כדאי לבדוק את הקישור שקיבלת."
+  },
+  "invitation": {
+    "howItWorks": "איך זה עובד",
+    "step1": "ספרו אם יש לכם רכב או שאתם מחפשים מקום",
+    "step2": "ציינו מאיפה אתם יוצאים",
+    "step3": "התקשרו או כתבו ישירות לאנשים באזור שלכם",
+    "join": "מצטרפים להסעות",
+    "joinHint": "בלי לפתוח חשבון · דקה אחת"
+  },
+  "join": {
+    "title": "איך מגיעים?",
+    "roles": "התפקיד שלך",
+    "driver": {
+      "title": "יש לי רכב",
+      "description": "יש לי מקום לנוסעים"
+    },
+    "passenger": {
+      "title": "מחפש/ת מקום",
+      "description": "אין לי רכב"
+    },
+    "trips": {
+      "label": "לאיזו נסיעה?",
+      "outbound": "הלוך · {{window}}",
+      "return": "חזור · בסביבות {{time}}"
+    },
+    "zone": {
+      "label": "מאיפה יוצאים?",
+      "placeholder": "עיר או שכונה",
+      "active": "כבר פעילים: {{zones}}"
+    },
+    "lastName": {
+      "label": "שם משפחה",
+      "placeholder": "שם משפחה"
+    },
+    "firstName": {
+      "label": "שם פרטי",
+      "placeholder": "שם פרטי"
+    },
+    "phone": {
+      "label": "טלפון",
+      "countryLabel": "קידומת"
+    },
+    "continue": "המשך"
+  },
+  "phone": {
+    "picker": {
+      "title": "בחירת מדינה",
+      "search": "חיפוש מדינה",
+      "close": "סגירה",
+      "empty": "לא נמצאה מדינה",
+      "selected": "קידומת: {{country}} {{code}}"
+    }
   }
 }

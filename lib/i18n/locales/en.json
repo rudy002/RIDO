@@ -1,12 +1,81 @@
 {
-  "home": {
-    "title": "Rido",
-    "subtitle": "Carpooling for your event.",
-    "cta": "Get started"
+  "app": {
+    "name": "Rido"
+  },
+  "common": {
+    "back": "Back",
+    "step": "Step {{current}} of {{total}}"
   },
   "notFound": {
     "title": "Page not found",
     "message": "This screen doesn’t exist.",
     "back": "Back to home"
+  },
+  "event": {
+    "types": {
+      "wedding": "Wedding",
+      "barMitzvah": "Bar mitzvah",
+      "birthday": "Birthday",
+      "festival": "Festival",
+      "other": "Event"
+    },
+    "organizedBy": "Carpool organized by {{name}}",
+    "seatsOffered_one": "seat offered",
+    "seatsOffered_other": "seats offered",
+    "guests_one": "guest signed up",
+    "guests_other": "guests signed up",
+    "notFound": "This event can’t be found. Check the link you received."
+  },
+  "invitation": {
+    "howItWorks": "How it works",
+    "step1": "Say whether you have a car or need a seat",
+    "step2": "Tell us where you’re leaving from",
+    "step3": "Call or message people in your area directly",
+    "join": "Join the carpool",
+    "joinHint": "No account needed · 1 minute"
+  },
+  "join": {
+    "title": "How are you getting there?",
+    "roles": "Your role",
+    "driver": {
+      "title": "I have a car",
+      "description": "I can give people a ride"
+    },
+    "passenger": {
+      "title": "I need a seat",
+      "description": "I don’t have a car"
+    },
+    "trips": {
+      "label": "Which trip?",
+      "outbound": "There · {{window}}",
+      "return": "Back · around {{time}}"
+    },
+    "zone": {
+      "label": "Where are you leaving from?",
+      "placeholder": "City or neighborhood",
+      "active": "Already active: {{zones}}"
+    },
+    "lastName": {
+      "label": "Last name",
+      "placeholder": "Last name"
+    },
+    "firstName": {
+      "label": "First name",
+      "placeholder": "First name"
+    },
+    "phone": {
+      "label": "Phone",
+      "countryLabel": "Code"
+    },
+    "continue": "Continue"
+  },
+  "phone": {
+    "picker": {
+      "title": "Choose your country",
+      "search": "Search for a country",
+      "close": "Close",
+      "empty": "No country found",
+      "selected": "Country code: {{country}} {{code}}"
+    }
   }
 }
