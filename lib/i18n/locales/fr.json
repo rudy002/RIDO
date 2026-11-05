@@ -1,0 +1,12 @@
+{
+  "home": {
+    "title": "Rido",
+    "subtitle": "Le covoiturage de ton événement.",
+    "cta": "Commencer"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "message": "Cet écran n’existe pas.",
+    "back": "Retour à l’accueil"
+  }
+}

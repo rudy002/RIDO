@@ -1,0 +1,12 @@
+{
+  "home": {
+    "title": "Rido",
+    "subtitle": "Carpooling for your event.",
+    "cta": "Get started"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "This screen doesn’t exist.",
+    "back": "Back to home"
+  }
+}
