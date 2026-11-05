@@ -1,0 +1,149 @@
+import { Check, X } from 'lucide-react-native';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList, Modal, Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useTheme } from '@/lib/design/use-theme';
+import { listCountries, searchCountries, type Country, type CountryCode } from '@/lib/phone/phone';
+
+import { AppText } from './AppText';
+import { Icon } from './Icon';
+import { TextField } from './TextField';
+
+type CountryPickerProps = {
+  visible: boolean;
+  selected: CountryCode;
+  onSelect: (code: CountryCode) => void;
+  onClose: () => void;
+};
+
+const PRESSED_OPACITY = 0.85;
+
+/** Liste plein écran des pays avec recherche, pour choisir un indicatif. */
+export function CountryPicker({ visible, selected, onSelect, onClose }: CountryPickerProps) {
+  const { t } = useTranslation();
+  const { colors, spacing, sizes, radius, language } = useTheme();
+  const insets = useSafeAreaInsets();
+  const [query, setQuery] = useState('');
+
+  const countries = useMemo(() => listCountries(language), [language]);
+  const results = useMemo(() => searchCountries(countries, query), [countries, query]);
+
+  const close = () => {
+    setQuery('');
+    onClose();
+  };
+
+  const renderItem = ({ item }: { item: Country }) => {
+    const isSelected = item.code === selected;
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name} ${item.callingCode}`}
+        accessibilityState={{ selected: isSelected }}
+        onPress={() => {
+          onSelect(item.code);
+          close();
+        }}
+        style={({ pressed }) => [
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.md,
+            minHeight: sizes.input,
+            paddingHorizontal: spacing.screen,
+          },
+          pressed && { opacity: PRESSED_OPACITY },
+        ]}>
+        <AppText variant="heading">{item.flag}</AppText>
+        <AppText variant={isSelected ? 'bodyStrong' : 'body'} style={{ flex: 1 }}>
+          {item.name}
+        </AppText>
+        <AppText variant="label" color="textMuted">
+          {item.callingCode}
+        </AppText>
+        {isSelected ? <Icon as={Check} /> : null}
+      </Pressable>
+    );
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      statusBarTranslucent
+      navigationBarTranslucent
+      onRequestClose={close}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.md,
+            paddingHorizontal: spacing.screen,
+            paddingTop: spacing.lg,
+          }}>
+          <AppText variant="heading" accessibilityRole="header" style={{ flex: 1 }}>
+            {t('phone.picker.title')}
+          </AppText>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('phone.picker.close')}
+            onPress={close}
+            style={({ pressed }) => [
+              {
+                width: sizes.touchMin,
+                height: sizes.touchMin,
+                borderRadius: radius.pill,
+                backgroundColor: colors.surface,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              pressed && { opacity: PRESSED_OPACITY },
+            ]}>
+            <Icon as={X} />
+          </Pressable>
+        </View>
+
+        <TextField
+          label={t('phone.picker.search')}
+          labelHidden
+          placeholder={t('phone.picker.search')}
+          value={query}
+          onChangeText={setQuery}
+          autoCorrect={false}
+          style={{ paddingHorizontal: spacing.screen, paddingVertical: spacing.lg }}
+        />
+
+        <FlatList
+          data={results}
+          keyExtractor={(country) => country.code}
+          renderItem={renderItem}
+          keyboardShouldPersistTaps="handled"
+          initialNumToRender={20}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: sizes.borderHairline,
+                backgroundColor: colors.divider,
+                marginHorizontal: spacing.screen,
+              }}
+            />
+          )}
+          ListEmptyComponent={
+            <AppText color="textMuted" style={{ paddingHorizontal: spacing.screen }}>
+              {t('phone.picker.empty')}
+            </AppText>
+          }
+        />
+      </View>
+    </Modal>
+  );
+}

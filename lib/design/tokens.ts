@@ -16,6 +16,7 @@ export const palette = {
     onPrimary: '#1D2840',
     inverse: '#1D2840', // bouton secondaire plein, onglet actif
     onInverse: '#FBF6EE',
+    onInverseMuted: '#C9CEDA', // texte secondaire sur fond inverse (relevé sur la maquette I1)
     accentSoft: '#FFF0C7', // pastille événement, avatars
     onAccentSoft: '#5A4210',
     seatFree: '#D3EFEA', // aussi : fond succès
@@ -40,6 +41,7 @@ export const palette = {
     onPrimary: '#1D2840',
     inverse: '#F3EEE4',
     onInverse: '#121826',
+    onInverseMuted: '#5A6378', // texte secondaire sur fond inverse (relevé sur la maquette I1)
     accentSoft: '#3A3220',
     onAccentSoft: '#FFD978',
     seatFree: '#123F3A',
@@ -91,6 +93,14 @@ export const sizes = {
   segment: 52,
   touchMin: 48,
   avatar: 48,
+  stepBadge: 36, // rond numéroté (« Comment ça marche »)
+  icon: 20, // icônes dans le texte (date, lieu)
+  iconTile: 52, // pastille d'icône des cartes de choix (maquette I2)
+  iconTileGlyph: 26, // icône dans cette pastille
+  radio: 28, // rond de sélection des cartes de choix
+  radioGlyph: 16, // coche dans le rond
+  borderSelected: 3, // contour d'une carte sélectionnée
+  countryField: 124, // largeur du champ indicatif (drapeau + « +972 » + chevron)
   tabBar: 84,
   borderStrong: 2, // champs, boutons contour
   borderHairline: 1.5, // séparateurs
@@ -173,6 +183,36 @@ export const components = (c: Colors) => ({
     backgroundColor: c.surfaceMuted,
     padding: spacing.lg,
     gap: spacing.md,
+  },
+  radioCard: {
+    container: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      gap: spacing.lg,
+      padding: spacing.lg,
+      borderRadius: radius.xl,
+      borderWidth: sizes.borderSelected,
+      borderColor: 'transparent',
+      backgroundColor: c.surface,
+    },
+    containerSelected: { borderColor: c.inverse },
+    iconTile: {
+      width: sizes.iconTile,
+      height: sizes.iconTile,
+      borderRadius: radius.md,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    radio: {
+      width: sizes.radio,
+      height: sizes.radio,
+      borderRadius: radius.pill,
+      borderWidth: sizes.borderStrong,
+      borderColor: c.border,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    radioSelected: { borderColor: c.inverse, backgroundColor: c.inverse },
   },
   chip: {
     height: 44,
