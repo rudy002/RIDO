@@ -7,6 +7,7 @@ import { ThemeProvider } from 'expo-router/react-navigation';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { FONT_ASSETS } from '@/lib/design/fonts';
 import { navigationTheme } from '@/lib/design/navigation-theme';
@@ -35,16 +36,19 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <ThemeProvider value={navigationTheme(scheme)}>
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{
-          headerShadowVisible: false,
-          headerTitleStyle: { fontFamily: typography.heading.fontFamily },
-          contentStyle: { backgroundColor: colors.background },
-        }}
-      />
-      <PortalHost />
-    </ThemeProvider>
+    // Expo SDK 56 est en plein écran (edge-to-edge) : le contrôleur de clavier doit le conserver.
+    <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
+      <ThemeProvider value={navigationTheme(scheme)}>
+        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        <Stack
+          screenOptions={{
+            headerShadowVisible: false,
+            headerTitleStyle: { fontFamily: typography.heading.fontFamily },
+            contentStyle: { backgroundColor: colors.background },
+          }}
+        />
+        <PortalHost />
+      </ThemeProvider>
+    </KeyboardProvider>
   );
 }
