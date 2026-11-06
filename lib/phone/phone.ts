@@ -57,7 +57,11 @@ export function listCountries(language: Language): Country[] {
 }
 
 function normalize(text: string): string {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
 }
 
 /** Recherche par nom (sans tenir compte des accents) ou par indicatif (« 33 », « +33 »). */
