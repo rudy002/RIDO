@@ -5,7 +5,9 @@
   "common": {
     "back": "Retour",
     "step": "Étape {{current}} sur {{total}}",
-    "close": "Fermer"
+    "close": "Fermer",
+    "copy": "Copier",
+    "copied": "Copié"
   },
   "notFound": {
     "title": "Page introuvable",
@@ -26,7 +28,12 @@
     "guests_one": "invité inscrit",
     "guests_other": "invités inscrits",
     "notFound": "Cet événement est introuvable. Vérifie le lien reçu.",
-    "startsAt": "Début de l’événement à {{time}}"
+    "startsAt": "Début de l’événement à {{time}}",
+    "directions": {
+      "both": "Aller et retour",
+      "outbound": "Aller seulement",
+      "return": "Retour seulement"
+    }
   },
   "invitation": {
     "howItWorks": "Comment ça marche",
@@ -224,5 +231,14 @@
   "calendar": {
     "previous": "Mois précédent",
     "next": "Mois suivant"
+  },
+  "eventReady": {
+    "title": "Ton événement est prêt !",
+    "description": "Envoie le lien dans le groupe WhatsApp de tes invités. Ils n’ont pas besoin de créer de compte.",
+    "linkLabel": "Lien de l’événement",
+    "messageLabel": "Message qui sera envoyé",
+    "message": "{{name}} : on organise le covoiturage ici. Qui a de la place, qui cherche un trajet ? {{link}}",
+    "whatsapp": "Envoyer sur WhatsApp",
+    "dashboard": "Voir mon tableau de bord"
   }
 }

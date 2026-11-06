@@ -95,7 +95,9 @@ export const sizes = {
   touchMin: 48,
   avatar: 48,
   stepperButton: 60, // boutons − / + du compteur de places
-  avatarLarge: 76, // en-tête d'une fiche (maquette T)
+  avatarLarge: 76,
+  iconCircle: 72, // rond de réussite (maquette O2)
+  iconCircleGlyph: 32, // en-tête d'une fiche (maquette T)
   stepBadge: 36, // rond numéroté (« Comment ça marche »)
   icon: 20, // icônes dans le texte (date, lieu)
   iconTile: 52, // pastille d'icône des cartes de choix (maquette I2)
@@ -291,6 +293,29 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     buttonFilled: { borderColor: c.inverse, backgroundColor: c.inverse },
+  },
+  // Lien à copier, cadre en pointillés (maquette O2).
+  copyField: {
+    container: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      gap: spacing.md,
+      paddingStart: spacing.lg,
+      paddingEnd: spacing.sm,
+      paddingVertical: spacing.sm,
+      borderRadius: radius.lg,
+      borderWidth: sizes.borderStrong,
+      borderStyle: 'dashed' as const,
+      borderColor: c.border,
+    },
+    button: {
+      height: sizes.touchMin,
+      paddingHorizontal: spacing.lg,
+      borderRadius: radius.md,
+      backgroundColor: c.segment,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
   },
   // Frise d'un trajet : point de départ, trait, carré d'arrivée (maquette T).
   timeline: {

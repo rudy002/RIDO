@@ -10,6 +10,7 @@ import {
   type CountryCode,
 } from 'libphonenumber-js';
 import examples from 'libphonenumber-js/mobile/examples';
+import { getLocales } from 'expo-localization';
 
 import type { Language } from '@/lib/i18n';
 
@@ -108,4 +109,18 @@ export function sanitizePhoneInput(text: string, current: PhoneInput): PhoneInpu
 export function toInternational({ country, national }: PhoneInput): string | null {
   const parsed = parsePhoneNumberFromString(national, country);
   return parsed?.isValid() ? parsed.number : null;
+}
+
+const FALLBACK_COUNTRY: CountryCode = 'IL';
+
+export function isCountryCode(value: string | null | undefined): value is CountryCode {
+  return getCountries().some((code) => code === value);
+}
+
+/** Pays réglé sur le téléphone (région), sinon Israël. */
+export function deviceCountry(): CountryCode {
+  const region = getLocales()
+    .map((locale) => locale.regionCode)
+    .find(isCountryCode);
+  return region ?? FALLBACK_COUNTRY;
 }

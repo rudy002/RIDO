@@ -24,6 +24,7 @@
     "@rn-primitives/switch": "^1.5.2",
     "eslint-config-expo": "~56.0.4",
     "expo": "~56.0.13",
+    "expo-clipboard": "~56.0.4",
     "expo-constants": "~56.0.19",
     "expo-font": "~56.0.7",
     "expo-haptics": "~56.0.3",

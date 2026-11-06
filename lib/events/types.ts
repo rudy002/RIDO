@@ -14,7 +14,8 @@ export type EventSummary = {
   venue: string;
   /** Pays de l'événement : indicatif téléphonique proposé par défaut. */
   country: CountryCode;
-  organizerName: string;
+  /** Absent tant que l'organisateur n'a pas donné son nom. */
+  organizerName?: string;
   seatsOffered: number;
   guestsCount: number;
   /** Créneau conseillé pour le trajet aller. */
@@ -22,6 +23,8 @@ export type EventSummary = {
   /** Heure approximative du retour. */
   returnAround: Date;
   activeZones: ZoneActivity[];
+  /** Trajets organisés : l'aller, le retour ou les deux. */
+  directions: TripDirection[];
 };
 
 /** Ce que l'organisateur saisit pour créer un événement (O1). */

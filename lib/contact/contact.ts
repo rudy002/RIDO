@@ -11,3 +11,8 @@ export function whatsappUrl(phone: E164, message?: string): string {
   const url = `https://wa.me/${phone.replace(/\D/g, '')}`;
   return message ? `${url}?text=${encodeURIComponent(message)}` : url;
 }
+
+/** Partage d'un message dans WhatsApp : l'utilisateur choisit la conversation (groupe des invités…). */
+export function whatsappShareUrl(message: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(message)}`;
+}

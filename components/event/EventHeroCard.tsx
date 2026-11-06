@@ -16,7 +16,8 @@ type EventHeroCardProps = {
   startsAt: Date;
   endsAt: Date;
   venue: string;
-  organizerName: string;
+  /** Ligne « organisé par » masquée si l'organisateur n'a pas donné son nom. */
+  organizerName?: string;
 };
 
 /** Grande carte d'en-tête d'un événement : type, nom, date, lieu, organisateur. */
@@ -45,7 +46,9 @@ export function EventHeroCard({
         />
         <InfoRow icon={MapPin} text={venue} color="onInverse" />
       </View>
-      <AppText color="onInverseMuted">{t('event.organizedBy', { name: organizerName })}</AppText>
+      {organizerName ? (
+        <AppText color="onInverseMuted">{t('event.organizedBy', { name: organizerName })}</AppText>
+      ) : null}
     </Card>
   );
 }

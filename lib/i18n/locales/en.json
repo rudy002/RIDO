@@ -5,7 +5,9 @@
   "common": {
     "back": "Back",
     "step": "Step {{current}} of {{total}}",
-    "close": "Close"
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "notFound": {
     "title": "Page not found",
@@ -26,7 +28,12 @@
     "guests_one": "guest signed up",
     "guests_other": "guests signed up",
     "notFound": "This event can’t be found. Check the link you received.",
-    "startsAt": "Event starts at {{time}}"
+    "startsAt": "Event starts at {{time}}",
+    "directions": {
+      "both": "Outbound and return",
+      "outbound": "Outbound only",
+      "return": "Return only"
+    }
   },
   "invitation": {
     "howItWorks": "How it works",
@@ -224,5 +231,14 @@
   "calendar": {
     "previous": "Previous month",
     "next": "Next month"
+  },
+  "eventReady": {
+    "title": "Your event is ready!",
+    "description": "Send the link to your guests’ WhatsApp group. They don’t need to create an account.",
+    "linkLabel": "Event link",
+    "messageLabel": "Message to be sent",
+    "message": "{{name}}: we’re organizing carpools here. Who has a seat, who needs a ride? {{link}}",
+    "whatsapp": "Send on WhatsApp",
+    "dashboard": "See my dashboard"
   }
 }
