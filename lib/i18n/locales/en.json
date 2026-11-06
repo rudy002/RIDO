@@ -290,5 +290,14 @@
     "trips": "My rides",
     "events": "My events",
     "profile": "Profile"
+  },
+  "myEvents": {
+    "subtitle": "The ones you organize",
+    "allSet": "Everyone has a seat",
+    "dashboard": "Dashboard",
+    "create": "Create an event",
+    "empty": "You’re not organizing any event",
+    "past_one": "{{count}} past event",
+    "past_other": "{{count}} past events"
   }
 }

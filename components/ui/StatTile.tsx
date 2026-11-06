@@ -10,9 +10,11 @@ type StatTileProps = {
   value: string;
   label: string;
   tone?: StatTone;
-  /** Plus petit, pour trois tuiles côte à côte. */
-  compact?: boolean;
+  /** Grande (accueil d'un événement), moyenne (trois côte à côte), petite (dans une carte). */
+  size?: 'large' | 'medium' | 'small';
 };
+
+const VALUE_VARIANT = { large: 'display', medium: 'stat', small: 'statSmall' } as const;
 
 const TONES: Record<StatTone, { card: CardTone; text: keyof Colors }> = {
   neutral: { card: 'surface', text: 'text' },
@@ -21,7 +23,8 @@ const TONES: Record<StatTone, { card: CardTone; text: keyof Colors }> = {
 };
 
 /** Chiffre clé avec son libellé (« 14 places proposées »). */
-export function StatTile({ value, label, tone = 'neutral', compact = false }: StatTileProps) {
+export function StatTile({ value, label, tone = 'neutral', size = 'large' }: StatTileProps) {
+  const compact = size !== 'large';
   const { spacing } = useTheme();
   const { card, text } = TONES[tone];
 
@@ -30,8 +33,12 @@ export function StatTile({ value, label, tone = 'neutral', compact = false }: St
       tone={card}
       accessible
       accessibilityLabel={`${value} ${label}`}
-      style={[{ flex: 1, gap: spacing.xs }, compact && { padding: spacing.md }]}>
-      <AppText variant={compact ? 'stat' : 'display'} color={text}>
+      style={[
+        { flex: 1, gap: spacing.xs },
+        size === 'medium' && { padding: spacing.md },
+        size === 'small' && { paddingVertical: spacing.sm, paddingHorizontal: spacing.md, gap: 0 },
+      ]}>
+      <AppText variant={VALUE_VARIANT[size]} color={text}>
         {value}
       </AppText>
       <AppText

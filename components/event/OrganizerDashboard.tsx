@@ -88,18 +88,18 @@ export function OrganizerDashboard({
         <>
           <View style={{ flexDirection: 'row', gap: spacing.md }}>
             <StatTile
-              compact
+              size="medium"
               value={String(current.drivers)}
               label={t('dashboard.stats.drivers', { count: current.drivers })}
             />
             <StatTile
-              compact
+              size="medium"
               tone="success"
               value={String(current.freeSeats)}
               label={t('dashboard.stats.freeSeats', { count: current.freeSeats })}
             />
             <StatTile
-              compact
+              size="medium"
               tone={current.unmatched.length > 0 ? 'danger' : 'neutral'}
               value={String(current.unmatched.length)}
               label={t('dashboard.stats.unmatched', { count: current.unmatched.length })}

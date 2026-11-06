@@ -86,7 +86,7 @@ export function TripCard({ trip, onPress }: TripCardProps) {
       ]}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
         <AppText variant="label" color="textMuted" style={{ flex: 1 }}>
-          {`${t(`event.types.${context.kind}`)} · ${formatShortWeekdayDate(context.startsAt, language)}`}
+          {`${t(`event.types.${context.kind}`)} · ${formatShortWeekdayDate(context.startsAt, language, { capitalize: false })}`}
         </AppText>
         <Badge small tone={role === 'driver' ? 'success' : 'accent'} label={roleLabel} />
       </View>

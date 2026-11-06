@@ -1,13 +1,13 @@
-import * as Clipboard from 'expo-clipboard';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Linking, Share } from 'react-native';
+import { Linking } from 'react-native';
 
 import { OrganizerDashboard } from '@/components/event/OrganizerDashboard';
+import { useShareEvent } from '@/components/event/use-share-event';
 import { AppText } from '@/components/ui/AppText';
 import { Screen } from '@/components/ui/Screen';
 import { whatsappUrl } from '@/lib/contact/contact';
-import { countMockEvents, DEMO_OVERVIEW, findMockEvent } from '@/lib/events/mock';
+import { countMockEvents, findMockEvent, overviewOf } from '@/lib/events/mock';
 import { eventShareUrl } from '@/lib/events/share';
 
 /** O3 : tableau de bord de l'organisateur. */
@@ -16,6 +16,7 @@ export default function OrganizerDashboardRoute() {
   const router = useRouter();
   const { t } = useTranslation();
   const event = findMockEvent(id);
+  const shareEvent = useShareEvent();
 
   if (!event) {
     return (
@@ -30,23 +31,17 @@ export default function OrganizerDashboardRoute() {
 
   const link = eventShareUrl(event.id);
 
-  // Feuille de partage du système ; si le navigateur n'en a pas, le lien est copié.
-  const share = () =>
-    void Share.share({ message: t('eventReady.message', { name: event.title, link }) }).catch(() =>
-      Clipboard.setStringAsync(link)
-    );
-
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <OrganizerDashboard
         event={event}
         // Sans serveur, les chiffres sont ceux de la démo, même pour un événement tout juste créé.
-        overview={DEMO_OVERVIEW}
+        overview={overviewOf(event.id)}
         eventsCount={countMockEvents()}
         // Le choix d'un autre événement n'a pas encore de maquette.
         onSwitchEvent={() => {}}
-        onShare={share}
+        onShare={() => shareEvent(event)}
         onRelaunch={(guest) =>
           void Linking.openURL(
             whatsappUrl(

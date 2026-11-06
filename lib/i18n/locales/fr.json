@@ -300,5 +300,14 @@
     "trips": "Mes trajets",
     "events": "Mes événements",
     "profile": "Profil"
+  },
+  "myEvents": {
+    "subtitle": "Ceux que tu organises",
+    "allSet": "Tout le monde a une place",
+    "dashboard": "Tableau de bord",
+    "create": "Créer un événement",
+    "empty": "Tu n’organises aucun événement",
+    "past_one": "{{count}} événement terminé",
+    "past_other": "{{count}} événements terminés"
   }
 }

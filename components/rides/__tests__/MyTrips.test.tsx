@@ -22,7 +22,7 @@ describe('MyTrips', () => {
 
     expect(screen.getByText('Bonjour David')).toBeOnTheScreen();
     expect(screen.getByRole('header', { name: 'Mes trajets' })).toBeOnTheScreen();
-    expect(screen.getByText('Mariage · Sam. 14 juin')).toBeOnTheScreen();
+    expect(screen.getByText('Mariage · sam. 14 juin')).toBeOnTheScreen();
     expect(screen.getByText('Conducteur')).toBeOnTheScreen();
     expect(screen.getByText('Aller · 18h00–18h30')).toBeOnTheScreen();
     expect(screen.getByText('1 libre')).toBeOnTheScreen();

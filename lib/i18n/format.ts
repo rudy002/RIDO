@@ -75,15 +75,19 @@ export function formatWeekday(date: Date, language: Language): string {
   return new Intl.DateTimeFormat(LOCALES[language], { weekday: 'short' }).format(date);
 }
 
-/** Jour abrégé et date en toutes lettres : « Sam. 14 juin ». */
-export function formatShortWeekdayDate(date: Date, language: Language): string {
+/** Jour abrégé et date en toutes lettres : « Sam. 14 juin » (« sam. 14 juin » en milieu de phrase). */
+export function formatShortWeekdayDate(
+  date: Date,
+  language: Language,
+  { capitalize = true }: { capitalize?: boolean } = {}
+): string {
   const locale = LOCALES[language];
   const text = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     day: 'numeric',
     month: 'long',
   }).format(date);
-  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+  return capitalize ? text.charAt(0).toLocaleUpperCase(locale) + text.slice(1) : text;
 }
 
 /** Prénom et initiale du nom : « Myriam B. ». */

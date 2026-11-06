@@ -28,7 +28,27 @@ export const DEMO_EVENT: EventSummary = {
 };
 
 // En mémoire seulement : un événement créé disparaît au redémarrage de l'appli (pas encore de serveur).
-const MOCK_EVENTS: Record<string, EventSummary> = { [DEMO_EVENT.id]: DEMO_EVENT };
+// Second événement d'exemple, où tout le monde a déjà un trajet (maquette A2).
+export const DEMO_EVENT_ALL_SET: EventSummary = {
+  id: 'eitan',
+  type: 'barMitzvah',
+  title: 'Bar mitzvah d’Eitan',
+  startsAt: new Date(2025, 6, 5, 18, 0),
+  endsAt: new Date(2025, 6, 5, 23, 0),
+  venue: 'Salle Ha-Tamar',
+  country: 'IL',
+  seatsOffered: 6,
+  guestsCount: 8,
+  outboundWindow: { from: new Date(2025, 6, 5, 16, 30), to: new Date(2025, 6, 5, 18, 0) },
+  returnAround: new Date(2025, 6, 5, 23, 0),
+  activeZones: [{ zone: 'Ashdod', count: 4 }],
+  directions: ['outbound', 'return'],
+};
+
+const MOCK_EVENTS: Record<string, EventSummary> = {
+  [DEMO_EVENT.id]: DEMO_EVENT,
+  [DEMO_EVENT_ALL_SET.id]: DEMO_EVENT_ALL_SET,
+};
 
 /** Créneau conseillé pour l'aller : l'heure et demie avant le début. */
 const OUTBOUND_LEAD_MINUTES = 90;
@@ -106,3 +126,26 @@ export const DEMO_OVERVIEW: Record<TripDirection, DirectionOverview> = {
 export function countMockEvents(): number {
   return Object.keys(MOCK_EVENTS).length;
 }
+
+const ALL_SET_OVERVIEW: DirectionOverview = {
+  drivers: 2,
+  freeSeats: 2,
+  unmatched: [],
+  zones: [{ zone: 'Ashdod', seats: 6, requests: 4 }],
+};
+
+const EMPTY_OVERVIEW: DirectionOverview = { drivers: 0, freeSeats: 0, unmatched: [], zones: [] };
+
+/** Chiffres d'un événement ; vides pour un événement tout juste créé. */
+export function overviewOf(id: string): Record<TripDirection, DirectionOverview> {
+  if (id === DEMO_EVENT.id) return DEMO_OVERVIEW;
+  if (id === DEMO_EVENT_ALL_SET.id) return { outbound: ALL_SET_OVERVIEW, return: ALL_SET_OVERVIEW };
+  return { outbound: EMPTY_OVERVIEW, return: EMPTY_OVERVIEW };
+}
+
+/** Les événements que l'utilisateur organise (sur cet appareil), du plus proche au plus lointain. */
+export function listMockEvents(): EventSummary[] {
+  return Object.values(MOCK_EVENTS).sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
+}
+
+export const DEMO_PAST_EVENTS_COUNT = 2;

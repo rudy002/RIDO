@@ -75,6 +75,7 @@ export const typography = {
   tag: { fontFamily: fonts.black, fontSize: 13, lineHeight: 16 }, // petites pastilles (rôle, statut)
   caption: { fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }, // libellés des tuiles compactes
   button: { fontFamily: fonts.black, fontSize: 18, lineHeight: 22 },
+  statSmall: { fontFamily: fonts.black, fontSize: 24, lineHeight: 28 }, // tuiles dans une carte (maquette A2)
   stat: { fontFamily: fonts.black, fontSize: 30, lineHeight: 34 }, // tuiles de chiffres compactes (maquette O3)
   counter: { fontFamily: fonts.black, fontSize: 56, lineHeight: 64 }, // compteur de places (maquette C2)
   overline: {
