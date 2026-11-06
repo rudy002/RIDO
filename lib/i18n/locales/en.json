@@ -4,7 +4,8 @@
   },
   "common": {
     "back": "Back",
-    "step": "Step {{current}} of {{total}}"
+    "step": "Step {{current}} of {{total}}",
+    "close": "Close"
   },
   "notFound": {
     "title": "Page not found",
@@ -75,7 +76,6 @@
     "picker": {
       "title": "Choose your country",
       "search": "Search for a country",
-      "close": "Close",
       "empty": "No country found",
       "selected": "Country code: {{country}} {{code}}"
     }
@@ -138,5 +138,29 @@
       "label": "Language (development)",
       "system": "Phone"
     }
+  },
+  "car": {
+    "title": "Your car",
+    "seats": {
+      "label": "How many free seats?",
+      "decrease": "One seat less",
+      "increase": "One seat more",
+      "value_one": "{{count}} free seat",
+      "value_other": "{{count}} free seats"
+    },
+    "outbound": {
+      "label": "Outbound: you leave between",
+      "hint": "The event starts at {{time}}."
+    },
+    "return": {
+      "label": "Return: you head back between",
+      "hint": "You’ll be able to set a different number of seats for the return."
+    },
+    "window": {
+      "and": "and",
+      "start": "Earliest",
+      "end": "Latest"
+    },
+    "publish": "Publish my ride"
   }
 }

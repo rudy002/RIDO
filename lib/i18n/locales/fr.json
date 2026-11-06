@@ -4,7 +4,8 @@
   },
   "common": {
     "back": "Retour",
-    "step": "Étape {{current}} sur {{total}}"
+    "step": "Étape {{current}} sur {{total}}",
+    "close": "Fermer"
   },
   "notFound": {
     "title": "Page introuvable",
@@ -75,7 +76,6 @@
     "picker": {
       "title": "Choisis ton pays",
       "search": "Rechercher un pays",
-      "close": "Fermer",
       "empty": "Aucun pays trouvé",
       "selected": "Indicatif : {{country}} {{code}}"
     }
@@ -138,5 +138,29 @@
       "label": "Langue (développement)",
       "system": "Tél."
     }
+  },
+  "car": {
+    "title": "Ta voiture",
+    "seats": {
+      "label": "Combien de places libres ?",
+      "decrease": "Une place de moins",
+      "increase": "Une place de plus",
+      "value_one": "{{count}} place libre",
+      "value_other": "{{count}} places libres"
+    },
+    "outbound": {
+      "label": "Aller : tu pars entre",
+      "hint": "L’événement commence à {{time}}."
+    },
+    "return": {
+      "label": "Retour : tu repars entre",
+      "hint": "Tu pourras indiquer un nombre de places différent au retour."
+    },
+    "window": {
+      "and": "et",
+      "start": "Au plus tôt",
+      "end": "Au plus tard"
+    },
+    "publish": "Publier mon trajet"
   }
 }

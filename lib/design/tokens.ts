@@ -73,6 +73,7 @@ export const typography = {
   body: { fontFamily: fonts.semibold, fontSize: 16, lineHeight: 22 },
   label: { fontFamily: fonts.extrabold, fontSize: 15, lineHeight: 20 },
   button: { fontFamily: fonts.black, fontSize: 18, lineHeight: 22 },
+  counter: { fontFamily: fonts.black, fontSize: 56, lineHeight: 64 }, // compteur de places (maquette C2)
   overline: {
     fontFamily: fonts.black,
     fontSize: 14,
@@ -93,6 +94,7 @@ export const sizes = {
   segment: 52,
   touchMin: 48,
   avatar: 48,
+  stepperButton: 60, // boutons − / + du compteur de places
   avatarLarge: 76, // en-tête d'une fiche (maquette T)
   stepBadge: 36, // rond numéroté (« Comment ça marche »)
   icon: 20, // icônes dans le texte (date, lieu)
@@ -264,6 +266,18 @@ export const components = (c: Colors) => ({
     // SVG (react-native-svg), viewBox 0 0 38 40 : dossier + assise
     back: { x: 7, y: 2, width: 24, height: 24, rx: 8 },
     base: { x: 2, y: 24, width: 34, height: 13, rx: 6 },
+  },
+  stepper: {
+    button: {
+      width: sizes.stepperButton,
+      height: sizes.stepperButton,
+      borderRadius: radius.md,
+      borderWidth: sizes.borderStrong,
+      borderColor: c.border,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    buttonFilled: { borderColor: c.inverse, backgroundColor: c.inverse },
   },
   // Frise d'un trajet : point de départ, trait, carré d'arrivée (maquette T).
   timeline: {

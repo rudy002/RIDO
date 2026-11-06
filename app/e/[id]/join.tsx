@@ -27,9 +27,15 @@ export default function JoinRideRoute() {
           activeZones={event.activeZones}
           defaultCountry={event.country}
           onBack={goBack}
-          // Aucun serveur pour l'instant ; l'écran conducteur n'a pas encore de maquette.
+          // Aucun serveur pour l'instant : les choix passent d'un écran à l'autre par la navigation.
           onSubmit={(draft) => {
-            if (draft.role !== 'passenger') return;
+            if (draft.role === 'driver') {
+              router.push({
+                pathname: '/e/[id]/car',
+                params: { id, directions: draft.directions.join(',') },
+              });
+              return;
+            }
             router.push({
               pathname: '/e/[id]/rides',
               params: { id, firstName: draft.firstName, zone: draft.zone.name },

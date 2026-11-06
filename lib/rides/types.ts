@@ -64,3 +64,12 @@ export type RideMatch = {
   /** En km ; absent quand le conducteur part de la même ville. */
   distanceKm?: number;
 };
+
+export const MIN_FREE_SEATS = 1;
+export const MAX_FREE_SEATS = 8;
+
+/** Ce qu'un conducteur publie : places libres et créneau de départ pour chaque sens choisi. */
+export type CarDraft = {
+  seats: number;
+  legs: Partial<Record<TripDirection, TimeWindow>>;
+};
