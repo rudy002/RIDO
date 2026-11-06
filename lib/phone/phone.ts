@@ -1,4 +1,4 @@
-import countries from 'i18n-iso-countries';
+import countries from 'i18n-iso-countries/index';
 import en from 'i18n-iso-countries/langs/en.json';
 import fr from 'i18n-iso-countries/langs/fr.json';
 import he from 'i18n-iso-countries/langs/he.json';

@@ -32,6 +32,11 @@ type AutocompleteFieldProps = Pick<
 };
 
 const PRESSED_OPACITY = 0.85;
+/**
+ * Dans un navigateur, le champ perd le focus dès l'appui sur une suggestion, avant le clic :
+ * on garde la liste ouverte un instant pour que ce clic aboutisse.
+ */
+const BLUR_DELAY_MS = 200;
 
 /** Champ de saisie avec suggestions affichées juste en dessous. */
 export function AutocompleteField({
@@ -51,6 +56,14 @@ export function AutocompleteField({
   const [focused, setFocused] = useState(false);
 
   const containerRef = useRef<View>(null);
+  const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (blurTimer.current) clearTimeout(blurTimer.current);
+    },
+    []
+  );
   const { scrollToTop } = useScreenScroll();
 
   const showFreeText = Boolean(freeTextLabel && onSelectFreeText);
@@ -99,8 +112,13 @@ export function AutocompleteField({
         hint={open ? undefined : hint}
         value={value}
         onChangeText={onChangeText}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={() => {
+          if (blurTimer.current) clearTimeout(blurTimer.current);
+          setFocused(true);
+        }}
+        onBlur={() => {
+          blurTimer.current = setTimeout(() => setFocused(false), BLUR_DELAY_MS);
+        }}
         autoCorrect={false}
       />
       {open && (options.length > 0 || showFreeText) ? (

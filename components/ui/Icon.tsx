@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react-native';
+import { View } from 'react-native';
 
 import type { Colors } from '@/lib/design/tokens';
 import { useTheme } from '@/lib/design/use-theme';
@@ -15,13 +16,14 @@ type IconProps = {
 export function Icon({ as: LucideComponent, color = 'text', size, flipInRTL = false }: IconProps) {
   const { colors, sizes, isRTL } = useTheme();
 
+  // Les propriétés d'accessibilité vont sur une View : posées sur le SVG, le web les rejette.
   return (
-    <LucideComponent
-      color={colors[color]}
-      size={size ?? sizes.icon}
-      style={flipInRTL && isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
+    <View
+      aria-hidden
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-    />
+      style={flipInRTL && isRTL ? { transform: [{ scaleX: -1 }] } : undefined}>
+      <LucideComponent color={colors[color]} size={size ?? sizes.icon} />
+    </View>
   );
 }
