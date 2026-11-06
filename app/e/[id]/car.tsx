@@ -7,6 +7,7 @@ import { Screen } from '@/components/ui/Screen';
 import { useTheme } from '@/lib/design/use-theme';
 import { findMockEvent } from '@/lib/events/mock';
 import { formatTime } from '@/lib/i18n/format';
+import { serializeCarDraft } from '@/lib/rides/car-draft';
 import { addMinutes } from '@/lib/rides/time-slots';
 import { TRIP_DIRECTIONS, type TripDirection } from '@/lib/rides/types';
 
@@ -15,7 +16,12 @@ const isDirection = (value: string): value is TripDirection =>
 
 /** C2 : étape 2 du conducteur, sa voiture et ses horaires. */
 export default function CarRoute() {
-  const { id, directions } = useLocalSearchParams<{ id: string; directions?: string }>();
+  const { id, directions, firstName, zone } = useLocalSearchParams<{
+    id: string;
+    directions?: string;
+    firstName?: string;
+    zone?: string;
+  }>();
   const router = useRouter();
   const { t } = useTranslation();
   const { language } = useTheme();
@@ -45,8 +51,17 @@ export default function CarRoute() {
           }}
           outboundHint={t('car.outbound.hint', { time: formatTime(event.startsAt, language) })}
           onBack={goBack}
-          // Aucun serveur pour l'instant ; l'écran suivant n'a pas encore de maquette.
-          onSubmit={() => {}}
+          // Aucun serveur pour l'instant : le trajet publié passe à l'écran suivant par la navigation.
+          onSubmit={(draft) =>
+            router.push({
+              pathname: '/e/[id]/my-car',
+              params: {
+                id,
+                ride: serializeCarDraft(draft),
+                ...(firstName && zone ? { firstName, zone } : {}),
+              },
+            })
+          }
         />
       ) : (
         <Screen>

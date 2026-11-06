@@ -73,3 +73,23 @@ export type CarDraft = {
   seats: number;
   legs: Partial<Record<TripDirection, TimeWindow>>;
 };
+
+/** Places réservées dans une voiture : par un passager (nommé) ou notées à la main par le conducteur. */
+export type Booking = { id: string; name?: string; seats: number };
+
+/** Un trajet vu par son conducteur : la voiture et qui y a une place. */
+export type DriverLeg = {
+  departure: Departure;
+  totalSeats: number;
+  bookings: Booking[];
+};
+
+/** Un passager qui cherche un trajet, dans un sens donné. */
+export type RideRequest = {
+  id: string;
+  direction: TripDirection;
+  passenger: { id: string; firstName: string; lastName: string; phone: string };
+  home: { city: string; area?: string };
+  /** Nombre de personnes à emmener (lui compris). */
+  partySize: number;
+};

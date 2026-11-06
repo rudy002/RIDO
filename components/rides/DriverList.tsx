@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Screen } from '@/components/ui/Screen';
@@ -15,6 +14,7 @@ import type { Language } from '@/lib/i18n';
 import type { RideMatch, RideOffer, TripDirection } from '@/lib/rides/types';
 import type { TFunction } from 'i18next';
 
+import { ContextHeader } from './ContextHeader';
 import { DriverCard } from './DriverCard';
 
 type DriverListProps = {
@@ -67,7 +67,7 @@ export function DriverList({
   onFound,
 }: DriverListProps) {
   const { t } = useTranslation();
-  const { spacing, radius, language } = useTheme();
+  const { spacing, language } = useTheme();
   const [direction, setDirection] = useState<TripDirection>(initialDirection);
 
   const visible = useMemo(
@@ -100,21 +100,7 @@ export function DriverList({
           onPress={onFound}
         />
       }>
-      <View style={{ flexDirection: 'row', alignItems: 'stretch', gap: spacing.md }}>
-        <Badge
-          tone="accent"
-          label={contextLabel}
-          singleLine
-          style={{ flexShrink: 1, alignSelf: 'stretch', justifyContent: 'center' }}
-        />
-        <Button
-          variant="outline"
-          label={t('rides.edit')}
-          accessibilityHint={t('rides.editHint')}
-          onPress={onEdit}
-          style={{ borderRadius: radius.pill }}
-        />
-      </View>
+      <ContextHeader label={contextLabel} onEdit={onEdit} />
 
       <View style={{ gap: spacing.xs }}>
         <AppText variant="bodyStrong" color="textMuted">

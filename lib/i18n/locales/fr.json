@@ -162,5 +162,33 @@
       "end": "Au plus tard"
     },
     "publish": "Publier mon trajet"
+  },
+  "myCar": {
+    "tabs": {
+      "outbound": "Aller · {{time}}",
+      "return": "Retour · {{time}}"
+    },
+    "leavingFrom": "Départ de {{zone}}",
+    "leavingFrom_vowel": "Départ d’{{zone}}",
+    "headingBackTo": "Retour vers {{zone}}",
+    "free_one": "{{count}} place libre",
+    "free_other": "{{count}} places libres",
+    "seat": {
+      "free": "Libre",
+      "taken": "Prise",
+      "extra": "{{name}} +{{count}}"
+    },
+    "take": "Une place prise",
+    "release": "Libérer une place",
+    "requests": {
+      "outbound": "Ils cherchent depuis {{zone}}",
+      "return": "Ils rentrent vers {{zone}}",
+      "empty": "Personne ne cherche de trajet ici pour l’instant."
+    },
+    "people_one": "{{count}} personne",
+    "people_other": "{{count}} personnes",
+    "contact": "Contacter",
+    "cancel": "Je ne peux plus conduire",
+    "whatsappMessage": "Bonjour {{name}}, je conduis via Rido et j’ai une place dans ma voiture."
   }
 }

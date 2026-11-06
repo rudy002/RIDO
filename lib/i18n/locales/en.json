@@ -162,5 +162,33 @@
       "end": "Latest"
     },
     "publish": "Publish my ride"
+  },
+  "myCar": {
+    "tabs": {
+      "outbound": "Outbound · {{time}}",
+      "return": "Return · {{time}}"
+    },
+    "leavingFrom": "Leaving from {{zone}}",
+    "leavingFrom_vowel": "Leaving from {{zone}}",
+    "headingBackTo": "Heading back to {{zone}}",
+    "free_one": "{{count}} free seat",
+    "free_other": "{{count}} free seats",
+    "seat": {
+      "free": "Free",
+      "taken": "Taken",
+      "extra": "{{name}} +{{count}}"
+    },
+    "take": "A seat is taken",
+    "release": "Free up a seat",
+    "requests": {
+      "outbound": "Looking for a ride from {{zone}}",
+      "return": "Riding back to {{zone}}",
+      "empty": "Nobody is looking for a ride here yet."
+    },
+    "people_one": "{{count}} person",
+    "people_other": "{{count}} people",
+    "contact": "Contact",
+    "cancel": "I can’t drive anymore",
+    "whatsappMessage": "Hi {{name}}, I’m driving through Rido and have a seat in my car."
   }
 }

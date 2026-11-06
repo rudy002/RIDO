@@ -32,7 +32,12 @@ export default function JoinRideRoute() {
             if (draft.role === 'driver') {
               router.push({
                 pathname: '/e/[id]/car',
-                params: { id, directions: draft.directions.join(',') },
+                params: {
+                  id,
+                  directions: draft.directions.join(','),
+                  firstName: draft.firstName,
+                  zone: draft.zone.name,
+                },
               });
               return;
             }

@@ -169,5 +169,35 @@
       "end": "הכי מאוחר"
     },
     "publish": "פרסום הנסיעה"
+  },
+  "myCar": {
+    "tabs": {
+      "outbound": "הלוך · {{time}}",
+      "return": "חזור · {{time}}"
+    },
+    "leavingFrom": "יציאה מ־{{zone}}",
+    "leavingFrom_vowel": "יציאה מ־{{zone}}",
+    "headingBackTo": "חזרה ל־{{zone}}",
+    "free_one": "מקום פנוי אחד",
+    "free_two": "{{count}} מקומות פנויים",
+    "free_other": "{{count}} מקומות פנויים",
+    "seat": {
+      "free": "פנוי",
+      "taken": "תפוס",
+      "extra": "{{name}} +{{count}}"
+    },
+    "take": "מקום נתפס",
+    "release": "שחרור מקום",
+    "requests": {
+      "outbound": "מחפשים טרמפ מ־{{zone}}",
+      "return": "חוזרים ל־{{zone}}",
+      "empty": "עדיין אף אחד לא מחפש כאן נסיעה."
+    },
+    "people_one": "אדם אחד",
+    "people_two": "{{count}} אנשים",
+    "people_other": "{{count}} אנשים",
+    "contact": "יצירת קשר",
+    "cancel": "אני כבר לא יכול/ה לנהוג",
+    "whatsappMessage": "היי {{name}}, אני נוהג/ת דרך Rido ויש לי מקום פנוי ברכב."
   }
 }

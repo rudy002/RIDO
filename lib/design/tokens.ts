@@ -106,6 +106,7 @@ export const sizes = {
   countryField: 124, // largeur du champ indicatif (drapeau + « +972 » + chevron)
   seatWidth: 38, // icône de siège (viewBox 0 0 38 40)
   seatHeight: 40,
+  seatLargeScale: 1.35, // sièges de sa propre voiture (maquette C3)
   tabBar: 84,
   borderStrong: 2, // champs, boutons contour
   borderHairline: 1.5, // séparateurs
@@ -145,6 +146,17 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     text: { ...typography.label, color: c.text },
+  },
+  // Action principale dans une carte (« Contacter »).
+  buttonPrimarySmall: {
+    container: {
+      height: sizes.touchMin,
+      borderRadius: radius.md,
+      backgroundColor: c.primary,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    text: { ...typography.label, color: c.onPrimary },
   },
   // Deuxième action principale, à hauteur du bouton principal (« Écrire sur WhatsApp »).
   buttonInverseLarge: {

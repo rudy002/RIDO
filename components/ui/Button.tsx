@@ -3,7 +3,8 @@ import { Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 
-export type ButtonVariant = 'primary' | 'inverse' | 'inverseLarge' | 'outline' | 'outlineStrong';
+export type ButtonVariant =
+  'primary' | 'primarySmall' | 'inverse' | 'inverseLarge' | 'outline' | 'outlineStrong';
 
 type ButtonProps = {
   label: string;
@@ -22,6 +23,7 @@ const DISABLED_OPACITY = 0.5;
 
 const VARIANT_STYLE = {
   primary: 'buttonPrimary',
+  primarySmall: 'buttonPrimarySmall',
   inverse: 'buttonInverse',
   inverseLarge: 'buttonInverseLarge',
   outline: 'buttonOutline',

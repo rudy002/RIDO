@@ -1,4 +1,4 @@
-import type { RideMatch } from './types';
+import type { DriverLeg, RideMatch, RideRequest, TripDirection } from './types';
 
 // Données d'exemple (maquette P1), en attendant le backend.
 export const DEMO_PASSENGER = { firstName: 'Esther', zone: 'Ashdod', partySize: 2 };
@@ -92,3 +92,48 @@ export function findMockOtherLeg(match: RideMatch): RideMatch | undefined {
       offer.driver.id === match.offer.driver.id && offer.direction !== match.offer.direction
   );
 }
+
+// Données d'exemple côté conducteur (maquette C3).
+export const DEMO_DRIVER = { firstName: 'David', zone: 'Ashdod' };
+
+export const DEMO_DRIVER_LEGS: Partial<Record<TripDirection, DriverLeg>> = {
+  outbound: {
+    departure: { from: day(18), to: day(18, 30) },
+    totalSeats: 3,
+    bookings: [{ id: 'esther', name: 'Esther', seats: 2 }],
+  },
+  return: {
+    departure: { from: night(0, 30) },
+    totalSeats: 3,
+    bookings: [{ id: 'esther', name: 'Esther', seats: 2 }],
+  },
+};
+
+export const DEMO_REQUESTS: RideRequest[] = [
+  {
+    id: 'req-nathan',
+    direction: 'outbound',
+    passenger: {
+      id: 'nathan',
+      firstName: 'Nathan',
+      lastName: 'Bensoussan',
+      phone: '+972526789012',
+    },
+    home: { city: 'Ashdod', area: 'Centre-ville' },
+    partySize: 1,
+  },
+  {
+    id: 'req-rachel',
+    direction: 'outbound',
+    passenger: { id: 'rachel', firstName: 'Rachel', lastName: 'Marciano', phone: '+972547890123' },
+    home: { city: 'Ashdod', area: 'Youd-Alef' },
+    partySize: 1,
+  },
+  {
+    id: 'req-rachel-back',
+    direction: 'return',
+    passenger: { id: 'rachel', firstName: 'Rachel', lastName: 'Marciano', phone: '+972547890123' },
+    home: { city: 'Ashdod', area: 'Youd-Alef' },
+    partySize: 1,
+  },
+];
