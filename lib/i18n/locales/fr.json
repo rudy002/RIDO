@@ -24,7 +24,8 @@
     "seatsOffered_other": "places proposées",
     "guests_one": "invité inscrit",
     "guests_other": "invités inscrits",
-    "notFound": "Cet événement est introuvable. Vérifie le lien reçu."
+    "notFound": "Cet événement est introuvable. Vérifie le lien reçu.",
+    "startsAt": "Début de l’événement à {{time}}"
   },
   "invitation": {
     "howItWorks": "Comment ça marche",
@@ -111,7 +112,26 @@
     "found": "J’ai trouvé ma place"
   },
   "rideDetails": {
-    "comingSoon": "La fiche trajet arrive bientôt."
+    "role": "Conducteur",
+    "directions": {
+      "outbound": "Aller",
+      "return": "Retour"
+    },
+    "departure": {
+      "window": "Départ entre {{from}} et {{to}}",
+      "around": "Départ vers {{time}}"
+    },
+    "otherLeg": {
+      "outboundWindow": "Part entre {{from}} et {{to}}",
+      "outboundAround": "Part vers {{time}}",
+      "returnWindow": "Repart entre {{from}} et {{to}}",
+      "returnAround": "Repart vers {{time}}"
+    },
+    "note": "Contacte {{name}} pour réserver ta place et lui donner ton adresse exacte. Ses places seront mises à jour.",
+    "call": "Appeler {{name}}",
+    "whatsapp": "Écrire sur WhatsApp",
+    "whatsappMessage": "Bonjour {{name}}, je t’écris via Rido pour une place dans ta voiture.",
+    "notFound": "Ce trajet est introuvable."
   },
   "dev": {
     "language": {

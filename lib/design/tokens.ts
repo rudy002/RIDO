@@ -93,6 +93,7 @@ export const sizes = {
   segment: 52,
   touchMin: 48,
   avatar: 48,
+  avatarLarge: 76, // en-tête d'une fiche (maquette T)
   stepBadge: 36, // rond numéroté (« Comment ça marche »)
   icon: 20, // icônes dans le texte (date, lieu)
   iconTile: 52, // pastille d'icône des cartes de choix (maquette I2)
@@ -142,6 +143,17 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     text: { ...typography.label, color: c.text },
+  },
+  // Deuxième action principale, à hauteur du bouton principal (« Écrire sur WhatsApp »).
+  buttonInverseLarge: {
+    container: {
+      height: sizes.buttonPrimary,
+      borderRadius: radius.lg,
+      backgroundColor: c.inverse,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    text: { ...typography.button, color: c.onInverse },
   },
   // Action secondaire pleine largeur en pied d'écran (« J'ai trouvé ma place »).
   buttonOutlineStrong: {
@@ -252,6 +264,20 @@ export const components = (c: Colors) => ({
     // SVG (react-native-svg), viewBox 0 0 38 40 : dossier + assise
     back: { x: 7, y: 2, width: 24, height: 24, rx: 8 },
     base: { x: 2, y: 24, width: 34, height: 13, rx: 6 },
+  },
+  // Frise d'un trajet : point de départ, trait, carré d'arrivée (maquette T).
+  timeline: {
+    start: { width: 16, height: 16, borderRadius: radius.pill, backgroundColor: c.inverse },
+    line: { width: 3, backgroundColor: c.border },
+    end: {
+      width: 18,
+      height: 18,
+      borderRadius: 5,
+      borderWidth: sizes.borderStrong,
+      borderColor: c.inverse,
+      backgroundColor: c.primary,
+    },
+    markerColumn: 18,
   },
   tabBar: {
     container: {

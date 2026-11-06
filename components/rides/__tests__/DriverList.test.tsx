@@ -48,7 +48,7 @@ describe('DriverList', () => {
     await renderList();
 
     expect(cardNames()).toEqual([
-      'David Cohen, Part entre 18h00 et 18h30 · Centre, 3 libres',
+      'David Cohen, Part entre 18h00 et 18h30 · Centre-ville, 3 libres',
       'Ruth Azoulay, Yavne, à 12 km · vers 18h00, 2 libres',
       'Myriam Benhamou, Part entre 18h15 et 18h45 · Youd-Alef, 1 libre',
       'Yoni Attal, Part vers 17h45 · La marina, Complet',

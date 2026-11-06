@@ -44,7 +44,13 @@ export type Departure = { from: Date; to?: Date };
 export type RideOffer = {
   id: string;
   direction: TripDirection;
-  driver: { firstName: string; lastName: string };
+  driver: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    /** E.164 ; visible seulement des participants (contact direct). */
+    phone: string;
+  };
   /** Zone du conducteur : ville et, si connu, quartier. Jamais d'adresse exacte. */
   home: { city: string; area?: string };
   departure: Departure;

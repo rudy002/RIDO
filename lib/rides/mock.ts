@@ -11,8 +11,8 @@ export const DEMO_MATCHES: RideMatch[] = [
     offer: {
       id: 'out-david',
       direction: 'outbound',
-      driver: { firstName: 'David', lastName: 'Cohen' },
-      home: { city: 'Ashdod', area: 'Centre' },
+      driver: { id: 'david', phone: '+972521234567', firstName: 'David', lastName: 'Cohen' },
+      home: { city: 'Ashdod', area: 'Centre-ville' },
       departure: { from: day(18), to: day(18, 30) },
       seats: { total: 4, free: 3 },
     },
@@ -21,7 +21,7 @@ export const DEMO_MATCHES: RideMatch[] = [
     offer: {
       id: 'out-ruth',
       direction: 'outbound',
-      driver: { firstName: 'Ruth', lastName: 'Azoulay' },
+      driver: { id: 'ruth', phone: '+972542345678', firstName: 'Ruth', lastName: 'Azoulay' },
       home: { city: 'Yavne' },
       departure: { from: day(18) },
       seats: { total: 3, free: 2 },
@@ -32,7 +32,7 @@ export const DEMO_MATCHES: RideMatch[] = [
     offer: {
       id: 'out-yoni',
       direction: 'outbound',
-      driver: { firstName: 'Yoni', lastName: 'Attal' },
+      driver: { id: 'yoni', phone: '+972503456789', firstName: 'Yoni', lastName: 'Attal' },
       home: { city: 'Ashdod', area: 'La marina' },
       departure: { from: day(17, 45) },
       seats: { total: 3, free: 0 },
@@ -42,7 +42,7 @@ export const DEMO_MATCHES: RideMatch[] = [
     offer: {
       id: 'out-myriam',
       direction: 'outbound',
-      driver: { firstName: 'Myriam', lastName: 'Benhamou' },
+      driver: { id: 'myriam', phone: '+972524567890', firstName: 'Myriam', lastName: 'Benhamou' },
       home: { city: 'Ashdod', area: 'Youd-Alef' },
       departure: { from: day(18, 15), to: day(18, 45) },
       seats: { total: 4, free: 1 },
@@ -52,27 +52,27 @@ export const DEMO_MATCHES: RideMatch[] = [
     offer: {
       id: 'ret-david',
       direction: 'return',
-      driver: { firstName: 'David', lastName: 'Cohen' },
-      home: { city: 'Ashdod', area: 'Centre' },
-      departure: { from: night(1) },
-      seats: { total: 4, free: 3 },
+      driver: { id: 'david', phone: '+972521234567', firstName: 'David', lastName: 'Cohen' },
+      home: { city: 'Ashdod', area: 'Centre-ville' },
+      departure: { from: night(0, 30), to: night(1) },
+      seats: { total: 4, free: 2 },
     },
   },
   {
     offer: {
       id: 'ret-sarah',
       direction: 'return',
-      driver: { firstName: 'Sarah', lastName: 'Levy' },
+      driver: { id: 'sarah', phone: '+972535678901', firstName: 'Sarah', lastName: 'Levy' },
       home: { city: 'Ashdod', area: 'Youd-Alef' },
-      departure: { from: night(0, 30), to: night(1) },
-      seats: { total: 4, free: 3 },
+      departure: { from: night(1), to: night(1, 30) },
+      seats: { total: 4, free: 4 },
     },
   },
   {
     offer: {
       id: 'ret-ruth',
       direction: 'return',
-      driver: { firstName: 'Ruth', lastName: 'Azoulay' },
+      driver: { id: 'ruth', phone: '+972542345678', firstName: 'Ruth', lastName: 'Azoulay' },
       home: { city: 'Yavne' },
       departure: { from: night(1, 30) },
       seats: { total: 3, free: 2 },
@@ -80,3 +80,15 @@ export const DEMO_MATCHES: RideMatch[] = [
     distanceKm: 12,
   },
 ];
+
+export function findMockMatch(rideId: string): RideMatch | undefined {
+  return DEMO_MATCHES.find(({ offer }) => offer.id === rideId);
+}
+
+/** Le trajet du même conducteur dans l'autre sens, s'il le fait. */
+export function findMockOtherLeg(match: RideMatch): RideMatch | undefined {
+  return DEMO_MATCHES.find(
+    ({ offer }) =>
+      offer.driver.id === match.offer.driver.id && offer.direction !== match.offer.direction
+  );
+}

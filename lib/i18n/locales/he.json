@@ -26,7 +26,8 @@
     "guests_one": "אורח רשום",
     "guests_two": "אורחים רשומים",
     "guests_other": "אורחים רשומים",
-    "notFound": "האירוע לא נמצא. כדאי לבדוק את הקישור שקיבלת."
+    "notFound": "האירוע לא נמצא. כדאי לבדוק את הקישור שקיבלת.",
+    "startsAt": "תחילת האירוע ב־{{time}}"
   },
   "invitation": {
     "howItWorks": "איך זה עובד",
@@ -117,7 +118,26 @@
     "found": "מצאתי מקום"
   },
   "rideDetails": {
-    "comingSoon": "פרטי הנסיעה יגיעו בקרוב."
+    "role": "נהג/ת",
+    "directions": {
+      "outbound": "הלוך",
+      "return": "חזור"
+    },
+    "departure": {
+      "window": "יציאה בין {{from}} ל־{{to}}",
+      "around": "יציאה בסביבות {{time}}"
+    },
+    "otherLeg": {
+      "outboundWindow": "יציאה בין {{from}} ל־{{to}}",
+      "outboundAround": "יציאה בסביבות {{time}}",
+      "returnWindow": "חזרה בין {{from}} ל־{{to}}",
+      "returnAround": "חזרה בסביבות {{time}}"
+    },
+    "note": "כדי לשריין מקום ולמסור את הכתובת המדויקת, צרו קשר עם {{name}}. המקומות הפנויים יעודכנו.",
+    "call": "שיחה עם {{name}}",
+    "whatsapp": "לכתוב בוואטסאפ",
+    "whatsappMessage": "היי {{name}}, אני פונה דרך Rido לגבי מקום ברכב שלך.",
+    "notFound": "הנסיעה לא נמצאה."
   },
   "dev": {
     "language": {

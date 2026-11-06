@@ -24,7 +24,8 @@
     "seatsOffered_other": "seats offered",
     "guests_one": "guest signed up",
     "guests_other": "guests signed up",
-    "notFound": "This event can’t be found. Check the link you received."
+    "notFound": "This event can’t be found. Check the link you received.",
+    "startsAt": "Event starts at {{time}}"
   },
   "invitation": {
     "howItWorks": "How it works",
@@ -111,7 +112,26 @@
     "found": "I found a seat"
   },
   "rideDetails": {
-    "comingSoon": "Ride details are coming soon."
+    "role": "Driver",
+    "directions": {
+      "outbound": "Outbound",
+      "return": "Return"
+    },
+    "departure": {
+      "window": "Leaves between {{from}} and {{to}}",
+      "around": "Leaves around {{time}}"
+    },
+    "otherLeg": {
+      "outboundWindow": "Leaves between {{from}} and {{to}}",
+      "outboundAround": "Leaves around {{time}}",
+      "returnWindow": "Heads back between {{from}} and {{to}}",
+      "returnAround": "Heads back around {{time}}"
+    },
+    "note": "Contact {{name}} to book your seat and share your exact address. Seats will be updated.",
+    "call": "Call {{name}}",
+    "whatsapp": "Message on WhatsApp",
+    "whatsappMessage": "Hi {{name}}, I’m reaching out through Rido about a seat in your car.",
+    "notFound": "This ride can’t be found."
   },
   "dev": {
     "language": {

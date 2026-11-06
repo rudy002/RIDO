@@ -5,10 +5,11 @@ import { useTheme } from '@/lib/design/use-theme';
 
 import { AppText } from './AppText';
 
-export type BadgeTone = 'primary' | 'accent' | 'success' | 'danger';
+export type BadgeTone = 'primary' | 'inverse' | 'accent' | 'success' | 'danger';
 
 const TONES: Record<BadgeTone, { background: keyof Colors; text: keyof Colors }> = {
   primary: { background: 'primary', text: 'onPrimary' },
+  inverse: { background: 'inverse', text: 'onInverse' },
   accent: { background: 'accentSoft', text: 'onAccentSoft' },
   success: { background: 'seatFree', text: 'seatFreeText' },
   danger: { background: 'dangerSoft', text: 'dangerText' },
