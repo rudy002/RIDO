@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "expo start -c",
     "android": "expo start -c --android",
+    "emulator": "${ANDROID_HOME:-$HOME/Library/Android/sdk}/emulator/emulator -avd Rido_Pixel7 -dns-server 8.8.8.8,1.1.1.1",
     "ios": "expo start -c --ios",
     "web": "expo start -c --web",
     "clean": "rm -rf .expo node_modules",
