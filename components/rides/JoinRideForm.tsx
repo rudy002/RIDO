@@ -24,6 +24,8 @@ import {
   type ZoneActivity,
 } from '@/lib/rides/types';
 
+import { ZoneField, type ZoneInput } from './ZoneField';
+
 type JoinRideFormProps = {
   outboundWindow: TimeWindow;
   returnAround: Date;
@@ -51,7 +53,7 @@ export function JoinRideForm({
   const [role, setRole] = useState<RideRole | null>(null);
   // La plupart des invités font l'aller et le retour : les deux sont cochés d'office.
   const [directions, setDirections] = useState<TripDirection[]>(['outbound', 'return']);
-  const [zone, setZone] = useState('');
+  const [zone, setZone] = useState<ZoneInput>({ text: '', zone: null });
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [phone, setPhone] = useState<PhoneInput>({ country: defaultCountry, national: '' });
@@ -63,7 +65,7 @@ export function JoinRideForm({
   const draft = rideDraftSchema.safeParse({
     role,
     directions,
-    zone,
+    zone: zone.zone,
     lastName,
     firstName,
     phone: toInternational(phone),
@@ -140,14 +142,11 @@ export function JoinRideForm({
         </View>
       </View>
 
-      <TextField
-        label={t('join.zone.label')}
-        placeholder={t('join.zone.placeholder')}
+      <ZoneField
+        country={defaultCountry}
         hint={zonesHint}
         value={zone}
-        onChangeText={setZone}
-        autoCapitalize="words"
-        autoCorrect={false}
+        onChange={setZone}
         returnKeyType="next"
         submitBehavior="submit"
         onSubmitEditing={() => lastNameRef.current?.focus()}

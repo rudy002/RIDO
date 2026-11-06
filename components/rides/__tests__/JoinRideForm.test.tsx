@@ -39,7 +39,10 @@ describe('JoinRideForm', () => {
   });
 
   async function fillIdentity(phone: string) {
-    await fireEvent.changeText(screen.getByLabelText('D’où pars-tu ?'), 'Ashdod');
+    const zone = screen.getByLabelText('D’où pars-tu ?');
+    await fireEvent(zone, 'focus');
+    await fireEvent.changeText(zone, 'Ashd');
+    await fireEvent.press(screen.getByRole('button', { name: 'Ashdod' }));
     await fireEvent.changeText(screen.getByLabelText('Nom'), 'Levy');
     await fireEvent.changeText(screen.getByLabelText('Prénom'), 'David');
     await fireEvent.changeText(screen.getByLabelText('Téléphone'), phone);
@@ -61,7 +64,7 @@ describe('JoinRideForm', () => {
     expect(onSubmit).toHaveBeenCalledWith({
       role: 'driver',
       directions: ['outbound'],
-      zone: 'Ashdod',
+      zone: { placeId: '295629', name: 'Ashdod' },
       lastName: 'Levy',
       firstName: 'David',
       phone: '+972521234567',
@@ -128,6 +131,40 @@ describe('JoinRideForm', () => {
     await fillIdentity('0521234567');
 
     expect(screen.getByRole('button', { name: 'Continuer' })).toBeDisabled();
+  });
+
+  it('propose les quartiers avec leur ville', async () => {
+    await renderForm();
+    const zone = screen.getByLabelText('D’où pars-tu ?');
+
+    await fireEvent(zone, 'focus');
+    await fireEvent.changeText(zone, 'floren');
+    await fireEvent.press(screen.getByRole('button', { name: 'Florentin, Tel-Aviv' }));
+
+    expect(zone).toHaveDisplayValue('Florentin, Tel-Aviv');
+    expect(screen.queryByRole('button', { name: 'Florentin, Tel-Aviv' })).not.toBeOnTheScreen();
+  });
+
+  it('accepte un lieu absent de la liste via « Autre »', async () => {
+    const { onSubmit } = await renderForm();
+    const zone = screen.getByLabelText('D’où pars-tu ?');
+
+    await fireEvent.press(screen.getByRole('radio', { name: 'J’ai une voiture' }));
+    await fireEvent(zone, 'focus');
+    await fireEvent.changeText(zone, 'Moshav Zzz');
+    expect(screen.getByRole('button', { name: 'Continuer' })).toBeDisabled();
+
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Autre\u00a0: «\u00a0Moshav Zzz\u00a0»' })
+    );
+    await fireEvent.changeText(screen.getByLabelText('Nom'), 'Levy');
+    await fireEvent.changeText(screen.getByLabelText('Prénom'), 'David');
+    await fireEvent.changeText(screen.getByLabelText('Téléphone'), '0521234567');
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuer' }));
+
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ zone: { placeId: null, name: 'Moshav Zzz' } })
+    );
   });
 
   it('revient en arrière', async () => {

@@ -13,11 +13,22 @@ export type TimeWindow = { from: Date; to: Date };
 /** Zone de départ et nombre de personnes qui y sont déjà inscrites. */
 export type ZoneActivity = { zone: string; count: number };
 
+/**
+ * Zone de départ : un lieu de la base (ville ou quartier, identifiant GeoNames) pour pouvoir
+ * mettre les gens en relation, ou une saisie libre (« Autre ») quand le lieu n'y est pas.
+ */
+export const zoneSchema = z.object({
+  placeId: z.string().nullable(),
+  name: z.string().trim().min(1),
+});
+
+export type Zone = z.infer<typeof zoneSchema>;
+
 /** Ce qu'un participant déclare pour rejoindre un covoiturage. */
 export const rideDraftSchema = z.object({
   role: z.enum(RIDE_ROLES),
   directions: z.array(z.enum(TRIP_DIRECTIONS)).min(1),
-  zone: z.string().trim().min(1),
+  zone: zoneSchema,
   lastName: z.string().trim().min(1),
   firstName: z.string().trim().min(1),
   /** Format international E.164 (« +972521234567 »), utilisable pour l'appel et WhatsApp. */

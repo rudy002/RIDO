@@ -53,7 +53,8 @@
     "zone": {
       "label": "D’où pars-tu ?",
       "placeholder": "Ville ou quartier",
-      "active": "Déjà actives : {{zones}}"
+      "active": "Déjà actives : {{zones}}",
+      "other": "Autre : « {{value}} »"
     },
     "lastName": {
       "label": "Nom",

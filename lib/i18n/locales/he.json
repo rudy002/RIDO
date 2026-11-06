@@ -55,7 +55,8 @@
     "zone": {
       "label": "מאיפה יוצאים?",
       "placeholder": "עיר או שכונה",
-      "active": "כבר פעילים: {{zones}}"
+      "active": "כבר פעילים: {{zones}}",
+      "other": "אחר: {{value}}"
     },
     "lastName": {
       "label": "שם משפחה",

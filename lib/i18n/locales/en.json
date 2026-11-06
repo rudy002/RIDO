@@ -53,7 +53,8 @@
     "zone": {
       "label": "Where are you leaving from?",
       "placeholder": "City or neighborhood",
-      "active": "Already active: {{zones}}"
+      "active": "Already active: {{zones}}",
+      "other": "Other: “{{value}}”"
     },
     "lastName": {
       "label": "Last name",
