@@ -13,10 +13,17 @@ type ScreenProps = {
   footer?: ReactNode;
   /** Trait de séparation au-dessus du pied (quand la liste défile dessous). */
   footerDivider?: boolean;
+  /** Écran au-dessus d'une barre d'onglets : c'est elle qui gère la zone sûre du bas. */
+  aboveTabBar?: boolean;
 };
 
 /** Cadre commun des écrans : fond, zones sûres, marges, pied fixe qui remonte avec le clavier. */
-export function Screen({ children, footer, footerDivider = false }: ScreenProps) {
+export function Screen({
+  children,
+  footer,
+  footerDivider = false,
+  aboveTabBar = false,
+}: ScreenProps) {
   const { colors, spacing, sizes } = useTheme();
   const scrollRef = useRef<ScrollView>(null);
   const contentRef = useRef<View>(null);
@@ -35,7 +42,9 @@ export function Screen({ children, footer, footerDivider = false }: ScreenProps)
   );
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView
+      edges={aboveTabBar ? ['top'] : ['top', 'bottom']}
+      style={{ flex: 1, backgroundColor: colors.background }}>
       {/* react-native-keyboard-controller : fiable en plein écran Android, contrairement à celui de RN. */}
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled">

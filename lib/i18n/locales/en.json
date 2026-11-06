@@ -7,7 +7,8 @@
     "step": "Step {{current}} of {{total}}",
     "close": "Close",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "comingSoon": "This screen is coming soon."
   },
   "notFound": {
     "title": "Page not found",
@@ -270,5 +271,24 @@
       "requests_other": "{{count}} requests"
     },
     "join": "I’m coming too: driver or passenger"
+  },
+  "trips": {
+    "title": "My rides",
+    "upcoming": "Upcoming",
+    "empty": "No rides yet",
+    "roles": {
+      "driver": "Driver",
+      "passenger": "Passenger"
+    },
+    "with": "With {{name}}",
+    "stillLooking": "Still looking",
+    "past_one": "{{count}} past ride",
+    "past_other": "{{count}} past rides",
+    "linkHint": "Got a link? Open it from WhatsApp: the event will show up here."
+  },
+  "tabs": {
+    "trips": "My rides",
+    "events": "My events",
+    "profile": "Profile"
   }
 }

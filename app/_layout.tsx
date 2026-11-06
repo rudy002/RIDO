@@ -59,8 +59,10 @@ export default function RootLayout() {
             headerShadowVisible: false,
             headerTitleStyle: { fontFamily: typography.heading.fontFamily },
             contentStyle: { backgroundColor: colors.background },
-          }}
-        />
+          }}>
+          {/* Les onglets dessinent leur propre haut d'écran. */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
         <PortalHost />
         {__DEV__ ? <DevLanguageSwitcher /> : null}
       </ThemeProvider>

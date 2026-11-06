@@ -7,7 +7,8 @@
     "step": "שלב {{current}} מתוך {{total}}",
     "close": "סגירה",
     "copy": "העתקה",
-    "copied": "הועתק"
+    "copied": "הועתק",
+    "comingSoon": "המסך הזה יגיע בקרוב."
   },
   "notFound": {
     "title": "הדף לא נמצא",
@@ -286,5 +287,25 @@
       "requests_other": "{{count}} בקשות"
     },
     "join": "גם אני מגיע/ה: נהג או נוסע"
+  },
+  "trips": {
+    "title": "הנסיעות שלי",
+    "upcoming": "בקרוב",
+    "empty": "עדיין אין נסיעות",
+    "roles": {
+      "driver": "נהג/ת",
+      "passenger": "נוסע/ת"
+    },
+    "with": "עם {{name}}",
+    "stillLooking": "עדיין מחפשים",
+    "past_one": "נסיעה אחת שעברה",
+    "past_two": "{{count}} נסיעות שעברו",
+    "past_other": "{{count}} נסיעות שעברו",
+    "linkHint": "קיבלת קישור? פתחו אותו מוואטסאפ והאירוע יופיע כאן."
+  },
+  "tabs": {
+    "trips": "הנסיעות שלי",
+    "events": "האירועים שלי",
+    "profile": "פרופיל"
   }
 }

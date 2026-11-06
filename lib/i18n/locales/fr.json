@@ -7,7 +7,8 @@
     "step": "Étape {{current}} sur {{total}}",
     "close": "Fermer",
     "copy": "Copier",
-    "copied": "Copié"
+    "copied": "Copié",
+    "comingSoon": "Cet écran arrive bientôt."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -280,5 +281,24 @@
     },
     "join": "Moi aussi, je viens : conducteur ou passager",
     "registered_zero": "0 inscrit"
+  },
+  "trips": {
+    "title": "Mes trajets",
+    "upcoming": "À venir",
+    "empty": "Aucun trajet pour l’instant",
+    "roles": {
+      "driver": "Conducteur",
+      "passenger": "Passager"
+    },
+    "with": "Avec {{name}}",
+    "stillLooking": "Tu cherches encore",
+    "past_one": "{{count}} trajet passé",
+    "past_other": "{{count}} trajets passés",
+    "linkHint": "Tu as reçu un lien ? Ouvre-le depuis WhatsApp : l’événement s’ajoutera ici."
+  },
+  "tabs": {
+    "trips": "Mes trajets",
+    "events": "Mes événements",
+    "profile": "Profil"
   }
 }

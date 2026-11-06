@@ -72,6 +72,7 @@ export const typography = {
   bodyStrong: { fontFamily: fonts.extrabold, fontSize: 18, lineHeight: 24 },
   body: { fontFamily: fonts.semibold, fontSize: 16, lineHeight: 22 },
   label: { fontFamily: fonts.extrabold, fontSize: 15, lineHeight: 20 },
+  tag: { fontFamily: fonts.black, fontSize: 13, lineHeight: 16 }, // petites pastilles (rôle, statut)
   caption: { fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }, // libellés des tuiles compactes
   button: { fontFamily: fonts.black, fontSize: 18, lineHeight: 22 },
   stat: { fontFamily: fonts.black, fontSize: 30, lineHeight: 34 }, // tuiles de chiffres compactes (maquette O3)
@@ -111,8 +112,11 @@ export const sizes = {
   countryField: 124, // largeur du champ indicatif (drapeau + « +972 » + chevron)
   seatWidth: 38, // icône de siège (viewBox 0 0 38 40)
   seatHeight: 40,
-  seatLargeScale: 1.35, // sièges de sa propre voiture (maquette C3)
+  seatLargeScale: 1.35,
+  seatSmallScale: 0.6, // sièges dans le résumé d'une carte (maquette A1) // sièges de sa propre voiture (maquette C3)
   tabBar: 84,
+  tabIcon: 24,
+  noteIcon: 22, // icône des encadrés d'aide
   borderStrong: 2, // champs, boutons contour
   borderHairline: 1.5, // séparateurs
 } as const;
@@ -282,6 +286,7 @@ export const components = (c: Colors) => ({
   },
   chipSelected: { borderColor: c.inverse, backgroundColor: c.inverse },
   badge: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: radius.pill },
+  badgeSmall: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.pill },
   switch: {
     trackOn: c.seatFreeStroke,
     trackOff: c.border,

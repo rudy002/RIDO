@@ -85,3 +85,16 @@ export function formatShortWeekdayDate(date: Date, language: Language): string {
   }).format(date);
   return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
 }
+
+/** Prénom et initiale du nom : « Myriam B. ». */
+export function formatShortName(firstName: string, lastName: string): string {
+  const initial = lastName.trim().charAt(0);
+  return initial ? `${firstName} ${initial.toLocaleUpperCase()}.` : firstName;
+}
+
+/** Créneau « 18h00–18h30 », ou heure seule « 20h15 ». */
+export function formatDeparture(from: Date, to: Date | undefined, language: Language): string {
+  return to
+    ? `${formatTime(from, language)}–${formatTime(to, language)}`
+    : formatTime(from, language);
+}

@@ -20,22 +20,33 @@ type BadgeProps = {
   tone?: BadgeTone;
   /** Coupe le texte avec « … » au-delà d'une ligne (pastille dans une rangée étroite). */
   singleLine?: boolean;
+  /** Petite pastille (rôle, statut) dans une carte. */
+  small?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
 /** Pastille (type d'événement, statut). */
-export function Badge({ label, tone = 'primary', singleLine = false, style }: BadgeProps) {
+export function Badge({
+  label,
+  tone = 'primary',
+  singleLine = false,
+  small = false,
+  style,
+}: BadgeProps) {
   const { components, colors } = useTheme();
   const { background, text } = TONES[tone];
 
   return (
     <View
       style={[
-        components.badge,
+        small ? components.badgeSmall : components.badge,
         { alignSelf: 'flex-start', backgroundColor: colors[background] },
         style,
       ]}>
-      <AppText variant="label" color={text} numberOfLines={singleLine ? 1 : undefined}>
+      <AppText
+        variant={small ? 'tag' : 'label'}
+        color={text}
+        numberOfLines={singleLine ? 1 : undefined}>
         {label}
       </AppText>
     </View>
