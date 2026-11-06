@@ -21,6 +21,8 @@ type TextFieldProps = Pick<
   | 'onSubmitEditing'
   | 'submitBehavior'
   | 'autoFocus'
+  | 'onFocus'
+  | 'onBlur'
   | 'testID'
 > & {
   label: string;
@@ -39,6 +41,8 @@ export function TextField({
   hint,
   ref,
   style,
+  onFocus,
+  onBlur,
   ...inputProps
 }: TextFieldProps) {
   const { components, colors, spacing } = useTheme();
@@ -54,8 +58,14 @@ export function TextField({
         accessibilityHint={hint}
         placeholderTextColor={colors.textMuted}
         selectionColor={colors.text}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          onBlur?.(event);
+        }}
         style={[
           components.input.container,
           components.input.text,
