@@ -99,7 +99,8 @@ export const sizes = {
   touchMin: 48,
   avatar: 48,
   stepperButton: 60, // boutons − / + du compteur de places
-  avatarLarge: 76,
+  avatarLarge: 76, // en-tête d’une fiche (maquette T)
+  avatarProfile: 80, // en-tête du profil (maquette A3)
   progressBar: 10, // barre de remplissage par zone (maquette O3)
   iconCircle: 72, // rond de réussite (maquette O2)
   iconCircleGlyph: 32, // en-tête d'une fiche (maquette T)

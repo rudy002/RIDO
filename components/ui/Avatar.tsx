@@ -8,9 +8,11 @@ type AvatarProps = {
   name: string;
   /** Ton éteint (ex. : conducteur complet). */
   muted?: boolean;
-  /** Grand format pour l'en-tête d'une fiche. */
-  large?: boolean;
+  /** Liste (48), en-tête d'une fiche (76), profil (80). */
+  size?: 'medium' | 'large' | 'profile';
 };
+
+const SIZE_TOKEN = { medium: 'avatar', large: 'avatarLarge', profile: 'avatarProfile' } as const;
 
 /** Premières lettres des deux premiers mots : « David Cohen » → « DC ». */
 export function initialsOf(name: string): string {
@@ -23,9 +25,9 @@ export function initialsOf(name: string): string {
 }
 
 /** Rond avec les initiales ; décoratif, le nom est toujours écrit à côté. */
-export function Avatar({ name, muted = false, large = false }: AvatarProps) {
+export function Avatar({ name, muted = false, size: variant = 'medium' }: AvatarProps) {
   const { colors, sizes, radius } = useTheme();
-  const size = large ? sizes.avatarLarge : sizes.avatar;
+  const size = sizes[SIZE_TOKEN[variant]];
 
   return (
     <View
@@ -39,7 +41,9 @@ export function Avatar({ name, muted = false, large = false }: AvatarProps) {
         justifyContent: 'center',
         backgroundColor: muted ? colors.segment : colors.accentSoft,
       }}>
-      <AppText variant={large ? 'title' : 'label'} color={muted ? 'textMuted' : 'onAccentSoft'}>
+      <AppText
+        variant={variant === 'medium' ? 'label' : 'title'}
+        color={muted ? 'textMuted' : 'onAccentSoft'}>
         {initialsOf(name)}
       </AppText>
     </View>

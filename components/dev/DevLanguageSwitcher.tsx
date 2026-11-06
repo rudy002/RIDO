@@ -1,14 +1,13 @@
 import { Languages } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DevSettings, I18nManager, Platform, Pressable, Text, View } from 'react-native';
+import { DevSettings, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/Icon';
 import { useTheme } from '@/lib/design/use-theme';
-import { detectLanguage, isRTLLanguage, LANGUAGES, type Language } from '@/lib/i18n';
-import { saveLanguageOverride } from '@/lib/i18n/language-override';
-import { applyDirection } from '@/lib/i18n/rtl';
+import { LANGUAGES, type Language } from '@/lib/i18n';
+import { changeAppLanguage } from '@/lib/i18n/change-language';
 
 /** `null` : langue du téléphone. */
 type Choice = Language | null;
@@ -20,19 +19,15 @@ const CHOICES: Choice[] = [...LANGUAGES, null];
  * Passer de/vers l'hébreu redémarre l'appli, seul moyen d'appliquer le sens RTL.
  */
 export function DevLanguageSwitcher() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { colors, typography, spacing, sizes, radius, language } = useTheme();
   const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
 
   const choose = async (choice: Choice) => {
     setOpen(false);
-    const target = choice ?? detectLanguage();
-    await saveLanguageOverride(choice);
-    const needsReload = Platform.OS !== 'web' && isRTLLanguage(target) !== I18nManager.isRTL;
-    await i18n.changeLanguage(target);
-    applyDirection(target);
-    if (needsReload) DevSettings.reload();
+    const { needsRestart } = await changeAppLanguage(choice);
+    if (needsRestart) DevSettings.reload();
   };
 
   const item = (key: string, label: string, onPress: () => void, active = false) => (

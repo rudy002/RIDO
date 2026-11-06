@@ -77,7 +77,7 @@ export function RideDetails({
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.lg }}>
-        <Avatar name={name} large />
+        <Avatar name={name} size="large" />
         <View style={{ flex: 1 }}>
           <AppText variant="title" accessibilityRole="header">
             {name}

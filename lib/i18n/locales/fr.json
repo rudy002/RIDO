@@ -309,5 +309,32 @@
     "empty": "Tu n’organises aucun événement",
     "past_one": "{{count}} événement terminé",
     "past_other": "{{count}} événements terminés"
+  },
+  "profile": {
+    "editHint": "Modifier ton nom et ton téléphone",
+    "car": {
+      "title": "Ma voiture",
+      "model": "Modèle et couleur",
+      "seats": "Places en général",
+      "departure": "Départ habituel"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "nearbyRequests": "Quelqu’un cherche une place dans ma zone",
+      "departureReminder": "Rappel une heure avant le départ"
+    },
+    "app": {
+      "title": "Application",
+      "appearance": "Apparence",
+      "language": "Langue",
+      "help": "Aide et contact"
+    },
+    "appearance": {
+      "system": "Automatique",
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "restartNote": "Ferme puis rouvre l’appli pour appliquer le sens de lecture de cette langue.",
+    "signOut": "Se déconnecter"
   }
 }

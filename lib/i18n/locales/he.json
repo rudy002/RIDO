@@ -317,5 +317,32 @@
     "past_one": "אירוע אחד שהסתיים",
     "past_two": "{{count}} אירועים שהסתיימו",
     "past_other": "{{count}} אירועים שהסתיימו"
+  },
+  "profile": {
+    "editHint": "עריכת השם והטלפון",
+    "car": {
+      "title": "הרכב שלי",
+      "model": "דגם וצבע",
+      "seats": "מספר מקומות בדרך כלל",
+      "departure": "נקודת יציאה קבועה"
+    },
+    "notifications": {
+      "title": "התראות",
+      "nearbyRequests": "מישהו מחפש מקום באזור שלי",
+      "departureReminder": "תזכורת שעה לפני היציאה"
+    },
+    "app": {
+      "title": "אפליקציה",
+      "appearance": "מראה",
+      "language": "שפה",
+      "help": "עזרה ויצירת קשר"
+    },
+    "appearance": {
+      "system": "אוטומטי",
+      "light": "בהיר",
+      "dark": "כהה"
+    },
+    "restartNote": "סגרו ופתחו מחדש את האפליקציה כדי להחיל את כיוון הקריאה של השפה.",
+    "signOut": "התנתקות"
   }
 }

@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 
 import { isLanguage, isRTLLanguage, DEFAULT_LANGUAGE, type Language } from '@/lib/i18n';
 
+import { useAppearance } from './appearance';
 import { fontsFor, withLanguageFonts } from './fonts';
 import { theme, type ColorScheme } from './tokens';
 
@@ -27,9 +28,11 @@ export function buildTheme(scheme: ColorScheme, language: Language): AppTheme {
   };
 }
 
-/** Thème actif : clair/sombre selon le système, police et sens selon la langue. */
+/** Thème actif : clair/sombre (choix du profil, sinon le système), police et sens selon la langue. */
 export function useTheme(): AppTheme {
-  const scheme: ColorScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const system: ColorScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const appearance = useAppearance();
+  const scheme: ColorScheme = appearance === 'system' ? system : appearance;
   const { i18n } = useTranslation();
   const language = isLanguage(i18n.language) ? i18n.language : DEFAULT_LANGUAGE;
 

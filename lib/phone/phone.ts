@@ -124,3 +124,8 @@ export function deviceCountry(): CountryCode {
     .find(isCountryCode);
   return region ?? FALLBACK_COUNTRY;
 }
+
+/** Numéro au format du pays (« 052-123-4567 »), ou tel quel s'il n'est pas reconnu. */
+export function formatPhoneNational(e164: string): string {
+  return parsePhoneNumberFromString(e164)?.formatNational() ?? e164;
+}

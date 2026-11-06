@@ -4,7 +4,7 @@ import { isLanguage, type Language } from './index';
 
 const STORAGE_KEY = 'rido.languageOverride';
 
-/** Langue choisie à la main (outil de développement), prioritaire sur celle du téléphone. */
+/** Langue choisie dans le profil (ou l'outil de développement), prioritaire sur celle du téléphone. */
 export async function loadLanguageOverride(): Promise<Language | null> {
   try {
     const value = await AsyncStorage.getItem(STORAGE_KEY);

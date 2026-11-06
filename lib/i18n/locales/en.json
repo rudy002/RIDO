@@ -299,5 +299,32 @@
     "empty": "You’re not organizing any event",
     "past_one": "{{count}} past event",
     "past_other": "{{count}} past events"
+  },
+  "profile": {
+    "editHint": "Edit your name and phone",
+    "car": {
+      "title": "My car",
+      "model": "Model and color",
+      "seats": "Usual seats",
+      "departure": "Usual departure"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "nearbyRequests": "Someone needs a seat in my area",
+      "departureReminder": "Reminder one hour before leaving"
+    },
+    "app": {
+      "title": "App",
+      "appearance": "Appearance",
+      "language": "Language",
+      "help": "Help and contact"
+    },
+    "appearance": {
+      "system": "Automatic",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "restartNote": "Close and reopen the app to apply this language’s reading direction.",
+    "signOut": "Sign out"
   }
 }
