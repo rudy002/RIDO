@@ -15,7 +15,7 @@ describe('EventInvitation', () => {
     await render(<EventInvitation event={DEMO_EVENT} onJoin={jest.fn()} />);
 
     expect(screen.getByText('Mariage')).toBeOnTheScreen();
-    expect(screen.getByText('Léa et Samuel')).toBeOnTheScreen();
+    expect(screen.getByText('Mariage de Léa et Samuel')).toBeOnTheScreen();
     expect(screen.getByText('Samedi 14 juin · 19h30 – 01h00')).toBeOnTheScreen();
     expect(screen.getByText('Domaine des Oliviers')).toBeOnTheScreen();
     expect(screen.getByText('Covoiturage organisé par Léa Cohen')).toBeOnTheScreen();

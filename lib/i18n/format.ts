@@ -51,3 +51,26 @@ export function formatSchedule(start: Date, end: Date, language: Language): stri
 export function formatShortDate(date: Date, language: Language): string {
   return new Intl.DateTimeFormat(LOCALES[language], { day: 'numeric', month: 'long' }).format(date);
 }
+
+/** Jour court et date : « Sam. 14/06 », « Sat, 06/14 ». */
+export function formatShortDay(date: Date, language: Language): string {
+  const locale = LOCALES[language];
+  const text = new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+  }).format(date);
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}
+
+/** Mois et année : « Juin 2025 ». */
+export function formatMonth(date: Date, language: Language): string {
+  const locale = LOCALES[language];
+  const text = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}
+
+/** Initiale courte d'un jour de semaine, pour l'en-tête du calendrier (« lun. », « Mon »). */
+export function formatWeekday(date: Date, language: Language): string {
+  return new Intl.DateTimeFormat(LOCALES[language], { weekday: 'short' }).format(date);
+}

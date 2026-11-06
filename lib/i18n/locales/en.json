@@ -15,7 +15,7 @@
   "event": {
     "types": {
       "wedding": "Wedding",
-      "barMitzvah": "Bar mitzvah",
+      "barMitzvah": "Bar/Bat mitzvah",
       "birthday": "Birthday",
       "festival": "Festival",
       "other": "Event"
@@ -86,8 +86,7 @@
     "full": "Full"
   },
   "rides": {
-    "eventLabel": "{{title}}’s {{type}} · {{date}}",
-    "eventLabel_vowel": "{{title}}’s {{type}} · {{date}}",
+    "eventLabel": "{{title}} · {{date}}",
     "edit": "Edit",
     "editHint": "Go back to my details",
     "greeting": "Hi {{name}}",
@@ -190,5 +189,40 @@
     "contact": "Contact",
     "cancel": "I can’t drive anymore",
     "whatsappMessage": "Hi {{name}}, I’m driving through Rido and have a seat in my car."
+  },
+  "createEvent": {
+    "header": "New event",
+    "title": "Create an event",
+    "type": "Event type",
+    "name": {
+      "label": "Event name",
+      "placeholder": "Léa and Samuel’s wedding"
+    },
+    "venue": {
+      "label": "Venue",
+      "placeholder": "Olive Grove Estate"
+    },
+    "date": "Date",
+    "datePlaceholder": "Choose",
+    "start": "Start",
+    "end": "End",
+    "trips": {
+      "label": "Rides to organize",
+      "outbound": {
+        "title": "Outbound",
+        "subtitle": "To the event venue"
+      },
+      "return": {
+        "title": "Return",
+        "subtitle": "When the event ends"
+      },
+      "missing": "Pick at least one ride: outbound, return or both."
+    },
+    "submit": "Create and get the link",
+    "otherType": "Other"
+  },
+  "calendar": {
+    "previous": "Previous month",
+    "next": "Next month"
   }
 }

@@ -15,7 +15,7 @@
   "event": {
     "types": {
       "wedding": "חתונה",
-      "barMitzvah": "בר מצווה",
+      "barMitzvah": "בר/בת מצווה",
       "birthday": "יום הולדת",
       "festival": "פסטיבל",
       "other": "אירוע"
@@ -89,8 +89,7 @@
     "full": "מלא"
   },
   "rides": {
-    "eventLabel": "{{type}} של {{title}} · {{date}}",
-    "eventLabel_vowel": "{{type}} של {{title}} · {{date}}",
+    "eventLabel": "{{title}} · {{date}}",
     "edit": "עריכה",
     "editHint": "חזרה לפרטים שלי",
     "greeting": "שלום {{name}}",
@@ -199,5 +198,40 @@
     "contact": "יצירת קשר",
     "cancel": "אני כבר לא יכול/ה לנהוג",
     "whatsappMessage": "היי {{name}}, אני נוהג/ת דרך Rido ויש לי מקום פנוי ברכב."
+  },
+  "createEvent": {
+    "header": "אירוע חדש",
+    "title": "יצירת אירוע",
+    "type": "סוג האירוע",
+    "name": {
+      "label": "שם האירוע",
+      "placeholder": "החתונה של לאה ושמואל"
+    },
+    "venue": {
+      "label": "מקום",
+      "placeholder": "אחוזת הזיתים"
+    },
+    "date": "תאריך",
+    "datePlaceholder": "בחירה",
+    "start": "התחלה",
+    "end": "סיום",
+    "trips": {
+      "label": "נסיעות לארגון",
+      "outbound": {
+        "title": "הלוך",
+        "subtitle": "אל מקום האירוע"
+      },
+      "return": {
+        "title": "חזור",
+        "subtitle": "בסוף האירוע"
+      },
+      "missing": "צריך לבחור לפחות נסיעה אחת: הלוך, חזור או שתיהן."
+    },
+    "submit": "יצירה וקבלת הקישור",
+    "otherType": "אחר"
+  },
+  "calendar": {
+    "previous": "החודש הקודם",
+    "next": "החודש הבא"
   }
 }

@@ -1,13 +1,13 @@
 import { X } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/lib/design/use-theme';
 
 import { AppText } from './AppText';
-import { Icon } from './Icon';
+import { IconButton } from './IconButton';
 
 type PickerSheetProps = {
   visible: boolean;
@@ -16,12 +16,10 @@ type PickerSheetProps = {
   children: ReactNode;
 };
 
-const PRESSED_OPACITY = 0.85;
-
 /** Fenêtre plein écran de choix (pays, heure…) : titre, bouton fermer, contenu. */
 export function PickerSheet({ visible, title, onClose, children }: PickerSheetProps) {
   const { t } = useTranslation();
-  const { colors, spacing, sizes, radius } = useTheme();
+  const { colors, spacing } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -49,23 +47,7 @@ export function PickerSheet({ visible, title, onClose, children }: PickerSheetPr
           <AppText variant="heading" accessibilityRole="header" style={{ flex: 1 }}>
             {title}
           </AppText>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('common.close')}
-            onPress={onClose}
-            style={({ pressed }) => [
-              {
-                width: sizes.touchMin,
-                height: sizes.touchMin,
-                borderRadius: radius.pill,
-                backgroundColor: colors.surface,
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              pressed && { opacity: PRESSED_OPACITY },
-            ]}>
-            <Icon as={X} />
-          </Pressable>
+          <IconButton icon={X} label={t('common.close')} onPress={onClose} />
         </View>
         {children}
       </View>

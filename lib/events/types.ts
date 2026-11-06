@@ -1,5 +1,5 @@
 import type { CountryCode } from '@/lib/phone/phone';
-import type { TimeWindow, ZoneActivity } from '@/lib/rides/types';
+import type { TimeWindow, TripDirection, ZoneActivity } from '@/lib/rides/types';
 
 export const EVENT_TYPES = ['wedding', 'barMitzvah', 'birthday', 'festival', 'other'] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -22,4 +22,16 @@ export type EventSummary = {
   /** Heure approximative du retour. */
   returnAround: Date;
   activeZones: ZoneActivity[];
+};
+
+/** Ce que l'organisateur saisit pour créer un événement (O1). */
+export type EventDraft = {
+  type: EventType;
+  name: string;
+  venue: string;
+  startsAt: Date;
+  /** Après `startsAt` ; le lendemain si l'événement finit après minuit. */
+  endsAt: Date;
+  /** Trajets à organiser : l'aller, le retour ou les deux. */
+  directions: TripDirection[];
 };

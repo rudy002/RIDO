@@ -4,7 +4,7 @@ import type { EventSummary } from './types';
 export const DEMO_EVENT: EventSummary = {
   id: 'demo',
   type: 'wedding',
-  title: 'Léa et Samuel',
+  title: 'Mariage de Léa et Samuel',
   startsAt: new Date(2025, 5, 14, 19, 30),
   endsAt: new Date(2025, 5, 15, 1, 0),
   venue: 'Domaine des Oliviers',

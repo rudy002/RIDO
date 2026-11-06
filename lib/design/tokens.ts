@@ -271,6 +271,7 @@ export const components = (c: Colors) => ({
     thumb: c.surface,
     width: 56,
     height: 34,
+    thumbSize: 26,
   },
   seat: {
     free: { fill: c.seatFree, stroke: c.seatFreeStroke, strokeWidth: 2.5 },

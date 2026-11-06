@@ -15,7 +15,7 @@
   "event": {
     "types": {
       "wedding": "Mariage",
-      "barMitzvah": "Bar mitzvah",
+      "barMitzvah": "Bar/Bat mitzvah",
       "birthday": "Anniversaire",
       "festival": "Festival",
       "other": "Événement"
@@ -86,8 +86,7 @@
     "full": "Complet"
   },
   "rides": {
-    "eventLabel": "{{type}} de {{title}} · {{date}}",
-    "eventLabel_vowel": "{{type}} d’{{title}} · {{date}}",
+    "eventLabel": "{{title}} · {{date}}",
     "edit": "Modifier",
     "editHint": "Revenir à mes informations",
     "greeting": "Bonjour {{name}}",
@@ -190,5 +189,40 @@
     "contact": "Contacter",
     "cancel": "Je ne peux plus conduire",
     "whatsappMessage": "Bonjour {{name}}, je conduis via Rido et j’ai une place dans ma voiture."
+  },
+  "createEvent": {
+    "header": "Nouvel événement",
+    "title": "Créer un événement",
+    "type": "Type d’événement",
+    "name": {
+      "label": "Nom de l’événement",
+      "placeholder": "Mariage de Léa et Samuel"
+    },
+    "venue": {
+      "label": "Lieu",
+      "placeholder": "Domaine des Oliviers"
+    },
+    "date": "Date",
+    "datePlaceholder": "Choisir",
+    "start": "Début",
+    "end": "Fin",
+    "trips": {
+      "label": "Trajets à organiser",
+      "outbound": {
+        "title": "Aller",
+        "subtitle": "Vers le lieu de l’événement"
+      },
+      "return": {
+        "title": "Retour",
+        "subtitle": "À la fin de l’événement"
+      },
+      "missing": "Choisis au moins un trajet : l’aller, le retour ou les deux."
+    },
+    "submit": "Créer et obtenir le lien",
+    "otherType": "Autre"
+  },
+  "calendar": {
+    "previous": "Mois précédent",
+    "next": "Mois suivant"
   }
 }

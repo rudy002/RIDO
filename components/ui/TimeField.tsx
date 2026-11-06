@@ -12,13 +12,22 @@ type TimeFieldProps = {
   onChange: (time: Date) => void;
   /** Lu par le lecteur d'écran et titre de la liste (« Au plus tôt »). */
   label: string;
+  /** Centré (deux heures côte à côte) ou au début, comme un champ de saisie. */
+  align?: 'center' | 'start';
   style?: StyleProp<ViewStyle>;
 };
 
 const PRESSED_OPACITY = 0.85;
 
 /** Champ d'heure : affiche l'heure choisie, ouvre la liste des créneaux. */
-export function TimeField({ value, slots, onChange, label, style }: TimeFieldProps) {
+export function TimeField({
+  value,
+  slots,
+  onChange,
+  label,
+  align = 'center',
+  style,
+}: TimeFieldProps) {
   const { components, language } = useTheme();
   const [open, setOpen] = useState(false);
   const time = formatTime(value, language);
@@ -31,7 +40,7 @@ export function TimeField({ value, slots, onChange, label, style }: TimeFieldPro
         onPress={() => setOpen(true)}
         style={({ pressed }) => [
           components.input.container,
-          { alignItems: 'center', justifyContent: 'center' },
+          { alignItems: align === 'center' ? 'center' : 'flex-start', justifyContent: 'center' },
           pressed && { opacity: PRESSED_OPACITY },
           style,
         ]}>
