@@ -49,6 +49,7 @@ export function EventCard({ event, highlights, onOpenDashboard, onShare }: Event
               alignItems: 'center',
               gap: spacing.sm,
               padding: spacing.md,
+              borderRadius: radius.lg,
             }}>
             <Icon as={Check} color="successText" />
             <AppText variant="label" color="successText">
