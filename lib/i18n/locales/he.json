@@ -80,5 +80,43 @@
       "empty": "לא נמצאה מדינה",
       "selected": "קידומת: {{country}} {{code}}"
     }
+  },
+  "seats": {
+    "free_one": "{{count}} פנוי",
+    "free_two": "{{count}} פנויים",
+    "free_other": "{{count}} פנויים",
+    "full": "מלא"
+  },
+  "rides": {
+    "eventLabel": "{{type}} של {{title}} · {{date}}",
+    "eventLabel_vowel": "{{type}} של {{title}} · {{date}}",
+    "edit": "עריכה",
+    "editHint": "חזרה לפרטים שלי",
+    "greeting": "שלום {{name}}",
+    "party": "אתם {{count}}",
+    "nearbySeats_one": "מקום פנוי אחד לידך",
+    "nearbySeats_two": "{{count}} מקומות פנויים לידך",
+    "nearbySeats_other": "{{count}} מקומות פנויים לידך",
+    "nearbySeatsNone": "עדיין אין מקום פנוי לידך",
+    "tabs": {
+      "outbound_one": "הלוך · מקום אחד",
+      "outbound_two": "הלוך · {{count}} מקומות",
+      "outbound_other": "הלוך · {{count}} מקומות",
+      "return_one": "חזור · מקום אחד",
+      "return_two": "חזור · {{count}} מקומות",
+      "return_other": "חזור · {{count}} מקומות"
+    },
+    "departure": {
+      "window": "יציאה בין {{from}} ל־{{to}}",
+      "around": "יציאה בסביבות {{time}}",
+      "windowShort": "בין {{from}} ל־{{to}}",
+      "aroundShort": "בסביבות {{time}}",
+      "nearby": "{{city}}, {{distance}} ק״מ ממך"
+    },
+    "empty": "עדיין אין נהגים לנסיעה הזו.",
+    "found": "מצאתי מקום"
+  },
+  "rideDetails": {
+    "comingSoon": "פרטי הנסיעה יגיעו בקרוב."
   }
 }

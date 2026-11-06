@@ -36,3 +36,25 @@ export const rideDraftSchema = z.object({
 });
 
 export type RideDraft = z.infer<typeof rideDraftSchema>;
+
+/** Heure de départ : un créneau (« entre 18h00 et 18h30 ») ou une heure approximative (`to` absent). */
+export type Departure = { from: Date; to?: Date };
+
+/** Un trajet proposé par un conducteur, dans un sens donné. */
+export type RideOffer = {
+  id: string;
+  direction: TripDirection;
+  driver: { firstName: string; lastName: string };
+  /** Zone du conducteur : ville et, si connu, quartier. Jamais d'adresse exacte. */
+  home: { city: string; area?: string };
+  departure: Departure;
+  /** Places passagers de la voiture, et combien restent libres. */
+  seats: { total: number; free: number };
+};
+
+/** Un trajet vu par un passager : distance entre sa zone et celle du conducteur. */
+export type RideMatch = {
+  offer: RideOffer;
+  /** En km ; absent quand le conducteur part de la même ville. */
+  distanceKm?: number;
+};

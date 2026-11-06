@@ -27,8 +27,14 @@ export default function JoinRideRoute() {
           activeZones={event.activeZones}
           defaultCountry={event.country}
           onBack={goBack}
-          // L'étape 2 n'a pas encore de maquette ; aucun serveur pour l'instant.
-          onSubmit={() => {}}
+          // Aucun serveur pour l'instant ; l'écran conducteur n'a pas encore de maquette.
+          onSubmit={(draft) => {
+            if (draft.role !== 'passenger') return;
+            router.push({
+              pathname: '/e/[id]/rides',
+              params: { id, firstName: draft.firstName, zone: draft.zone.name },
+            });
+          }}
         />
       ) : (
         <Screen>

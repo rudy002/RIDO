@@ -11,11 +11,13 @@ type ScreenProps = {
   children: ReactNode;
   /** Zone collée en bas de l'écran (bouton principal, mention). */
   footer?: ReactNode;
+  /** Trait de séparation au-dessus du pied (quand la liste défile dessous). */
+  footerDivider?: boolean;
 };
 
 /** Cadre commun des écrans : fond, zones sûres, marges, pied fixe qui remonte avec le clavier. */
-export function Screen({ children, footer }: ScreenProps) {
-  const { colors, spacing } = useTheme();
+export function Screen({ children, footer, footerDivider = false }: ScreenProps) {
+  const { colors, spacing, sizes } = useTheme();
   const scrollRef = useRef<ScrollView>(null);
   const contentRef = useRef<View>(null);
 
@@ -55,6 +57,10 @@ export function Screen({ children, footer }: ScreenProps) {
               paddingTop: spacing.md,
               paddingBottom: spacing.sm,
               gap: spacing.md,
+              ...(footerDivider && {
+                borderTopWidth: sizes.borderHairline,
+                borderTopColor: colors.divider,
+              }),
             }}>
             {footer}
           </View>

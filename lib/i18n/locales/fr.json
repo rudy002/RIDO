@@ -78,5 +78,39 @@
       "empty": "Aucun pays trouvé",
       "selected": "Indicatif : {{country}} {{code}}"
     }
+  },
+  "seats": {
+    "free_one": "{{count}} libre",
+    "free_other": "{{count}} libres",
+    "full": "Complet"
+  },
+  "rides": {
+    "eventLabel": "{{type}} de {{title}} · {{date}}",
+    "eventLabel_vowel": "{{type}} d’{{title}} · {{date}}",
+    "edit": "Modifier",
+    "editHint": "Revenir à mes informations",
+    "greeting": "Bonjour {{name}}",
+    "party": "vous êtes {{count}}",
+    "nearbySeats_one": "{{count}} place libre près de chez toi",
+    "nearbySeats_other": "{{count}} places libres près de chez toi",
+    "nearbySeatsNone": "Pas encore de place libre près de chez toi",
+    "tabs": {
+      "outbound_one": "Aller · {{count}} place",
+      "outbound_other": "Aller · {{count}} places",
+      "return_one": "Retour · {{count}} place",
+      "return_other": "Retour · {{count}} places"
+    },
+    "departure": {
+      "window": "Part entre {{from}} et {{to}}",
+      "around": "Part vers {{time}}",
+      "windowShort": "entre {{from}} et {{to}}",
+      "aroundShort": "vers {{time}}",
+      "nearby": "{{city}}, à {{distance}} km"
+    },
+    "empty": "Aucun conducteur pour ce trajet pour l’instant.",
+    "found": "J’ai trouvé ma place"
+  },
+  "rideDetails": {
+    "comingSoon": "La fiche trajet arrive bientôt."
   }
 }

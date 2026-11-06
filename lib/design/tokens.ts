@@ -101,6 +101,8 @@ export const sizes = {
   radioGlyph: 16, // coche dans le rond
   borderSelected: 3, // contour d'une carte sélectionnée
   countryField: 124, // largeur du champ indicatif (drapeau + « +972 » + chevron)
+  seatWidth: 38, // icône de siège (viewBox 0 0 38 40)
+  seatHeight: 40,
   tabBar: 84,
   borderStrong: 2, // champs, boutons contour
   borderHairline: 1.5, // séparateurs
@@ -140,6 +142,18 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     text: { ...typography.label, color: c.text },
+  },
+  // Action secondaire pleine largeur en pied d'écran (« J'ai trouvé ma place »).
+  buttonOutlineStrong: {
+    container: {
+      height: sizes.buttonPrimary,
+      borderRadius: radius.lg,
+      borderWidth: sizes.borderStrong,
+      borderColor: c.inverse,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    text: { ...typography.button, color: c.text },
   },
   input: {
     container: {
@@ -235,7 +249,9 @@ export const components = (c: Colors) => ({
   seat: {
     free: { fill: c.seatFree, stroke: c.seatFreeStroke, strokeWidth: 2.5 },
     taken: { fill: c.seatTaken, stroke: c.seatTaken, strokeWidth: 2.5 },
-    // SVG (react-native-svg), viewBox 0 0 38 40 : dossier <Rect x=7 y=2 w=24 h=24 rx=8/> + assise <Rect x=2 y=24 w=34 h=13 rx=6/>
+    // SVG (react-native-svg), viewBox 0 0 38 40 : dossier + assise
+    back: { x: 7, y: 2, width: 24, height: 24, rx: 8 },
+    base: { x: 2, y: 24, width: 34, height: 13, rx: 6 },
   },
   tabBar: {
     container: {

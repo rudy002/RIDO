@@ -46,3 +46,8 @@ export function formatDay(date: Date, language: Language): string {
 export function formatSchedule(start: Date, end: Date, language: Language): string {
   return `${formatDay(start, language)} · ${formatTime(start, language)} – ${formatTime(end, language)}`;
 }
+
+/** Date courte, sans le jour de la semaine : « 14 juin », « June 14 ». */
+export function formatShortDate(date: Date, language: Language): string {
+  return new Intl.DateTimeFormat(LOCALES[language], { day: 'numeric', month: 'long' }).format(date);
+}

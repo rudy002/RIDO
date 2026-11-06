@@ -78,5 +78,39 @@
       "empty": "No country found",
       "selected": "Country code: {{country}} {{code}}"
     }
+  },
+  "seats": {
+    "free_one": "{{count}} free",
+    "free_other": "{{count}} free",
+    "full": "Full"
+  },
+  "rides": {
+    "eventLabel": "{{title}}’s {{type}} · {{date}}",
+    "eventLabel_vowel": "{{title}}’s {{type}} · {{date}}",
+    "edit": "Edit",
+    "editHint": "Go back to my details",
+    "greeting": "Hi {{name}}",
+    "party": "party of {{count}}",
+    "nearbySeats_one": "{{count}} free seat near you",
+    "nearbySeats_other": "{{count}} free seats near you",
+    "nearbySeatsNone": "No free seats near you yet",
+    "tabs": {
+      "outbound_one": "Outbound · {{count}} seat",
+      "outbound_other": "Outbound · {{count}} seats",
+      "return_one": "Return · {{count}} seat",
+      "return_other": "Return · {{count}} seats"
+    },
+    "departure": {
+      "window": "Leaves between {{from}} and {{to}}",
+      "around": "Leaves around {{time}}",
+      "windowShort": "between {{from}} and {{to}}",
+      "aroundShort": "around {{time}}",
+      "nearby": "{{city}}, {{distance}} km away"
+    },
+    "empty": "No drivers for this trip yet.",
+    "found": "I found a seat"
+  },
+  "rideDetails": {
+    "comingSoon": "Ride details are coming soon."
   }
 }
