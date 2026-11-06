@@ -112,5 +112,11 @@
   },
   "rideDetails": {
     "comingSoon": "La fiche trajet arrive bientôt."
+  },
+  "dev": {
+    "language": {
+      "label": "Langue (développement)",
+      "system": "Tél."
+    }
   }
 }

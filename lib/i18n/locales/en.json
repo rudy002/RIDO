@@ -112,5 +112,11 @@
   },
   "rideDetails": {
     "comingSoon": "Ride details are coming soon."
+  },
+  "dev": {
+    "language": {
+      "label": "Language (development)",
+      "system": "Phone"
+    }
   }
 }

@@ -118,5 +118,11 @@
   },
   "rideDetails": {
     "comingSoon": "פרטי הנסיעה יגיעו בקרוב."
+  },
+  "dev": {
+    "language": {
+      "label": "שפה (פיתוח)",
+      "system": "טלפון"
+    }
   }
 }

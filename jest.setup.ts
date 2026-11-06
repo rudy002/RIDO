@@ -8,3 +8,8 @@ jest.mock(
 jest.mock('react-native-keyboard-controller', () =>
   jest.requireActual('react-native-keyboard-controller/jest')
 );
+
+// Simulation officielle du stockage local (module natif).
+jest.mock('@react-native-async-storage/async-storage', () =>
+  jest.requireActual('@react-native-async-storage/async-storage/jest/async-storage-mock')
+);
