@@ -74,3 +74,14 @@ export function formatMonth(date: Date, language: Language): string {
 export function formatWeekday(date: Date, language: Language): string {
   return new Intl.DateTimeFormat(LOCALES[language], { weekday: 'short' }).format(date);
 }
+
+/** Jour abrégé et date en toutes lettres : « Sam. 14 juin ». */
+export function formatShortWeekdayDate(date: Date, language: Language): string {
+  const locale = LOCALES[language];
+  const text = new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+  }).format(date);
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}

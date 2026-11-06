@@ -33,7 +33,9 @@
       "both": "Aller et retour",
       "outbound": "Aller seulement",
       "return": "Retour seulement"
-    }
+    },
+    "seatsOffered_zero": "place proposée",
+    "guests_zero": "invité inscrit"
   },
   "invitation": {
     "howItWorks": "Comment ça marche",
@@ -105,7 +107,9 @@
       "outbound_one": "Aller · {{count}} place",
       "outbound_other": "Aller · {{count}} places",
       "return_one": "Retour · {{count}} place",
-      "return_other": "Retour · {{count}} places"
+      "return_other": "Retour · {{count}} places",
+      "outbound_zero": "Aller · 0 place",
+      "return_zero": "Retour · 0 place"
     },
     "departure": {
       "window": "Part entre {{from}} et {{to}}",
@@ -240,5 +244,41 @@
     "message": "{{name}} : on organise le covoiturage ici. Qui a de la place, qui cherche un trajet ? {{link}}",
     "whatsapp": "Envoyer sur WhatsApp",
     "dashboard": "Voir mon tableau de bord"
+  },
+  "dashboard": {
+    "myEvents_one": "Mon événement",
+    "myEvents_other": "Mes événements · {{count}}",
+    "share": "Partager le lien",
+    "registered_one": "{{count}} inscrit",
+    "registered_other": "{{count}} inscrits",
+    "stats": {
+      "drivers_one": "conducteur",
+      "drivers_other": "conducteurs",
+      "freeSeats_one": "place libre",
+      "freeSeats_other": "places libres",
+      "unmatched_one": "sans solution",
+      "unmatched_other": "sans solution",
+      "drivers_zero": "conducteur",
+      "freeSeats_zero": "place libre",
+      "unmatched_zero": "sans solution"
+    },
+    "unmatched": {
+      "outbound": "Sans solution pour l’aller",
+      "return": "Sans solution pour le retour",
+      "none": "Tout le monde a une solution."
+    },
+    "relaunch": "Relancer",
+    "relaunchMessage": "Bonjour {{name}}, tu cherches toujours un trajet pour « {{event}} » ? Des places se libèrent sur Rido : {{link}}",
+    "zones": "Par zone de départ",
+    "zone": {
+      "seats_one": "{{count}} place",
+      "seats_other": "{{count}} places",
+      "requests_one": "{{count}} demande",
+      "requests_other": "{{count}} demandes",
+      "seats_zero": "0 place",
+      "requests_zero": "0 demande"
+    },
+    "join": "Moi aussi, je viens : conducteur ou passager",
+    "registered_zero": "0 inscrit"
   }
 }

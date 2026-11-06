@@ -29,8 +29,9 @@ export default function EventShareRoute() {
           onShare={(message) =>
             void Linking.openURL(whatsappShareUrl(message)).catch(() => undefined)
           }
-          // Le tableau de bord organisateur (O3) n'a pas encore de maquette.
-          onOpenDashboard={() => {}}
+          onOpenDashboard={() =>
+            router.replace({ pathname: '/events/[id]', params: { id: event.id } })
+          }
         />
       ) : (
         <Screen>

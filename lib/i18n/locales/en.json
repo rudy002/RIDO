@@ -240,5 +240,35 @@
     "message": "{{name}}: we’re organizing carpools here. Who has a seat, who needs a ride? {{link}}",
     "whatsapp": "Send on WhatsApp",
     "dashboard": "See my dashboard"
+  },
+  "dashboard": {
+    "myEvents_one": "My event",
+    "myEvents_other": "My events · {{count}}",
+    "share": "Share the link",
+    "registered_one": "{{count}} signed up",
+    "registered_other": "{{count}} signed up",
+    "stats": {
+      "drivers_one": "driver",
+      "drivers_other": "drivers",
+      "freeSeats_one": "free seat",
+      "freeSeats_other": "free seats",
+      "unmatched_one": "without a ride",
+      "unmatched_other": "without a ride"
+    },
+    "unmatched": {
+      "outbound": "No ride yet for the way there",
+      "return": "No ride yet for the way back",
+      "none": "Everyone has a ride."
+    },
+    "relaunch": "Follow up",
+    "relaunchMessage": "Hi {{name}}, still looking for a ride to “{{event}}”? Seats are opening up on Rido: {{link}}",
+    "zones": "By departure area",
+    "zone": {
+      "seats_one": "{{count}} seat",
+      "seats_other": "{{count}} seats",
+      "requests_one": "{{count}} request",
+      "requests_other": "{{count}} requests"
+    },
+    "join": "I’m coming too: driver or passenger"
   }
 }

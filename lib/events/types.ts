@@ -38,3 +38,24 @@ export type EventDraft = {
   /** Trajets à organiser : l'aller, le retour ou les deux. */
   directions: TripDirection[];
 };
+
+/** Invité qui n'a encore trouvé aucun trajet. */
+export type UnmatchedGuest = {
+  id: string;
+  name: string;
+  city: string;
+  partySize: number;
+  /** E.164, pour le relancer directement. */
+  phone: string;
+};
+
+/** Places proposées et demandes, pour une zone de départ. */
+export type ZoneDemand = { zone: string; seats: number; requests: number };
+
+/** Vue de l'organisateur sur un sens de trajet (O3). */
+export type DirectionOverview = {
+  drivers: number;
+  freeSeats: number;
+  unmatched: UnmatchedGuest[];
+  zones: ZoneDemand[];
+};

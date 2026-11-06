@@ -2,7 +2,8 @@ import type { CountryCode } from '@/lib/phone/phone';
 import { addMinutes } from '@/lib/rides/time-slots';
 
 import { eventSlug, uniqueSlug } from './slug';
-import type { EventDraft, EventSummary } from './types';
+import type { DirectionOverview, EventDraft, EventSummary } from './types';
+import type { TripDirection } from '@/lib/rides/types';
 
 // Données d'exemple (maquettes I1 et I2), en attendant le backend.
 export const DEMO_EVENT: EventSummary = {
@@ -59,4 +60,49 @@ export function createMockEvent(draft: EventDraft, country: CountryCode): EventS
   };
   MOCK_EVENTS[id] = event;
   return event;
+}
+
+// Données d'exemple du tableau de bord organisateur (maquette O3).
+export const DEMO_OVERVIEW: Record<TripDirection, DirectionOverview> = {
+  outbound: {
+    drivers: 6,
+    freeSeats: 14,
+    unmatched: [
+      { id: 'paul', name: 'Paul Amsellem', city: 'Ashkelon', partySize: 1, phone: '+972528901234' },
+      {
+        id: 'sarah-d',
+        name: 'Sarah Dahan',
+        city: 'Ashkelon',
+        partySize: 2,
+        phone: '+972549012345',
+      },
+      {
+        id: 'michael',
+        name: 'Michaël Ohana',
+        city: 'Kiryat Gat',
+        partySize: 1,
+        phone: '+972500123456',
+      },
+    ],
+    zones: [
+      { zone: 'Ashdod', seats: 6, requests: 3 },
+      { zone: 'Tel-Aviv', seats: 8, requests: 5 },
+      { zone: 'Ashkelon', seats: 0, requests: 3 },
+    ],
+  },
+  return: {
+    drivers: 5,
+    freeSeats: 11,
+    unmatched: [],
+    zones: [
+      { zone: 'Ashdod', seats: 5, requests: 2 },
+      { zone: 'Tel-Aviv', seats: 6, requests: 4 },
+      { zone: 'Ashkelon', seats: 2, requests: 2 },
+    ],
+  },
+};
+
+/** Événements créés sur cet appareil (démo comprise). */
+export function countMockEvents(): number {
+  return Object.keys(MOCK_EVENTS).length;
 }

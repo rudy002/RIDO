@@ -249,5 +249,42 @@
     "message": "{{name}}: מארגנים כאן את הנסיעות המשותפות. למי יש מקום ומי מחפש נסיעה? {{link}}",
     "whatsapp": "שליחה בוואטסאפ",
     "dashboard": "ללוח הבקרה שלי"
+  },
+  "dashboard": {
+    "myEvents_one": "האירוע שלי",
+    "myEvents_two": "האירועים שלי · {{count}}",
+    "myEvents_other": "האירועים שלי · {{count}}",
+    "share": "שיתוף הקישור",
+    "registered_one": "נרשם אחד",
+    "registered_two": "{{count}} נרשמו",
+    "registered_other": "{{count}} נרשמו",
+    "stats": {
+      "drivers_one": "נהג",
+      "drivers_two": "נהגים",
+      "drivers_other": "נהגים",
+      "freeSeats_one": "מקום פנוי",
+      "freeSeats_two": "מקומות פנויים",
+      "freeSeats_other": "מקומות פנויים",
+      "unmatched_one": "בלי נסיעה",
+      "unmatched_two": "בלי נסיעה",
+      "unmatched_other": "בלי נסיעה"
+    },
+    "unmatched": {
+      "outbound": "עדיין בלי נסיעה הלוך",
+      "return": "עדיין בלי נסיעה חזור",
+      "none": "לכולם יש נסיעה."
+    },
+    "relaunch": "תזכורת",
+    "relaunchMessage": "היי {{name}}, עדיין מחפשים נסיעה ל״{{event}}״? מתפנים מקומות ב־Rido: {{link}}",
+    "zones": "לפי אזור יציאה",
+    "zone": {
+      "seats_one": "מקום אחד",
+      "seats_two": "{{count}} מקומות",
+      "seats_other": "{{count}} מקומות",
+      "requests_one": "בקשה אחת",
+      "requests_two": "{{count}} בקשות",
+      "requests_other": "{{count}} בקשות"
+    },
+    "join": "גם אני מגיע/ה: נהג או נוסע"
   }
 }

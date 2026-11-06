@@ -3,7 +3,7 @@ import { View, type StyleProp, type ViewProps, type ViewStyle } from 'react-nati
 
 import { useTheme } from '@/lib/design/use-theme';
 
-export type CardTone = 'surface' | 'muted' | 'inverse' | 'success';
+export type CardTone = 'surface' | 'muted' | 'inverse' | 'success' | 'danger';
 
 type CardProps = Pick<ViewProps, 'accessible' | 'accessibilityLabel' | 'testID'> & {
   children: ReactNode;
@@ -19,6 +19,7 @@ export function Card({ children, tone = 'surface', style, ...props }: CardProps)
     muted: colors.surfaceMuted,
     inverse: colors.inverse,
     success: colors.seatFree,
+    danger: colors.dangerSoft,
   }[tone];
 
   return (

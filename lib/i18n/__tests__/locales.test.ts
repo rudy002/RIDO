@@ -1,3 +1,5 @@
+import i18n from '@/lib/i18n';
+
 import en from '../locales/en.json';
 import fr from '../locales/fr.json';
 import he from '../locales/he.json';
@@ -52,5 +54,13 @@ describe('traductions', () => {
     ['en', en],
   ])('%s ne contient aucun texte vide', (_name, locale) => {
     expect(valuesOf(locale).every((value) => value.trim().length > 0)).toBe(true);
+  });
+});
+
+describe('pluriel du zéro en français', () => {
+  it('reste au singulier, quel que soit le moteur JavaScript', async () => {
+    await i18n.changeLanguage('fr');
+    expect(i18n.t('dashboard.zone.seats', { count: 0 })).toBe('0 place');
+    expect(i18n.t('dashboard.zone.seats', { count: 2 })).toBe('2 places');
   });
 });

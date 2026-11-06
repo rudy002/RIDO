@@ -72,7 +72,9 @@ export const typography = {
   bodyStrong: { fontFamily: fonts.extrabold, fontSize: 18, lineHeight: 24 },
   body: { fontFamily: fonts.semibold, fontSize: 16, lineHeight: 22 },
   label: { fontFamily: fonts.extrabold, fontSize: 15, lineHeight: 20 },
+  caption: { fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }, // libellés des tuiles compactes
   button: { fontFamily: fonts.black, fontSize: 18, lineHeight: 22 },
+  stat: { fontFamily: fonts.black, fontSize: 30, lineHeight: 34 }, // tuiles de chiffres compactes (maquette O3)
   counter: { fontFamily: fonts.black, fontSize: 56, lineHeight: 64 }, // compteur de places (maquette C2)
   overline: {
     fontFamily: fonts.black,
@@ -96,6 +98,7 @@ export const sizes = {
   avatar: 48,
   stepperButton: 60, // boutons − / + du compteur de places
   avatarLarge: 76,
+  progressBar: 10, // barre de remplissage par zone (maquette O3)
   iconCircle: 72, // rond de réussite (maquette O2)
   iconCircleGlyph: 32, // en-tête d'une fiche (maquette T)
   stepBadge: 36, // rond numéroté (« Comment ça marche »)
@@ -159,6 +162,18 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     text: { ...typography.label, color: c.onPrimary },
+  },
+  // Action secondaire dans une ligne (« Relancer »).
+  buttonOutlineSmall: {
+    container: {
+      height: sizes.touchMin,
+      borderRadius: radius.sm,
+      borderWidth: sizes.borderStrong,
+      borderColor: c.inverse,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    text: { ...typography.label, color: c.text },
   },
   // Deuxième action principale, à hauteur du bouton principal (« Écrire sur WhatsApp »).
   buttonInverseLarge: {

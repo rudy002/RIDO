@@ -4,7 +4,13 @@ import { Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
 import { useTheme } from '@/lib/design/use-theme';
 
 export type ButtonVariant =
-  'primary' | 'primarySmall' | 'inverse' | 'inverseLarge' | 'outline' | 'outlineStrong';
+  | 'primary'
+  | 'primarySmall'
+  | 'inverse'
+  | 'inverseLarge'
+  | 'outline'
+  | 'outlineStrong'
+  | 'outlineSmall';
 
 type ButtonProps = {
   label: string;
@@ -28,6 +34,7 @@ const VARIANT_STYLE = {
   inverseLarge: 'buttonInverseLarge',
   outline: 'buttonOutline',
   outlineStrong: 'buttonOutlineStrong',
+  outlineSmall: 'buttonOutlineSmall',
 } as const;
 
 export function Button({
@@ -60,7 +67,7 @@ export function Button({
         style,
       ]}>
       {icon}
-      <Text style={text}>{label}</Text>
+      <Text style={[text, { textAlign: 'center' }]}>{label}</Text>
     </Pressable>
   );
 }
