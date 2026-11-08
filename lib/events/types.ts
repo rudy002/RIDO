@@ -41,7 +41,10 @@ export type EventDraft = {
 
 /** Invité qui n'a encore trouvé aucun trajet. */
 export type UnmatchedGuest = {
+  /** La recherche concernée (un sens). */
   id: string;
+  /** La personne : la même peut être sans solution à l'aller et au retour. */
+  participantId: string;
   name: string;
   city: string;
   partySize: number;

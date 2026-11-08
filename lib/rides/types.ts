@@ -24,6 +24,9 @@ export const zoneSchema = z.object({
 
 export type Zone = z.infer<typeof zoneSchema>;
 
+export const MIN_FREE_SEATS = 1;
+export const MAX_FREE_SEATS = 8;
+
 /** Ce qu'un participant déclare pour rejoindre un covoiturage. */
 export const rideDraftSchema = z.object({
   role: z.enum(RIDE_ROLES),
@@ -33,6 +36,8 @@ export const rideDraftSchema = z.object({
   firstName: z.string().trim().min(1),
   /** Format international E.164 (« +972521234567 »), utilisable pour l'appel et WhatsApp. */
   phone: z.string().regex(/^\+\d{6,15}$/),
+  /** Personnes à emmener, soi compris (passager) ; 1 pour un conducteur. */
+  partySize: z.number().int().min(1).max(MAX_FREE_SEATS),
 });
 
 export type RideDraft = z.infer<typeof rideDraftSchema>;
@@ -58,15 +63,13 @@ export type RideOffer = {
   seats: { total: number; free: number };
 };
 
-/** Un trajet vu par un passager : distance entre sa zone et celle du conducteur. */
+/** Un trajet vu par un passager : le conducteur part-il de sa ville, sinon à quelle distance. */
 export type RideMatch = {
   offer: RideOffer;
-  /** En km ; absent quand le conducteur part de la même ville. */
+  sameCity: boolean;
+  /** En km, pour une autre ville ; absent si l'un des lieux est une saisie libre. */
   distanceKm?: number;
 };
-
-export const MIN_FREE_SEATS = 1;
-export const MAX_FREE_SEATS = 8;
 
 /** Ce qu'un conducteur publie : places libres et créneau de départ pour chaque sens choisi. */
 export type CarDraft = {
@@ -75,7 +78,13 @@ export type CarDraft = {
 };
 
 /** Places réservées dans une voiture : par un passager (nommé) ou notées à la main par le conducteur. */
-export type Booking = { id: string; name?: string; seats: number };
+export type Booking = {
+  id: string;
+  name?: string;
+  seats: number;
+  /** Recherche du passager qui a trouvé sa place ici (absent : place notée à la main). */
+  passengerLegId?: string;
+};
 
 /** Un trajet vu par son conducteur : la voiture et qui y a une place. */
 export type DriverLeg = {

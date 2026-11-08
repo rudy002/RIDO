@@ -1,6 +1,7 @@
 import {
   countryOf,
   listCountries,
+  phoneInputFromE164 as fromE164,
   sanitizePhoneInput,
   searchCountries,
   toInternational,
@@ -42,5 +43,12 @@ describe('téléphone', () => {
     expect(toInternational({ country: 'IL', national: '0521234567' })).toBe('+972521234567');
     expect(toInternational({ country: 'FR', national: '0612345678' })).toBe('+33612345678');
     expect(toInternational({ country: 'IL', national: '05212' })).toBeNull();
+  });
+
+  it('remet un numéro enregistré dans le champ, et le reconvertit à l’identique', () => {
+    const input = fromE164('+972521234567', 'FR');
+    expect(input).toEqual({ country: 'IL', national: '0521234567' });
+    expect(toInternational(input)).toBe('+972521234567');
+    expect(fromE164('pas un numéro', 'FR')).toEqual({ country: 'FR', national: '' });
   });
 });

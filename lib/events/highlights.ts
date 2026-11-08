@@ -19,10 +19,16 @@ export function eventHighlights(
   const legs = TRIP_DIRECTIONS.filter((direction) => event.directions.includes(direction))
     .map((direction) => overview[direction])
     .filter((leg): leg is DirectionOverview => leg !== undefined);
-  const unmatched = legs.reduce((sum, leg) => sum + leg.unmatched.length, 0);
+  // Des personnes, pas des trajets : sans solution à l'aller et au retour, on ne compte qu'une fois.
+  const unmatched = new Set(
+    legs.flatMap((leg) => leg.unmatched.map((guest) => guest.participantId))
+  ).size;
   return {
     status: event.guestsCount > 0 && unmatched === 0 ? 'allSet' : 'needs',
     freeSeats: legs[0]?.freeSeats ?? 0,
     unmatched,
   };
 }
+
+/** Un événement qu'on organise, avec ce que sa carte résume (A2). */
+export type OrganizedEvent = { event: EventSummary; highlights: EventHighlights };

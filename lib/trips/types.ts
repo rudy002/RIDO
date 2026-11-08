@@ -7,14 +7,16 @@ import type { Departure, DriverLeg, TripDirection } from '@/lib/rides/types';
  */
 export type TripContext = { kind: EventType; title: string; startsAt: Date };
 
-/** Côté passager : avec qui il part, ou rien tant qu'il cherche encore. */
+/** Côté passager : place trouvée (avec un conducteur de Rido ou autrement) ou encore en recherche. */
 export type PassengerLeg = {
+  found: boolean;
   departure?: Departure;
   driver?: { firstName: string; lastName: string };
 };
 
 export type Trip =
   | {
+      /** Identifiant de l'événement : un trajet par événement et par personne. */
       id: string;
       context: TripContext;
       role: 'driver';

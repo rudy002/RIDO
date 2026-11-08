@@ -129,3 +129,11 @@ export function deviceCountry(): CountryCode {
 export function formatPhoneNational(e164: string): string {
   return parsePhoneNumberFromString(e164)?.formatNational() ?? e164;
 }
+
+/** Numéro enregistré (E.164) remis dans le champ : pays et chiffres nationaux. */
+export function phoneInputFromE164(e164: string, fallback: CountryCode): PhoneInput {
+  const parsed = parsePhoneNumberFromString(e164);
+  if (!parsed?.country) return { country: fallback, national: '' };
+  // Les chiffres tels qu'on les tape dans le pays (« 0521234567 », avec le 0 initial).
+  return { country: parsed.country, national: parsed.formatNational().replace(/\D/g, '') };
+}
