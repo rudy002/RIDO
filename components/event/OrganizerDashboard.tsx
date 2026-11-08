@@ -127,27 +127,28 @@ export function OrganizerDashboard({
             <InfoNote icon={Share2} text={t('dashboard.noGuests')} />
           ) : (
             <>
-              <View style={{ gap: spacing.md }}>
-                <AppText variant="heading" accessibilityRole="header">
-                  {t(`dashboard.unmatched.${direction}`)}
-                </AppText>
-                {current.unmatched.length > 0 ? (
-                  current.unmatched.map((guest) => (
+              {current.unmatched.length > 0 ? (
+                <View style={{ gap: spacing.md }}>
+                  <AppText variant="heading" accessibilityRole="header">
+                    {`${t(`dashboard.unmatched.${direction}`)} · ${current.unmatched.length}`}
+                  </AppText>
+                  {current.unmatched.map((guest) => (
                     <UnmatchedRow
                       key={guest.id}
                       name={guest.name}
                       info={`${guest.city} · ${t('myCar.people', { count: guest.partySize })}`}
                       onRelaunch={() => onRelaunch(guest)}
                     />
-                  ))
-                ) : (
-                  <Card tone="success">
-                    <AppText variant="bodyStrong" color="successText">
-                      {t('dashboard.unmatched.none')}
-                    </AppText>
-                  </Card>
-                )}
-              </View>
+                  ))}
+                </View>
+              ) : (
+                // Personne sans solution : pas de titre de liste vide, seulement la bonne nouvelle.
+                <Card tone="success">
+                  <AppText variant="bodyStrong" color="successText">
+                    {t(`dashboard.unmatched.allSet.${direction}`)}
+                  </AppText>
+                </Card>
+              )}
 
               {current.zones.length > 0 ? (
                 <View style={{ gap: spacing.lg }}>

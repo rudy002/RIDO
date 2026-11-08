@@ -40,7 +40,7 @@ describe('OrganizerDashboard', () => {
     expect(screen.getByLabelText('6 conducteurs')).toBeOnTheScreen();
     expect(screen.getByLabelText('12 places libres')).toBeOnTheScreen();
     expect(screen.getByLabelText('3 sans solution')).toBeOnTheScreen();
-    expect(screen.getByText('Sans solution pour l’aller')).toBeOnTheScreen();
+    expect(screen.getByText('Sans solution pour l’aller · 3')).toBeOnTheScreen();
     expect(screen.getByText('Ashkelon · 2 personnes')).toBeOnTheScreen();
   });
 
@@ -56,7 +56,7 @@ describe('OrganizerDashboard', () => {
 
     await fireEvent.press(screen.getByRole('tab', { name: 'Retour' }));
 
-    expect(screen.getByText('Sans solution pour le retour')).toBeOnTheScreen();
+    expect(screen.getByText('Sans solution pour le retour · 1')).toBeOnTheScreen();
     expect(screen.getByText('Michaël Ohana')).toBeOnTheScreen();
     expect(screen.queryByText('Paul Amsellem')).toBeNull();
     expect(screen.getByLabelText('4 conducteurs')).toBeOnTheScreen();
@@ -66,7 +66,8 @@ describe('OrganizerDashboard', () => {
     const outbound = DEMO_OVERVIEW.outbound!;
     await renderDashboard({ outbound: { ...outbound, unmatched: [] } });
 
-    expect(screen.getByText('Tout le monde a une solution.')).toBeOnTheScreen();
+    expect(screen.getByText('Aller : tout le monde a une place.')).toBeOnTheScreen();
+    expect(screen.queryByText(/^Sans solution pour/)).toBeNull();
     expect(screen.getByLabelText('0 sans solution')).toBeOnTheScreen();
   });
 
@@ -105,7 +106,7 @@ describe('OrganizerDashboard', () => {
     );
 
     expect(screen.getByText(/Personne n’est encore inscrit/)).toBeOnTheScreen();
-    expect(screen.queryByText('Tout le monde a une solution.')).toBeNull();
+    expect(screen.queryByText(/tout le monde a une place/)).toBeNull();
     expect(screen.queryByText('Par zone de départ')).toBeNull();
   });
 

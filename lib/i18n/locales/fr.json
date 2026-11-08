@@ -299,7 +299,10 @@
     "unmatched": {
       "outbound": "Sans solution pour l’aller",
       "return": "Sans solution pour le retour",
-      "none": "Tout le monde a une solution."
+      "allSet": {
+        "outbound": "Aller : tout le monde a une place.",
+        "return": "Retour : tout le monde a une place."
+      }
     },
     "relaunch": "Relancer",
     "relaunchMessage": "Bonjour {{name}}, tu cherches toujours un trajet pour « {{event}} » ? Des places se libèrent sur Rido : {{link}}",

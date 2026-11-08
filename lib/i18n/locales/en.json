@@ -292,7 +292,10 @@
     "unmatched": {
       "outbound": "No ride yet for the way there",
       "return": "No ride yet for the way back",
-      "none": "Everyone has a ride."
+      "allSet": {
+        "outbound": "Outbound: everyone has a seat.",
+        "return": "Return: everyone has a seat."
+      }
     },
     "relaunch": "Follow up",
     "relaunchMessage": "Hi {{name}}, still looking for a ride to “{{event}}”? Seats are opening up on Rido: {{link}}",
