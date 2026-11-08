@@ -12,6 +12,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { DevLanguageSwitcher } from '@/components/dev/DevLanguageSwitcher';
 
 import { FONT_ASSETS } from '@/lib/design/fonts';
+import { loadAppData } from '@/lib/data/store';
 import { loadAppearance } from '@/lib/design/appearance';
 import { navigationTheme } from '@/lib/design/navigation-theme';
 import { useTheme } from '@/lib/design/use-theme';
@@ -29,7 +30,7 @@ void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(FONT_ASSETS);
   const { scheme, language, colors, typography } = useTheme();
-  // Langue et apparence choisies dans le profil : appliquées avant d'afficher le premier écran.
+  // Langue, apparence et données enregistrées : chargées avant d'afficher le premier écran.
   const [preferencesReady, setPreferencesReady] = useState(false);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function RootLayout() {
         }
       }),
       loadAppearance(),
+      loadAppData(),
     ]).finally(() => setPreferencesReady(true));
   }, []);
 

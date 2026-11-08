@@ -17,13 +17,22 @@ type ZoneFieldProps = Pick<
   'returnKeyType' | 'onSubmitEditing' | 'submitBehavior'
 > & {
   country: CountryCode;
+  /** Par défaut « D'où pars-tu ? ». */
+  label?: string;
   hint?: string;
   value: ZoneInput;
   onChange: (value: ZoneInput) => void;
 };
 
 /** « D'où pars-tu ? » : villes et quartiers du pays de l'événement, ou saisie libre. */
-export function ZoneField({ country, hint, value, onChange, ...inputProps }: ZoneFieldProps) {
+export function ZoneField({
+  country,
+  label,
+  hint,
+  value,
+  onChange,
+  ...inputProps
+}: ZoneFieldProps) {
   const { t } = useTranslation();
   const { language } = useTheme();
   const searchable = hasPlaces(country);
@@ -47,7 +56,7 @@ export function ZoneField({ country, hint, value, onChange, ...inputProps }: Zon
   return (
     <AutocompleteField
       {...inputProps}
-      label={t('join.zone.label')}
+      label={label ?? t('join.zone.label')}
       placeholder={t('join.zone.placeholder')}
       hint={hint}
       value={value.text}

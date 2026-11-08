@@ -1,22 +1,41 @@
 import i18n from '@/lib/i18n';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { useState } from 'react';
 
-import { DEMO_DRIVER, DEMO_DRIVER_LEGS, DEMO_REQUESTS } from '@/lib/rides/mock';
+import { DAVID_LEGS, DAVID_REQUESTS } from '@/lib/data/__fixtures__/demo';
+import type { Booking, DriverLeg, TripDirection } from '@/lib/rides/types';
 
 import { DriverDashboard } from '../DriverDashboard';
 
-async function renderDashboard() {
-  const handlers = { onEdit: jest.fn(), onContact: jest.fn(), onCancel: jest.fn() };
-  await render(
+const INITIAL: Partial<Record<TripDirection, DriverLeg>> = {
+  outbound: DAVID_LEGS.outbound,
+  return: DAVID_LEGS.return,
+};
+
+/** L'écran ne garde rien lui-même : on rejoue ici ce que fait le stockage. */
+function Harness(handlers: { onContact: jest.Mock; onCancel: jest.Mock; onEdit: jest.Mock }) {
+  const [legs, setLegs] = useState(INITIAL);
+  const change = (direction: TripDirection, bookings: Booking[]) =>
+    setLegs((current) => {
+      const leg = current[direction];
+      return leg ? { ...current, [direction]: { ...leg, bookings } } : current;
+    });
+  return (
     <DriverDashboard
       contextLabel="Mariage de Léa et Samuel · 14 juin"
-      driver={DEMO_DRIVER}
-      legs={DEMO_DRIVER_LEGS}
-      requests={DEMO_REQUESTS}
+      driver={{ firstName: 'David', zone: 'Ashdod' }}
+      legs={legs}
+      requests={DAVID_REQUESTS}
+      onBookingsChange={change}
       {...handlers}
     />
   );
+}
+
+async function renderDashboard() {
+  const handlers = { onEdit: jest.fn(), onContact: jest.fn(), onCancel: jest.fn() };
+  await render(<Harness {...handlers} />);
   return handlers;
 }
 
@@ -30,7 +49,7 @@ describe('DriverDashboard', () => {
 
     expect(screen.getByText('Bonjour David')).toBeOnTheScreen();
     expect(screen.getByRole('tab', { name: 'Aller · 18h00–18h30' })).toBeSelected();
-    expect(screen.getByRole('tab', { name: 'Retour · 00h30' })).toBeOnTheScreen();
+    expect(screen.getByRole('tab', { name: 'Retour · 00h30–01h00' })).toBeOnTheScreen();
     expect(screen.getByText('Départ d’Ashdod')).toBeOnTheScreen();
     expect(screen.getByText('1 place libre')).toBeOnTheScreen();
     expect(screen.getByText('Esther')).toBeOnTheScreen();
@@ -51,21 +70,31 @@ describe('DriverDashboard', () => {
     expect(screen.getByText('2 places libres')).toBeOnTheScreen();
   });
 
-  it('liste les passagers du sens choisi et permet de les contacter', async () => {
-    const { onContact, onCancel } = await renderDashboard();
+  it('liste les passagers proches du sens choisi et permet de les contacter', async () => {
+    const { onContact } = await renderDashboard();
 
     expect(screen.getByText('Ils cherchent depuis Ashdod')).toBeOnTheScreen();
     expect(screen.getByText('Nathan Bensoussan')).toBeOnTheScreen();
-    expect(screen.getByText('1 personne · Centre-ville')).toBeOnTheScreen();
+    expect(screen.getByText('1 personne · Rova HaKirya')).toBeOnTheScreen();
 
-    await fireEvent.press(screen.getByRole('tab', { name: 'Retour · 00h30' }));
+    await fireEvent.press(screen.getByRole('tab', { name: 'Retour · 00h30–01h00' }));
     expect(screen.getByText('Retour vers Ashdod')).toBeOnTheScreen();
     expect(screen.queryByText('Nathan Bensoussan')).toBeNull();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Contacter' }));
-    expect(onContact).toHaveBeenCalledWith(expect.objectContaining({ id: 'req-rachel-back' }));
+    expect(onContact).toHaveBeenCalledWith(expect.objectContaining({ id: 's-rachel-ret' }));
+  });
+
+  it('demande confirmation avant de retirer la voiture', async () => {
+    const { onCancel } = await renderDashboard();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Je ne peux plus conduire' }));
+    expect(onCancel).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Garder mon trajet' }));
+    expect(onCancel).not.toHaveBeenCalled();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Je ne peux plus conduire' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Retirer ma voiture' }));
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
 });

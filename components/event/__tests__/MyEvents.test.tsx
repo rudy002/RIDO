@@ -2,15 +2,11 @@ import i18n from '@/lib/i18n';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { eventHighlights } from '@/lib/events/highlights';
-import { DEMO_EVENT, DEMO_EVENT_ALL_SET, overviewOf } from '@/lib/events/mock';
+import { ORGANIZED } from '@/lib/data/__fixtures__/demo';
 
 import { MyEvents } from '../MyEvents';
 
-const EVENTS = [DEMO_EVENT, DEMO_EVENT_ALL_SET].map((event) => ({
-  event,
-  highlights: eventHighlights(event, overviewOf(event.id)),
-}));
+const EVENTS = ORGANIZED.upcoming;
 
 async function renderEvents(events = EVENTS) {
   const handlers = {
@@ -33,8 +29,8 @@ describe('MyEvents', () => {
 
     expect(screen.getByText('Ceux que tu organises')).toBeOnTheScreen();
     expect(screen.getByText('Mariage · sam. 14 juin')).toBeOnTheScreen();
-    expect(screen.getByText('23 inscrits')).toBeOnTheScreen();
-    expect(screen.getByLabelText('14 places libres')).toBeOnTheScreen();
+    expect(screen.getByText('18 inscrits')).toBeOnTheScreen();
+    expect(screen.getByLabelText('12 places libres')).toBeOnTheScreen();
     expect(screen.getByLabelText('3 sans solution')).toBeOnTheScreen();
   });
 

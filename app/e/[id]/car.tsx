@@ -1,73 +1,72 @@
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
+import { EventNotFound } from '@/components/event/EventNotFound';
 import { CarForm } from '@/components/rides/CarForm';
-import { AppText } from '@/components/ui/AppText';
-import { Screen } from '@/components/ui/Screen';
-import { useTheme } from '@/lib/design/use-theme';
-import { findMockEvent } from '@/lib/events/mock';
+import { publishCar } from '@/lib/data/actions';
+import { useEventContext } from '@/lib/data/hooks';
+import { directionsOf, driverLegsOf } from '@/lib/data/selectors';
+import { updateAppData } from '@/lib/data/store';
 import { formatTime } from '@/lib/i18n/format';
-import { serializeCarDraft } from '@/lib/rides/car-draft';
 import { addMinutes } from '@/lib/rides/time-slots';
-import { TRIP_DIRECTIONS, type TripDirection } from '@/lib/rides/types';
+import type { Departure, TimeWindow } from '@/lib/rides/types';
 
-const isDirection = (value: string): value is TripDirection =>
-  TRIP_DIRECTIONS.some((direction) => direction === value);
+/** Créneau d'une demi-heure par défaut. */
+const WINDOW_MINUTES = 30;
+const windowOf = ({ from, to }: Departure): TimeWindow => ({
+  from,
+  to: to ?? addMinutes(from, WINDOW_MINUTES),
+});
 
-/** C2 : étape 2 du conducteur, sa voiture et ses horaires. */
+/** C2 — étape 2 du conducteur : sa voiture et ses horaires (aussi pour les modifier). */
 export default function CarRoute() {
-  const { id, directions, firstName, zone } = useLocalSearchParams<{
-    id: string;
-    directions?: string;
-    firstName?: string;
-    zone?: string;
-  }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { language } = useTheme();
-  const event = findMockEvent(id);
+  const { data, event, summary, me, language } = useEventContext(id);
 
-  // Sens choisis à l'étape 1 (« outbound,return ») ; les deux si l'écran est ouvert directement.
-  const chosen = (directions ?? '').split(',').filter(isDirection);
+  if (!event || !summary) {
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <EventNotFound />
+      </>
+    );
+  }
+  if (!me || me.role !== 'driver') {
+    return <Redirect href={{ pathname: '/e/[id]/join', params: { id: event.id } }} />;
+  }
 
+  const published = driverLegsOf(data, me);
+  const anyLeg = published.outbound ?? published.return;
   const goBack = () =>
     router.canGoBack()
       ? router.back()
-      : router.replace({ pathname: '/e/[id]/join', params: { id } });
+      : router.replace({ pathname: '/e/[id]/join', params: { id: event.id } });
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      {event ? (
-        <CarForm
-          directions={chosen.length > 0 ? chosen : [...TRIP_DIRECTIONS]}
-          defaults={{
-            // Une demi-heure de marge par défaut, à partir du créneau conseillé par l'organisateur.
-            outbound: {
-              from: event.outboundWindow.from,
-              to: addMinutes(event.outboundWindow.from, 30),
-            },
-            return: { from: addMinutes(event.returnAround, -30), to: event.returnAround },
-          }}
-          outboundHint={t('car.outbound.hint', { time: formatTime(event.startsAt, language) })}
-          onBack={goBack}
-          // Aucun serveur pour l'instant : le trajet publié passe à l'écran suivant par la navigation.
-          onSubmit={(draft) =>
-            router.push({
-              pathname: '/e/[id]/my-car',
-              params: {
-                id,
-                ride: serializeCarDraft(draft),
-                ...(firstName && zone ? { firstName, zone } : {}),
-              },
-            })
-          }
-        />
-      ) : (
-        <Screen>
-          <AppText>{t('event.notFound')}</AppText>
-        </Screen>
-      )}
+      <CarForm
+        directions={directionsOf(event, me)}
+        defaults={{
+          // Ce qui est déjà publié, sinon une demi-heure à partir du créneau conseillé.
+          outbound: published.outbound
+            ? windowOf(published.outbound.departure)
+            : windowOf({ from: summary.outboundWindow.from }),
+          return: published.return
+            ? windowOf(published.return.departure)
+            : { from: addMinutes(summary.returnAround, -WINDOW_MINUTES), to: summary.returnAround },
+        }}
+        initialSeats={anyLeg?.totalSeats ?? data.profile?.car.seats}
+        outboundHint={t('car.outbound.hint', { time: formatTime(event.startsAt, language) })}
+        onBack={goBack}
+        onSubmit={(draft) => {
+          updateAppData((current) => publishCar(current, event.id, draft));
+          // Revient à la voiture si on venait de « Modifier », sinon l'ouvre.
+          router.dismissTo({ pathname: '/e/[id]/my-car', params: { id: event.id } });
+        }}
+      />
     </>
   );
 }

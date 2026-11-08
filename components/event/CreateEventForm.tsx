@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
@@ -46,6 +46,7 @@ export function CreateEventForm({ onClose, onCreate, today = new Date() }: Creat
     return { from, to: addMinutes(from, DEFAULT_DURATION_MINUTES) };
   });
   const [directions, setDirections] = useState<TripDirection[]>([...TRIP_DIRECTIONS]);
+  const venueRef = useRef<TextInput>(null);
 
   const day = date ?? firstDay;
   const missingTrips = directions.length === 0;
@@ -114,9 +115,12 @@ export function CreateEventForm({ onClose, onCreate, today = new Date() }: Creat
         onChangeText={setName}
         autoCapitalize="sentences"
         returnKeyType="next"
+        submitBehavior="submit"
+        onSubmitEditing={() => venueRef.current?.focus()}
       />
 
       <TextField
+        ref={venueRef}
         label={t('createEvent.venue.label')}
         placeholder={t('createEvent.venue.placeholder')}
         value={venue}

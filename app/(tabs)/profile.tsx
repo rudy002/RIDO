@@ -1,17 +1,22 @@
+import { useRouter } from 'expo-router';
+
 import { Profile } from '@/components/profile/Profile';
+import { signOut, updateProfile } from '@/lib/data/actions';
+import { updateAppData, useAppData } from '@/lib/data/store';
 import { setAppearance, useAppearance } from '@/lib/design/appearance';
 import { changeAppLanguage } from '@/lib/i18n/change-language';
 import { reloadForDirection } from '@/lib/i18n/restart';
-import { DEMO_PROFILE } from '@/lib/profile/mock';
 
 /** A3 : « Profil ». */
 export default function ProfileRoute() {
+  const router = useRouter();
+  const data = useAppData();
   const appearance = useAppearance();
+  const openEditor = () => router.push('/profile/edit');
 
   return (
     <Profile
-      // Pas encore de compte : profil de démo. L'apparence et la langue, elles, sont vraiment retenues.
-      profile={DEMO_PROFILE}
+      profile={data.profile}
       appearance={appearance}
       onAppearanceChange={(value) => void setAppearance(value)}
       onLanguageChange={async (language) => {
@@ -20,12 +25,19 @@ export default function ProfileRoute() {
         if (result.needsRestart && (await reloadForDirection())) return { needsRestart: false };
         return result;
       }}
-      // Les écrans d'édition, l'aide et les comptes n'ont pas encore de maquette.
-      onNotificationsChange={() => {}}
-      onEditProfile={() => {}}
-      onEditCar={() => {}}
+      onNotificationsChange={(notifications) =>
+        updateAppData((current) =>
+          current.profile ? updateProfile(current, { ...current.profile, notifications }) : current
+        )
+      }
+      onEditProfile={openEditor}
+      onEditCar={openEditor}
+      // L'aide (adresse ou numéro de contact) reste à définir.
       onHelp={() => {}}
-      onSignOut={() => {}}
+      onSignOut={() => {
+        updateAppData(signOut);
+        router.replace('/');
+      }}
     />
   );
 }

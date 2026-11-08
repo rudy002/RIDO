@@ -8,12 +8,9 @@ import { Icon } from '@/components/ui/Icon';
 import { LinkRow } from '@/components/ui/LinkRow';
 import { Screen } from '@/components/ui/Screen';
 import { useTheme } from '@/lib/design/use-theme';
-import type { EventHighlights } from '@/lib/events/highlights';
-import type { EventSummary } from '@/lib/events/types';
+import type { OrganizedEvent } from '@/lib/events/highlights';
 
 import { EventCard } from './EventCard';
-
-export type OrganizedEvent = { event: EventSummary; highlights: EventHighlights };
 
 type MyEventsProps = {
   events: OrganizedEvent[];

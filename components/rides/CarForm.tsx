@@ -24,8 +24,10 @@ import {
 type CarFormProps = {
   /** Sens choisis à l'étape 1 : seuls ceux-là sont demandés. */
   directions: TripDirection[];
-  /** Créneaux proposés au départ, un par sens. */
+  /** Créneaux proposés au départ, un par sens (ceux déjà publiés quand on modifie sa voiture). */
   defaults: Record<TripDirection, TimeWindow>;
+  /** Places déjà publiées, ou celles du profil. */
+  initialSeats?: number;
   /** Aide sous l'aller (« L'événement commence à 19h30. »), selon le contexte du trajet. */
   outboundHint?: string;
   onBack: () => void;
@@ -37,10 +39,17 @@ const DEFAULT_SEATS = 3;
 const RANGE_MINUTES = 3 * 60;
 
 /** Écran C2 : places libres et créneaux de départ du conducteur. */
-export function CarForm({ directions, defaults, outboundHint, onBack, onSubmit }: CarFormProps) {
+export function CarForm({
+  directions,
+  defaults,
+  initialSeats = DEFAULT_SEATS,
+  outboundHint,
+  onBack,
+  onSubmit,
+}: CarFormProps) {
   const { t } = useTranslation();
   const { spacing } = useTheme();
-  const [seats, setSeats] = useState(DEFAULT_SEATS);
+  const [seats, setSeats] = useState(initialSeats);
   const [legs, setLegs] = useState(() =>
     Object.fromEntries(directions.map((direction) => [direction, defaults[direction]]))
   );

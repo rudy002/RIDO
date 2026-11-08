@@ -16,7 +16,8 @@ type EventCardProps = {
   event: Pick<EventSummary, 'type' | 'title' | 'startsAt' | 'guestsCount'>;
   highlights: EventHighlights;
   onOpenDashboard: () => void;
-  onShare: () => void;
+  /** Absent pour un événement terminé : plus rien à partager. */
+  onShare?: () => void;
 };
 
 /** Un événement qu'on organise : où en est le covoiturage, et les actions utiles. */
@@ -81,12 +82,14 @@ export function EventCard({ event, highlights, onOpenDashboard, onShare }: Event
               label={t('myEvents.dashboard')}
               onPress={onOpenDashboard}
             />
-            <Button
-              variant="outline"
-              style={{ flex: 1, paddingHorizontal: spacing.md }}
-              label={t('dashboard.share')}
-              onPress={onShare}
-            />
+            {onShare ? (
+              <Button
+                variant="outline"
+                style={{ flex: 1, paddingHorizontal: spacing.md }}
+                label={t('dashboard.share')}
+                onPress={onShare}
+              />
+            ) : null}
           </View>
         </>
       )}

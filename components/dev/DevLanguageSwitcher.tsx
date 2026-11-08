@@ -1,10 +1,11 @@
-import { Languages } from 'lucide-react-native';
+import { Languages, RotateCcw } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DevSettings, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/Icon';
+import { resetDemoData } from '@/lib/data/store';
 import { useTheme } from '@/lib/design/use-theme';
 import { LANGUAGES, type Language } from '@/lib/i18n';
 import { changeAppLanguage } from '@/lib/i18n/change-language';
@@ -15,7 +16,8 @@ type Choice = Language | null;
 const CHOICES: Choice[] = [...LANGUAGES, null];
 
 /**
- * Outil de développement (jamais affiché dans l'appli publiée) : change la langue d'un geste.
+ * Outil de développement (jamais affiché dans l'appli publiée) : change la langue d'un geste,
+ * et remet les données de démonstration (↺).
  * Passer de/vers l'hébreu redémarre l'appli, seul moyen d'appliquer le sens RTL.
  */
 export function DevLanguageSwitcher() {
@@ -67,14 +69,31 @@ export function DevLanguageSwitcher() {
         backgroundColor: colors.inverse,
       }}>
       {open ? (
-        CHOICES.map((choice) =>
-          item(
-            choice ?? 'system',
-            choice ? choice.toUpperCase() : t('dev.language.system'),
-            () => void choose(choice),
-            choice === language
-          )
-        )
+        <>
+          {CHOICES.map((choice) =>
+            item(
+              choice ?? 'system',
+              choice ? choice.toUpperCase() : t('dev.language.system'),
+              () => void choose(choice),
+              choice === language
+            )
+          )}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('dev.resetDemo')}
+            onPress={() => {
+              setOpen(false);
+              resetDemoData();
+            }}
+            style={{
+              width: sizes.touchMin,
+              height: sizes.touchMin,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Icon as={RotateCcw} color="onInverse" />
+          </Pressable>
+        </>
       ) : (
         <Pressable
           accessibilityRole="button"

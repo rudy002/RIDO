@@ -1,42 +1,33 @@
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
 
-import { MyEvents, type OrganizedEvent } from '@/components/event/MyEvents';
+import { MyEvents } from '@/components/event/MyEvents';
 import { useShareEvent } from '@/components/event/use-share-event';
-import { eventHighlights } from '@/lib/events/highlights';
-import {
-  DEMO_PAST_EVENTS_COUNT,
-  findMockEvent,
-  listMockEvents,
-  overviewOf,
-} from '@/lib/events/mock';
-
-const organizedEvents = (): OrganizedEvent[] =>
-  listMockEvents().map((event) => ({
-    event,
-    highlights: eventHighlights(event, overviewOf(event.id)),
-  }));
+import { organizedEvents } from '@/lib/data/selectors';
+import { useAppData } from '@/lib/data/store';
+import { useTheme } from '@/lib/design/use-theme';
 
 /** A2 : « Mes événements ». */
 export default function MyEventsRoute() {
   const router = useRouter();
+  const data = useAppData();
+  const { language } = useTheme();
   const shareEvent = useShareEvent();
-  const [events, setEvents] = useState(organizedEvents);
-
-  // Un événement créé depuis O1 apparaît en revenant sur l'onglet.
-  useFocusEffect(useCallback(() => setEvents(organizedEvents()), []));
+  const { upcoming, past } = useMemo(
+    () => organizedEvents(data, new Date(), language),
+    [data, language]
+  );
 
   return (
     <MyEvents
-      events={events}
-      pastCount={DEMO_PAST_EVENTS_COUNT}
+      events={upcoming}
+      pastCount={past.length}
       onOpenDashboard={(id) => router.push({ pathname: '/events/[id]', params: { id } })}
       onShare={(id) => {
-        const event = findMockEvent(id);
-        if (event) shareEvent(event);
+        const organized = upcoming.find(({ event }) => event.id === id);
+        if (organized) shareEvent(organized.event);
       }}
-      // L'historique des événements n'a pas encore de maquette.
-      onOpenPast={() => {}}
+      onOpenPast={() => router.push('/events/past')}
       onCreate={() => router.push('/events/new')}
     />
   );

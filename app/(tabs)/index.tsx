@@ -1,17 +1,24 @@
+import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
+
 import { MyTrips } from '@/components/rides/MyTrips';
-import { DEMO_PAST_TRIPS_COUNT, DEMO_UPCOMING_TRIPS, DEMO_USER } from '@/lib/trips/mock';
+import { myRidePath } from '@/lib/data/navigation';
+import { tripsOf } from '@/lib/data/selectors';
+import { useAppData } from '@/lib/data/store';
 
 /** A1 : accueil de l'appli, « Mes trajets ». */
 export default function MyTripsRoute() {
+  const router = useRouter();
+  const data = useAppData();
+  const { upcoming, past } = useMemo(() => tripsOf(data, new Date()), [data]);
+
   return (
     <MyTrips
-      // Pas encore de compte ni de stockage : données de démo.
-      firstName={DEMO_USER.firstName}
-      upcoming={DEMO_UPCOMING_TRIPS}
-      pastCount={DEMO_PAST_TRIPS_COUNT}
-      // La fiche d'un trajet de l'utilisateur et l'historique n'ont pas encore de maquette.
-      onOpenTrip={() => {}}
-      onOpenPast={() => {}}
+      firstName={data.profile?.firstName}
+      upcoming={upcoming}
+      pastCount={past.length}
+      onOpenTrip={(eventId) => router.push(myRidePath(data, eventId))}
+      onOpenPast={() => router.push('/trips/past')}
     />
   );
 }

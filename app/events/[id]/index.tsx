@@ -1,13 +1,15 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 
+import { EventNotFound } from '@/components/event/EventNotFound';
 import { OrganizerDashboard } from '@/components/event/OrganizerDashboard';
 import { useShareEvent } from '@/components/event/use-share-event';
-import { AppText } from '@/components/ui/AppText';
-import { Screen } from '@/components/ui/Screen';
 import { whatsappUrl } from '@/lib/contact/contact';
-import { countMockEvents, findMockEvent, overviewOf } from '@/lib/events/mock';
+import { useEventContext } from '@/lib/data/hooks';
+import { myRidePath } from '@/lib/data/navigation';
+import { eventOverview, organizedEvents } from '@/lib/data/selectors';
 import { eventShareUrl } from '@/lib/events/share';
 
 /** O3 : tableau de bord de l'organisateur. */
@@ -15,47 +17,46 @@ export default function OrganizerDashboardRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const event = findMockEvent(id);
   const shareEvent = useShareEvent();
-
-  if (!event) {
-    return (
-      <>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Screen>
-          <AppText>{t('event.notFound')}</AppText>
-        </Screen>
-      </>
-    );
-  }
-
-  const link = eventShareUrl(event.id);
+  const { data, event, summary, me, language } = useEventContext(id);
+  const overview = useMemo(
+    () => (event ? eventOverview(data, event, language) : {}),
+    [data, event, language]
+  );
+  const eventsCount = useMemo(
+    () => organizedEvents(data, new Date(), language).upcoming.length,
+    [data, language]
+  );
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <OrganizerDashboard
-        event={event}
-        // Sans serveur, les chiffres sont ceux de la démo, même pour un événement tout juste créé.
-        overview={overviewOf(event.id)}
-        eventsCount={countMockEvents()}
-        // Le choix d'un autre événement n'a pas encore de maquette.
-        onSwitchEvent={() => {}}
-        onShare={() => shareEvent(event)}
-        onRelaunch={(guest) =>
-          void Linking.openURL(
-            whatsappUrl(
-              guest.phone,
-              t('dashboard.relaunchMessage', {
-                name: guest.name.split(' ')[0],
-                event: event.title,
-                link,
-              })
-            )
-          ).catch(() => undefined)
-        }
-        onJoin={() => router.push({ pathname: '/e/[id]/join', params: { id: event.id } })}
-      />
+      {summary ? (
+        <OrganizerDashboard
+          event={summary}
+          overview={overview}
+          eventsCount={eventsCount}
+          onSwitchEvent={() => router.navigate('/my-events')}
+          onShare={() => shareEvent(summary)}
+          onRelaunch={(guest) =>
+            void Linking.openURL(
+              whatsappUrl(
+                guest.phone,
+                t('dashboard.relaunchMessage', {
+                  name: guest.name.split(' ')[0],
+                  event: summary.title,
+                  link: eventShareUrl(summary.id),
+                })
+              )
+            ).catch(() => undefined)
+          }
+          registeredAs={me?.role}
+          onJoin={() => router.push({ pathname: '/e/[id]/join', params: { id: summary.id } })}
+          onOpenMyRide={() => router.push(myRidePath(data, summary.id))}
+        />
+      ) : (
+        <EventNotFound />
+      )}
     </>
   );
 }

@@ -2,11 +2,11 @@ import i18n from '@/lib/i18n';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { DEMO_PROFILE } from '@/lib/profile/mock';
+import { DEMO } from '@/lib/data/__fixtures__/demo';
 
 import { Profile } from '../Profile';
 
-async function renderProfile(needsRestart = false) {
+async function renderProfile(needsRestart = false, profile = DEMO.profile) {
   const handlers = {
     onAppearanceChange: jest.fn(),
     onLanguageChange: jest.fn(() => Promise.resolve({ needsRestart })),
@@ -16,7 +16,7 @@ async function renderProfile(needsRestart = false) {
     onHelp: jest.fn(),
     onSignOut: jest.fn(),
   };
-  await render(<Profile profile={DEMO_PROFILE} appearance="system" {...handlers} />);
+  await render(<Profile profile={profile} appearance="system" {...handlers} />);
   return handlers;
 }
 
@@ -46,10 +46,10 @@ describe('Profile', () => {
     await fireEvent.press(nearby);
     await fireEvent.press(screen.getByText('Rappel une heure avant le départ'));
 
-    expect(onNotificationsChange).toHaveBeenLastCalledWith({
-      nearbyRequests: false,
-      departureReminder: false,
-    });
+    expect(onNotificationsChange.mock.calls).toEqual([
+      [{ nearbyRequests: false, departureReminder: true }],
+      [{ nearbyRequests: true, departureReminder: false }],
+    ]);
   });
 
   it('choisit l’apparence dans une feuille', async () => {
@@ -79,15 +79,27 @@ describe('Profile', () => {
     const handlers = await renderProfile();
 
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Départ habituel, Ashdod, centre-ville' })
+      screen.getByRole('button', { name: 'Départ habituel, Rova HaKirya, Ashdod' })
     );
     await fireEvent.press(screen.getByRole('button', { name: 'Modifier' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Aide et contact' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Se déconnecter' }));
+    expect(handlers.onSignOut).not.toHaveBeenCalled();
+    // La confirmation : son bouton porte le même nom, c'est le dernier affiché.
+    await fireEvent.press(screen.getAllByRole('button', { name: 'Se déconnecter' }).at(-1)!);
 
     expect(handlers.onEditCar).toHaveBeenCalledWith('usualDeparture');
     expect(handlers.onEditProfile).toHaveBeenCalledTimes(1);
     expect(handlers.onHelp).toHaveBeenCalledTimes(1);
     expect(handlers.onSignOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('propose de créer un profil quand il n’y en a pas', async () => {
+    const handlers = await renderProfile(false, null);
+
+    expect(screen.queryByRole('button', { name: 'Se déconnecter' })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Créer mon profil' }));
+    expect(handlers.onEditProfile).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'Apparence, Automatique' })).toBeOnTheScreen();
   });
 });

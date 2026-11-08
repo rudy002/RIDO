@@ -1,53 +1,70 @@
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { Redirect, Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useMemo } from 'react';
 
+import { EventNotFound } from '@/components/event/EventNotFound';
 import { useEventLabel } from '@/components/event/use-event-label';
 import { DriverList } from '@/components/rides/DriverList';
-import { AppText } from '@/components/ui/AppText';
-import { Screen } from '@/components/ui/Screen';
-import { findMockEvent } from '@/lib/events/mock';
-import { DEMO_MATCHES, DEMO_PASSENGER } from '@/lib/rides/mock';
+import { markFound, searchAgain } from '@/lib/data/actions';
+import { useEventContext } from '@/lib/data/hooks';
+import { describeZone } from '@/lib/data/matching';
+import { directionsOf, matchesFor, passengerStatusOf } from '@/lib/data/selectors';
+import { updateAppData } from '@/lib/data/store';
 
-/** P1 : conducteurs disponibles pour un passager. */
+/** P1 — conducteurs disponibles pour un passager. */
 export default function DriverListRoute() {
-  const { id, firstName, zone } = useLocalSearchParams<{
-    id: string;
-    firstName?: string;
-    zone?: string;
-  }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
-  const event = findMockEvent(id);
-  const contextLabel = useEventLabel(event);
+  const { data, event, summary, me, language } = useEventContext(id);
+  const contextLabel = useEventLabel(summary);
+  const matches = useMemo(() => (me ? matchesFor(data, me, language) : []), [data, me, language]);
+  const status = useMemo(() => (me ? passengerStatusOf(data, me) : {}), [data, me]);
 
-  // Pas encore de stockage : les infos viennent de l'étape précédente, sinon de la démo.
-  const passenger = firstName && zone ? { firstName, zone } : DEMO_PASSENGER;
+  if (!event || !summary) {
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <EventNotFound />
+      </>
+    );
+  }
+  // Pas encore inscrit comme passager : retour à l'invitation (ou à sa voiture s'il conduit).
+  if (!me) return <Redirect href={{ pathname: '/e/[id]', params: { id: event.id } }} />;
+  if (me.role === 'driver')
+    return <Redirect href={{ pathname: '/e/[id]/my-car', params: { id: event.id } }} />;
 
   const editDetails = () =>
     router.canGoBack()
       ? router.back()
-      : router.replace({ pathname: '/e/[id]/join', params: { id } });
+      : router.push({ pathname: '/e/[id]/join', params: { id: event.id } });
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      {event ? (
-        <DriverList
-          contextLabel={contextLabel}
-          passenger={passenger}
-          matches={DEMO_MATCHES}
-          onEdit={editDetails}
-          onOpenRide={(offer) =>
-            router.push({ pathname: '/e/[id]/ride/[rideId]', params: { id, rideId: offer.id } })
-          }
-          // L'écran suivant n'a pas encore de maquette.
-          onFound={() => {}}
-        />
-      ) : (
-        <Screen>
-          <AppText>{t('event.notFound')}</AppText>
-        </Screen>
-      )}
+      <DriverList
+        contextLabel={contextLabel}
+        // La ville seule en titre, comme sur la maquette (« Ashdod »).
+        passenger={{
+          firstName: me.firstName,
+          zone: describeZone(me.zone, language).city,
+          partySize: me.partySize,
+        }}
+        matches={matches}
+        directions={directionsOf(event, me)}
+        status={status}
+        onEdit={editDetails}
+        onOpenRide={(offer) =>
+          router.push({
+            pathname: '/e/[id]/ride/[rideId]',
+            params: { id: event.id, rideId: offer.id },
+          })
+        }
+        onFound={(direction, offerId) =>
+          updateAppData((current) => markFound(current, event.id, direction, offerId))
+        }
+        onSearchAgain={(direction) =>
+          updateAppData((current) => searchAgain(current, event.id, direction))
+        }
+      />
     </>
   );
 }

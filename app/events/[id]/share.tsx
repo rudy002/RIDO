@@ -1,42 +1,35 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 
+import { EventNotFound } from '@/components/event/EventNotFound';
 import { EventShare } from '@/components/event/EventShare';
-import { AppText } from '@/components/ui/AppText';
-import { Screen } from '@/components/ui/Screen';
 import { whatsappShareUrl } from '@/lib/contact/contact';
-import { findMockEvent } from '@/lib/events/mock';
+import { useEventContext } from '@/lib/data/hooks';
 import { eventShareUrl } from '@/lib/events/share';
 
 /** O2 : l'événement est prêt, partage du lien. */
 export default function EventShareRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
-  const event = findMockEvent(id);
-
-  const close = () => router.replace('/');
+  const { summary } = useEventContext(id);
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      {event ? (
+      {summary ? (
         <EventShare
-          event={event}
-          link={eventShareUrl(event.id)}
-          onClose={close}
+          event={summary}
+          link={eventShareUrl(summary.id)}
+          onClose={() => router.replace('/my-events')}
           onShare={(message) =>
             void Linking.openURL(whatsappShareUrl(message)).catch(() => undefined)
           }
           onOpenDashboard={() =>
-            router.replace({ pathname: '/events/[id]', params: { id: event.id } })
+            router.replace({ pathname: '/events/[id]', params: { id: summary.id } })
           }
         />
       ) : (
-        <Screen>
-          <AppText>{t('event.notFound')}</AppText>
-        </Screen>
+        <EventNotFound />
       )}
     </>
   );

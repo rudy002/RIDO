@@ -7,13 +7,14 @@ import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { IconButton } from '@/components/ui/IconButton';
+import { InfoNote } from '@/components/ui/InfoNote';
 import { Screen } from '@/components/ui/Screen';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import { StatTile } from '@/components/ui/StatTile';
 import { useTheme } from '@/lib/design/use-theme';
 import type { DirectionOverview, EventSummary, UnmatchedGuest } from '@/lib/events/types';
 import { formatShortWeekdayDate, formatTime } from '@/lib/i18n/format';
-import type { TripDirection } from '@/lib/rides/types';
+import type { RideRole, TripDirection } from '@/lib/rides/types';
 
 import { EventSwitcher } from './EventSwitcher';
 import { UnmatchedRow } from './UnmatchedRow';
@@ -28,7 +29,10 @@ type OrganizerDashboardProps = {
   onSwitchEvent: () => void;
   onShare: () => void;
   onRelaunch: (guest: UnmatchedGuest) => void;
+  /** L'organisateur est déjà inscrit : le bouton du bas mène à son trajet. */
+  registeredAs?: RideRole;
   onJoin: () => void;
+  onOpenMyRide: () => void;
 };
 
 /** Écran O3 : où en est le covoiturage de son événement, sens par sens. */
@@ -39,7 +43,9 @@ export function OrganizerDashboard({
   onSwitchEvent,
   onShare,
   onRelaunch,
+  registeredAs,
   onJoin,
+  onOpenMyRide,
 }: OrganizerDashboardProps) {
   const { t } = useTranslation();
   const { spacing, language } = useTheme();
@@ -55,7 +61,17 @@ export function OrganizerDashboard({
 
   return (
     <Screen
-      footer={<Button variant="outlineStrong" label={t('dashboard.join')} onPress={onJoin} />}>
+      footer={
+        registeredAs ? (
+          <Button
+            variant="outlineStrong"
+            label={t(`invitation.myRide.${registeredAs}`)}
+            onPress={onOpenMyRide}
+          />
+        ) : (
+          <Button variant="outlineStrong" label={t('dashboard.join')} onPress={onJoin} />
+        )
+      }>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
         <EventSwitcher
           label={t('dashboard.myEvents', { count: eventsCount })}
@@ -106,42 +122,51 @@ export function OrganizerDashboard({
             />
           </View>
 
-          <View style={{ gap: spacing.md }}>
-            <AppText variant="heading" accessibilityRole="header">
-              {t(`dashboard.unmatched.${direction}`)}
-            </AppText>
-            {current.unmatched.length > 0 ? (
-              current.unmatched.map((guest) => (
-                <UnmatchedRow
-                  key={guest.id}
-                  name={guest.name}
-                  info={`${guest.city} · ${t('myCar.people', { count: guest.partySize })}`}
-                  onRelaunch={() => onRelaunch(guest)}
-                />
-              ))
-            ) : (
-              <Card tone="success">
-                <AppText variant="bodyStrong" color="successText">
-                  {t('dashboard.unmatched.none')}
+          {event.guestsCount === 0 ? (
+            // Personne d'inscrit : rien à résoudre, il faut d'abord partager le lien.
+            <InfoNote icon={Share2} text={t('dashboard.noGuests')} />
+          ) : (
+            <>
+              <View style={{ gap: spacing.md }}>
+                <AppText variant="heading" accessibilityRole="header">
+                  {t(`dashboard.unmatched.${direction}`)}
                 </AppText>
-              </Card>
-            )}
-          </View>
+                {current.unmatched.length > 0 ? (
+                  current.unmatched.map((guest) => (
+                    <UnmatchedRow
+                      key={guest.id}
+                      name={guest.name}
+                      info={`${guest.city} · ${t('myCar.people', { count: guest.partySize })}`}
+                      onRelaunch={() => onRelaunch(guest)}
+                    />
+                  ))
+                ) : (
+                  <Card tone="success">
+                    <AppText variant="bodyStrong" color="successText">
+                      {t('dashboard.unmatched.none')}
+                    </AppText>
+                  </Card>
+                )}
+              </View>
 
-          <View style={{ gap: spacing.lg }}>
-            <AppText variant="heading" accessibilityRole="header">
-              {t('dashboard.zones')}
-            </AppText>
-            {current.zones.map(({ zone, seats, requests }) => (
-              <ZoneBar
-                key={zone}
-                name={zone}
-                text={`${t('dashboard.zone.seats', { count: seats })} · ${t('dashboard.zone.requests', { count: requests })}`}
-                ratio={requests === 0 ? 1 : seats / requests}
-                tone={seats >= requests ? 'ok' : 'alert'}
-              />
-            ))}
-          </View>
+              {current.zones.length > 0 ? (
+                <View style={{ gap: spacing.lg }}>
+                  <AppText variant="heading" accessibilityRole="header">
+                    {t('dashboard.zones')}
+                  </AppText>
+                  {current.zones.map(({ zone, seats, requests }) => (
+                    <ZoneBar
+                      key={zone}
+                      name={zone}
+                      text={`${t('dashboard.zone.seats', { count: seats })} · ${t('dashboard.zone.requests', { count: requests })}`}
+                      ratio={requests === 0 ? 1 : seats / requests}
+                      tone={seats >= requests ? 'ok' : 'alert'}
+                    />
+                  ))}
+                </View>
+              ) : null}
+            </>
+          )}
         </>
       ) : null}
     </Screen>

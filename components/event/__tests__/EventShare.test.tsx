@@ -3,7 +3,7 @@ import i18n from '@/lib/i18n';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import * as Clipboard from 'expo-clipboard';
 
-import { DEMO_EVENT } from '@/lib/events/mock';
+import { WEDDING as DEMO_EVENT } from '@/lib/data/__fixtures__/demo';
 
 import { EventShare } from '../EventShare';
 

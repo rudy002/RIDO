@@ -10,12 +10,19 @@ import { PhoneField } from '@/components/ui/PhoneField';
 import { RadioCard } from '@/components/ui/RadioCard';
 import { Screen } from '@/components/ui/Screen';
 import { StepHeader } from '@/components/ui/StepHeader';
+import { Stepper } from '@/components/ui/Stepper';
 import { TextField } from '@/components/ui/TextField';
 import { ToggleButton } from '@/components/ui/ToggleButton';
 import { useTheme } from '@/lib/design/use-theme';
 import { formatShortTime, formatTimeWindow } from '@/lib/i18n/format';
-import { toInternational, type CountryCode, type PhoneInput } from '@/lib/phone/phone';
 import {
+  phoneInputFromE164,
+  toInternational,
+  type CountryCode,
+  type PhoneInput,
+} from '@/lib/phone/phone';
+import {
+  MAX_FREE_SEATS,
   rideDraftSchema,
   type RideDraft,
   type RideRole,
@@ -32,6 +39,10 @@ type JoinRideFormProps = {
   activeZones: ZoneActivity[];
   /** Pays proposé par défaut pour l'indicatif. */
   defaultCountry: CountryCode;
+  /** Trajets ouverts par l'organisateur : seuls ceux-là sont proposés. */
+  directions: TripDirection[];
+  /** Pour pré-remplir : l'inscription à modifier, ou ce que le profil connaît déjà. */
+  initial?: Partial<RideDraft>;
   onBack: () => void;
   onSubmit: (draft: RideDraft) => void;
 };
@@ -44,19 +55,31 @@ export function JoinRideForm({
   returnAround,
   activeZones,
   defaultCountry,
+  directions: available,
+  initial,
   onBack,
   onSubmit,
 }: JoinRideFormProps) {
   const { t } = useTranslation();
   const { spacing, language } = useTheme();
 
-  const [role, setRole] = useState<RideRole | null>(null);
-  // La plupart des invités font l'aller et le retour : les deux sont cochés d'office.
-  const [directions, setDirections] = useState<TripDirection[]>(['outbound', 'return']);
-  const [zone, setZone] = useState<ZoneInput>({ text: '', zone: null });
-  const [lastName, setLastName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [phone, setPhone] = useState<PhoneInput>({ country: defaultCountry, national: '' });
+  const [role, setRole] = useState<RideRole | null>(initial?.role ?? null);
+  // La plupart des invités font l'aller et le retour : tous les trajets ouverts sont cochés d'office.
+  const [directions, setDirections] = useState<TripDirection[]>(() => {
+    const kept = initial?.directions?.filter((direction) => available.includes(direction));
+    return kept && kept.length > 0 ? kept : available;
+  });
+  const [zone, setZone] = useState<ZoneInput>(
+    initial?.zone ? { text: initial.zone.name, zone: initial.zone } : { text: '', zone: null }
+  );
+  const [lastName, setLastName] = useState(initial?.lastName ?? '');
+  const [firstName, setFirstName] = useState(initial?.firstName ?? '');
+  const [phone, setPhone] = useState<PhoneInput>(() =>
+    initial?.phone
+      ? phoneInputFromE164(initial.phone, defaultCountry)
+      : { country: defaultCountry, national: '' }
+  );
+  const [partySize, setPartySize] = useState(initial?.partySize ?? 1);
 
   const lastNameRef = useRef<TextInput>(null);
   const firstNameRef = useRef<TextInput>(null);
@@ -69,6 +92,7 @@ export function JoinRideForm({
     lastName,
     firstName,
     phone: toInternational(phone),
+    partySize: role === 'passenger' ? partySize : 1,
   });
 
   const toggleDirection = (direction: TripDirection) =>
@@ -122,23 +146,46 @@ export function JoinRideForm({
         />
       </View>
 
+      {role === 'passenger' ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+          <View style={{ flex: 1 }}>
+            <AppText variant="label">{t('join.partySize.label')}</AppText>
+            <AppText color="textMuted">{t('join.partySize.hint')}</AppText>
+          </View>
+          <Stepper
+            size="compact"
+            value={partySize}
+            min={1}
+            max={MAX_FREE_SEATS}
+            onChange={setPartySize}
+            valueLabel={t('join.partySize.value', { count: partySize })}
+            decreaseLabel={t('join.partySize.decrease')}
+            increaseLabel={t('join.partySize.increase')}
+          />
+        </View>
+      ) : null}
+
       <View accessibilityLabelledBy={TRIPS_LABEL_ID}>
         <FieldLabel nativeID={TRIPS_LABEL_ID}>{t('join.trips.label')}</FieldLabel>
         <View style={{ flexDirection: 'row', gap: spacing.md }}>
-          <ToggleButton
-            style={{ flex: 1 }}
-            label={t('join.trips.outbound', {
-              window: formatTimeWindow(outboundWindow.from, outboundWindow.to, language),
-            })}
-            selected={directions.includes('outbound')}
-            onToggle={() => toggleDirection('outbound')}
-          />
-          <ToggleButton
-            style={{ flex: 1 }}
-            label={t('join.trips.return', { time: formatShortTime(returnAround, language) })}
-            selected={directions.includes('return')}
-            onToggle={() => toggleDirection('return')}
-          />
+          {available.includes('outbound') ? (
+            <ToggleButton
+              style={{ flex: 1 }}
+              label={t('join.trips.outbound', {
+                window: formatTimeWindow(outboundWindow.from, outboundWindow.to, language),
+              })}
+              selected={directions.includes('outbound')}
+              onToggle={() => toggleDirection('outbound')}
+            />
+          ) : null}
+          {available.includes('return') ? (
+            <ToggleButton
+              style={{ flex: 1 }}
+              label={t('join.trips.return', { time: formatShortTime(returnAround, language) })}
+              selected={directions.includes('return')}
+              onToggle={() => toggleDirection('return')}
+            />
+          ) : null}
         </View>
       </View>
 

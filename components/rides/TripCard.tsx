@@ -59,8 +59,12 @@ export function TripCard({ trip, onPress }: TripCardProps) {
       </AppText>
       {leg.driver ? (
         <AppText variant="bodyStrong">
-          {t('trips.with', { name: formatShortName(leg.driver.firstName, leg.driver.lastName) })}
+          {t('trips.with', {
+            name: formatShortName(leg.driver.firstName, leg.driver.lastName, language),
+          })}
         </AppText>
+      ) : leg.found ? (
+        <Badge small tone="success" label={t('trips.found')} />
       ) : (
         <Badge small tone="danger" label={t('trips.stillLooking')} />
       )}

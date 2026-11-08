@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ConfirmSheet } from '@/components/ui/ConfirmSheet';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { Screen } from '@/components/ui/Screen';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
@@ -34,6 +35,9 @@ type DriverDashboardProps = {
   requests: RideRequest[];
   onEdit: () => void;
   onContact: (request: RideRequest) => void;
+  /** Places notées ou libérées par le conducteur, pour un sens. */
+  onBookingsChange: (direction: TripDirection, bookings: Booking[]) => void;
+  /** Appelé après confirmation : la voiture est retirée. */
   onCancel: () => void;
 };
 
@@ -45,19 +49,16 @@ export function DriverDashboard({
   requests,
   onEdit,
   onContact,
+  onBookingsChange,
   onCancel,
 }: DriverDashboardProps) {
   const { t } = useTranslation();
   const { spacing, language } = useTheme();
   const directions = TRIP_DIRECTIONS.filter((direction) => legs[direction]);
-  const [direction, setDirection] = useState<TripDirection>(directions[0] ?? 'outbound');
-  // Places notées par le conducteur ; sans serveur, elles ne sont pas encore enregistrées.
-  const [bookings, setBookings] = useState(
-    () =>
-      Object.fromEntries(directions.map((d) => [d, legs[d]?.bookings ?? []])) as Partial<
-        Record<TripDirection, Booking[]>
-      >
-  );
+  const [selected, setDirection] = useState<TripDirection>(directions[0] ?? 'outbound');
+  // Le sens choisi peut disparaître (trajet retiré en modifiant la voiture) : on retombe sur un autre.
+  const direction = directions.includes(selected) ? selected : (directions[0] ?? 'outbound');
+  const [confirming, setConfirming] = useState(false);
 
   const timeOf = (leg: DriverLeg) => {
     const from = formatTime(leg.departure.from, language);
@@ -65,16 +66,16 @@ export function DriverDashboard({
   };
 
   const leg = legs[direction];
-  const legBookings = bookings[direction] ?? [];
+  const legBookings = leg?.bookings ?? [];
   const free = leg ? freeSeats(legBookings, leg.totalSeats) : 0;
   const visibleRequests = requests.filter((request) => request.direction === direction);
   const zoneParams = { zone: driver.zone, context: elisionContext(driver.zone) };
 
   const update = (change: (current: Booking[]) => Booking[]) =>
-    setBookings((current) => ({ ...current, [direction]: change(current[direction] ?? []) }));
+    onBookingsChange(direction, change(legBookings));
 
   return (
-    <Screen footer={<LinkButton label={t('myCar.cancel')} onPress={onCancel} />}>
+    <Screen footer={<LinkButton label={t('myCar.cancel')} onPress={() => setConfirming(true)} />}>
       <ContextHeader label={contextLabel} onEdit={onEdit} />
 
       <View style={{ gap: spacing.xs }}>
@@ -156,6 +157,18 @@ export function DriverDashboard({
           <AppText color="textMuted">{t('myCar.requests.empty', zoneParams)}</AppText>
         )}
       </View>
+      <ConfirmSheet
+        visible={confirming}
+        title={t('myCar.cancelConfirm.title')}
+        message={t('myCar.cancelConfirm.message')}
+        confirmLabel={t('myCar.cancelConfirm.confirm')}
+        cancelLabel={t('myCar.cancelConfirm.keep')}
+        onConfirm={() => {
+          setConfirming(false);
+          onCancel();
+        }}
+        onCancel={() => setConfirming(false)}
+      />
     </Screen>
   );
 }

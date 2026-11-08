@@ -2,19 +2,25 @@ import i18n from '@/lib/i18n';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { DEMO_EVENT } from '@/lib/events/mock';
+import { WEDDING } from '@/lib/data/__fixtures__/demo';
+import type { RideDraft, TripDirection } from '@/lib/rides/types';
 
 import { JoinRideForm } from '../JoinRideForm';
 
-async function renderForm() {
+async function renderForm({
+  directions = ['outbound', 'return'],
+  initial,
+}: { directions?: TripDirection[]; initial?: Partial<RideDraft> } = {}) {
   const onSubmit = jest.fn();
   const onBack = jest.fn();
   await render(
     <JoinRideForm
-      outboundWindow={DEMO_EVENT.outboundWindow}
-      returnAround={DEMO_EVENT.returnAround}
-      activeZones={DEMO_EVENT.activeZones}
+      outboundWindow={WEDDING.outboundWindow}
+      returnAround={WEDDING.returnAround}
+      activeZones={WEDDING.activeZones}
       defaultCountry="IL"
+      directions={directions}
+      initial={initial}
       onBack={onBack}
       onSubmit={onSubmit}
     />
@@ -34,7 +40,9 @@ describe('JoinRideForm', () => {
     expect(screen.getByRole('checkbox', { name: 'Aller · 18h–19h30' })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Retour · vers 01h' })).toBeChecked();
     expect(
-      screen.getByText('Déjà actives : Ashdod (5), Tel-Aviv (8), Yavne (1)')
+      screen.getByText(
+        'Déjà actives\u00a0: Ashdod (8), Tel-Aviv (5), Ashkelon (3), Gan Yavne (1), Kiryat Gat (1)'
+      )
     ).toBeOnTheScreen();
   });
 
@@ -68,6 +76,61 @@ describe('JoinRideForm', () => {
       lastName: 'Levy',
       firstName: 'David',
       phone: '+972521234567',
+      partySize: 1,
+    });
+  });
+
+  it('demande combien on est, seulement pour chercher une place', async () => {
+    const { onSubmit } = await renderForm();
+
+    expect(screen.queryByText('Combien êtes-vous ?')).toBeNull();
+    await fireEvent.press(screen.getByRole('radio', { name: 'Je cherche une place' }));
+    expect(screen.getByText('Combien êtes-vous ?')).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Une personne de plus' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Une personne de plus' }));
+    await fillIdentity('0521234567');
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuer' }));
+
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'passenger', partySize: 3 })
+    );
+  });
+
+  it('ne propose que les trajets ouverts par l’organisateur', async () => {
+    await renderForm({ directions: ['return'] });
+
+    expect(screen.queryByRole('checkbox', { name: 'Aller · 18h–19h30' })).toBeNull();
+    expect(screen.getByRole('checkbox', { name: 'Retour · vers 01h' })).toBeChecked();
+  });
+
+  it('reprend une inscription existante pour la modifier', async () => {
+    const { onSubmit } = await renderForm({
+      initial: {
+        role: 'passenger',
+        directions: ['return'],
+        zone: { placeId: '8598981', name: 'Florentin, Tel-Aviv' },
+        firstName: 'Noam',
+        lastName: 'Katz',
+        phone: '+972521230987',
+        partySize: 2,
+      },
+    });
+
+    expect(screen.getByRole('radio', { name: 'Je cherche une place' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Aller · 18h–19h30' })).not.toBeChecked();
+    expect(screen.getByLabelText('D’où pars-tu ?')).toHaveDisplayValue('Florentin, Tel-Aviv');
+    expect(screen.getByLabelText('Téléphone')).toHaveDisplayValue('0521230987');
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuer' }));
+    expect(onSubmit).toHaveBeenCalledWith({
+      role: 'passenger',
+      directions: ['return'],
+      zone: { placeId: '8598981', name: 'Florentin, Tel-Aviv' },
+      lastName: 'Katz',
+      firstName: 'Noam',
+      phone: '+972521230987',
+      partySize: 2,
     });
   });
 

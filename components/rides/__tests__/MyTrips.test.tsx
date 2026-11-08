@@ -2,11 +2,11 @@ import i18n from '@/lib/i18n';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { DEMO_UPCOMING_TRIPS } from '@/lib/trips/mock';
+import { TRIPS } from '@/lib/data/__fixtures__/demo';
 
 import { MyTrips } from '../MyTrips';
 
-async function renderTrips(upcoming = DEMO_UPCOMING_TRIPS) {
+async function renderTrips(upcoming = TRIPS.upcoming) {
   const handlers = { onOpenTrip: jest.fn(), onOpenPast: jest.fn() };
   await render(<MyTrips firstName="David" upcoming={upcoming} pastCount={3} {...handlers} />);
   return handlers;
@@ -45,7 +45,7 @@ describe('MyTrips', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Les 30 ans de Noa, Passager' }));
     await fireEvent.press(screen.getByRole('button', { name: '3 trajets passés' }));
 
-    expect(onOpenTrip).toHaveBeenCalledWith('trip-noa');
+    expect(onOpenTrip).toHaveBeenCalledWith('noa');
     expect(onOpenPast).toHaveBeenCalledTimes(1);
   });
 
