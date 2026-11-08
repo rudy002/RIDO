@@ -1,9 +1,10 @@
 import type { LucideIcon } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/lib/design/use-theme';
 
+import { BaseText } from './BaseText';
 import { Icon } from './Icon';
 
 export type TabItem = {
@@ -63,9 +64,9 @@ export function TabBar({ items }: TabBarProps) {
               color={item.selected ? 'text' : 'textMuted'}
               strokeWidth={item.selected ? ACTIVE_STROKE : INACTIVE_STROKE}
             />
-            <Text numberOfLines={1} style={[label, item.selected && labelActive]}>
+            <BaseText numberOfLines={1} style={[label, item.selected && labelActive]}>
               {item.label}
-            </Text>
+            </BaseText>
           </View>
         </Pressable>
       ))}

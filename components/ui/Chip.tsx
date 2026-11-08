@@ -1,6 +1,8 @@
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
+
+import { BaseText } from './BaseText';
 
 type ChipProps = {
   label: string;
@@ -28,9 +30,9 @@ export function Chip({ label, selected, onPress }: ChipProps) {
         selected && components.chipSelected,
         pressed && !selected && { opacity: PRESSED_OPACITY },
       ]}>
-      <Text style={[typography.label, { color: selected ? colors.onInverse : colors.text }]}>
+      <BaseText style={[typography.label, { color: selected ? colors.onInverse : colors.text }]}>
         {label}
-      </Text>
+      </BaseText>
     </Pressable>
   );
 }

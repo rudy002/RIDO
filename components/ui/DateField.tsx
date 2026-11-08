@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 import { formatShortDay } from '@/lib/i18n/format';
 
+import { BaseText } from './BaseText';
 import { CalendarPicker } from './CalendarPicker';
 
 type DateFieldProps = {
@@ -36,12 +37,12 @@ export function DateField({ value, onChange, label, placeholder, minDate, style 
           pressed && { opacity: PRESSED_OPACITY },
           style,
         ]}>
-        <Text
+        <BaseText
           numberOfLines={1}
           adjustsFontSizeToFit
           style={[components.input.text, !value && { color: colors.textMuted }]}>
           {text}
-        </Text>
+        </BaseText>
       </Pressable>
       <CalendarPicker
         visible={open}

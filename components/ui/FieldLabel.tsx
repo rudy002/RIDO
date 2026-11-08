@@ -1,6 +1,8 @@
-import { Text, type TextProps } from 'react-native';
+import { type TextProps } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
+
+import { BaseText } from './BaseText';
 
 type FieldLabelProps = Pick<TextProps, 'nativeID'> & {
   children: string;
@@ -10,8 +12,8 @@ type FieldLabelProps = Pick<TextProps, 'nativeID'> & {
 export function FieldLabel({ children, nativeID }: FieldLabelProps) {
   const { components } = useTheme();
   return (
-    <Text nativeID={nativeID} style={components.input.label}>
+    <BaseText nativeID={nativeID} style={components.input.label}>
       {children}
-    </Text>
+    </BaseText>
   );
 }

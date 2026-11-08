@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
-import { Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
+
+import { BaseText } from './BaseText';
 
 export type ButtonVariant =
   | 'primary'
@@ -10,7 +12,8 @@ export type ButtonVariant =
   | 'inverseLarge'
   | 'outline'
   | 'outlineStrong'
-  | 'outlineSmall';
+  | 'outlineSmall'
+  | 'danger';
 
 type ButtonProps = {
   label: string;
@@ -35,6 +38,7 @@ const VARIANT_STYLE = {
   outline: 'buttonOutline',
   outlineStrong: 'buttonOutlineStrong',
   outlineSmall: 'buttonOutlineSmall',
+  danger: 'buttonDanger',
 } as const;
 
 export function Button({
@@ -67,7 +71,7 @@ export function Button({
         style,
       ]}>
       {icon}
-      <Text style={[text, { textAlign: 'center' }]}>{label}</Text>
+      <BaseText style={[text, { textAlign: 'center' }]}>{label}</BaseText>
     </Pressable>
   );
 }

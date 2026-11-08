@@ -1,6 +1,8 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
+
+import { BaseText } from './BaseText';
 
 export type SegmentOption<T extends string> = { value: T; label: string };
 
@@ -37,9 +39,9 @@ export function SegmentedControl<T extends string>({
               selected && itemActive,
               pressed && !selected && { opacity: PRESSED_OPACITY },
             ]}>
-            <Text style={[text, selected && textActive]} numberOfLines={1} adjustsFontSizeToFit>
+            <BaseText style={[text, selected && textActive]} numberOfLines={1} adjustsFontSizeToFit>
               {option.label}
-            </Text>
+            </BaseText>
           </Pressable>
         );
       })}

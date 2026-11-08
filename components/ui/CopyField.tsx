@@ -1,10 +1,11 @@
 import * as Clipboard from 'expo-clipboard';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 
+import { BaseText } from './BaseText';
 import { AppText } from './AppText';
 
 type CopyFieldProps = {
@@ -59,9 +60,9 @@ export function CopyField({ label, value, accessibilityLabel }: CopyFieldProps) 
           components.copyField.button,
           pressed && { opacity: PRESSED_OPACITY },
         ]}>
-        <Text style={[typography.label, { color: colors.text }]}>
+        <BaseText style={[typography.label, { color: colors.text }]}>
           {copied ? t('common.copied') : t('common.copy')}
-        </Text>
+        </BaseText>
       </Pressable>
     </View>
   );

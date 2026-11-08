@@ -1,6 +1,8 @@
-import { Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
+
+import { BaseText } from './BaseText';
 
 type ToggleButtonProps = {
   label: string;
@@ -28,9 +30,9 @@ export function ToggleButton({ label, selected, onToggle, style }: ToggleButtonP
         pressed && { opacity: PRESSED_OPACITY },
         style,
       ]}>
-      <Text style={text} numberOfLines={1} adjustsFontSizeToFit>
+      <BaseText style={text} numberOfLines={1} adjustsFontSizeToFit>
         {label}
-      </Text>
+      </BaseText>
     </Pressable>
   );
 }

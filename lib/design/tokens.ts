@@ -158,6 +158,17 @@ export const components = (c: Colors) => ({
     },
     text: { ...typography.label, color: c.text },
   },
+  // Action qu'on ne peut pas annuler (« Ne plus conduire », « Se déconnecter »).
+  buttonDanger: {
+    container: {
+      height: sizes.buttonPrimary,
+      borderRadius: radius.lg,
+      backgroundColor: c.danger,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    },
+    text: { ...typography.button, color: c.onInverse },
+  },
   // Action principale dans une carte (« Contacter »).
   buttonPrimarySmall: {
     container: {
@@ -315,6 +326,8 @@ export const components = (c: Colors) => ({
       justifyContent: 'center' as const,
     },
     buttonFilled: { borderColor: c.inverse, backgroundColor: c.inverse },
+    // Version compacte, dans un formulaire (« Combien êtes-vous ? »).
+    buttonCompact: { width: sizes.touchMin, height: sizes.touchMin, borderRadius: radius.sm },
   },
   // Lien à copier, cadre en pointillés (maquette O2).
   copyField: {
