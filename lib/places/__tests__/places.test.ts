@@ -1,4 +1,11 @@
-import { hasPlaces, searchPlaces } from '../places';
+import {
+  cityOf,
+  defaultEventCountry,
+  describePlace,
+  distanceKm,
+  hasPlaces,
+  searchPlaces,
+} from '../places';
 
 const ids = (query: string, language: 'fr' | 'he' | 'en' = 'fr') =>
   searchPlaces('IL', query, language).map((place) => place.id);
@@ -36,5 +43,28 @@ describe('lieux', () => {
     expect(results[0].name).toBe('Tel-Aviv');
     expect(results.length).toBeLessThanOrEqual(6);
     expect(searchPlaces('IL', '   ', 'fr')).toEqual([]);
+  });
+
+  it('trouve une ville par ses autres orthographes, sous son nom usuel', () => {
+    expect(searchPlaces('IL', 'ashkelon', 'fr')[0]).toEqual({ id: '295620', name: 'Ashkelon' });
+    expect(searchPlaces('IL', 'ashqelon', 'en')[0]).toEqual({ id: '295620', name: 'Ashkelon' });
+    expect(searchPlaces('IL', 'givat', 'en')[0].name).toBe('Givatayim');
+  });
+
+  it('situe un quartier dans sa ville et mesure les distances', () => {
+    expect(cityOf('8598981')?.id).toBe('293397');
+    expect(describePlace('8598981', 'fr')).toEqual({ city: 'Tel-Aviv', area: 'Florentin' });
+    expect(describePlace('295629', 'he')).toEqual({ city: 'אשדוד' });
+    // Ashdod – Yavne : environ 10 km.
+    expect(distanceKm('295629', '293222')).toBeGreaterThan(5);
+    expect(distanceKm('295629', '293222')).toBeLessThan(15);
+    expect(distanceKm('295629', 'inconnu')).toBeUndefined();
+  });
+});
+
+describe('pays d’un nouvel événement', () => {
+  it('garde le pays du téléphone s’il est intégré, sinon le premier pays intégré', () => {
+    expect(defaultEventCountry('IL')).toBe('IL');
+    expect(defaultEventCountry('FR')).toBe('IL');
   });
 });

@@ -16,6 +16,8 @@ export type Place = {
   population: number;
   /** Ville de rattachement d'un quartier. */
   cityId?: string;
+  /** Autres orthographes, pour la recherche seulement (« Ashqelon » pour Ashkelon). */
+  aliases?: string[];
 };
 
 /** Suggestion prête à afficher : « Florentin » + « Tel-Aviv ». */
@@ -58,7 +60,9 @@ function indexOf(country: CountryCode): SearchIndex {
     index = {
       entries: places.map((place) => ({
         place,
-        keys: [...new Set(Object.values(place.names).map(normalize))],
+        keys: [
+          ...new Set([...Object.values(place.names), ...(place.aliases ?? [])].map(normalize)),
+        ],
       })),
       byId: new Map(places.map((place) => [place.id, place])),
     };
@@ -98,4 +102,57 @@ export function searchPlaces(
         ...(city ? { city: nameOf(city, language) } : {}),
       };
     });
+}
+
+/** Un lieu, quel que soit le pays intégré où il se trouve. */
+export function findPlace(id: string): Place | undefined {
+  for (const country of Object.keys(PLACES) as CountryCode[]) {
+    const place = indexOf(country).byId.get(id);
+    if (place) return place;
+  }
+  return undefined;
+}
+
+/** Ville d'un lieu : lui-même pour une ville, sa ville de rattachement pour un quartier. */
+export function cityOf(id: string): Place | undefined {
+  const place = findPlace(id);
+  if (!place || place.kind === 'city') return place;
+  return place.cityId ? findPlace(place.cityId) : undefined;
+}
+
+/** Ville et quartier à afficher dans la langue active : { city: 'Tel-Aviv', area: 'Florentin' }. */
+export function describePlace(
+  id: string,
+  language: Language
+): { city: string; area?: string } | undefined {
+  const place = findPlace(id);
+  if (!place) return undefined;
+  const city = cityOf(id);
+  if (place.kind === 'city' || !city) return { city: nameOf(place, language) };
+  return { city: nameOf(city, language), area: nameOf(place, language) };
+}
+
+/** Distance à vol d'oiseau entre deux lieux, en km (arrondie au km). */
+export function distanceKm(fromId: string, toId: string): number | undefined {
+  const a = findPlace(fromId);
+  const b = findPlace(toId);
+  if (!a || !b) return undefined;
+  const rad = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * rad;
+  const dLng = (b.lng - a.lng) * rad;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) ** 2;
+  return Math.round(12742 * Math.asin(Math.sqrt(h)));
+}
+
+/** Premier pays intégré (aujourd'hui Israël). */
+const FIRST_COUNTRY = (Object.keys(PLACES) as CountryCode[])[0] ?? 'IL';
+
+/**
+ * Pays d'un nouvel événement, tant qu'on ne le déduit pas du lieu : celui du téléphone s'il est
+ * intégré (villes et quartiers proposés), sinon le premier pays intégré.
+ */
+export function defaultEventCountry(device: CountryCode): CountryCode {
+  return hasPlaces(device) ? device : FIRST_COUNTRY;
 }
