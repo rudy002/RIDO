@@ -60,6 +60,11 @@ export default function MyCarRoute() {
         legs={legs}
         requests={requests}
         onEdit={() => router.push({ pathname: '/e/[id]/car', params: { id: event.id } })}
+        onBack={() =>
+          router.canGoBack()
+            ? router.back()
+            : router.replace({ pathname: '/e/[id]', params: { id: event.id } })
+        }
         onContact={({ passenger }) =>
           void Linking.openURL(
             whatsappUrl(passenger.phone, t('myCar.whatsappMessage', { name: passenger.firstName }))

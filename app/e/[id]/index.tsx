@@ -19,6 +19,8 @@ export default function EventInvitationRoute() {
         <EventInvitation
           event={summary}
           registeredAs={me?.role}
+          // Ouverte depuis un lien, l'invitation est le premier écran : pas de flèche retour.
+          onBack={router.canGoBack() ? () => router.back() : undefined}
           isOrganizer={isOrganizer(data, event)}
           onJoin={() => router.push({ pathname: '/e/[id]/join', params: { id: event.id } })}
           onOpenMyRide={() => router.push(myRidePath(data, event.id))}

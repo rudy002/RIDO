@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { BackButton } from '@/components/ui/BackButton';
 import { IconButton } from '@/components/ui/IconButton';
 import { InfoNote } from '@/components/ui/InfoNote';
 import { Screen } from '@/components/ui/Screen';
@@ -27,6 +28,7 @@ type OrganizerDashboardProps = {
   /** Nombre d'événements de l'organisateur. */
   eventsCount: number;
   onSwitchEvent: () => void;
+  onBack: () => void;
   onShare: () => void;
   onRelaunch: (guest: UnmatchedGuest) => void;
   /** L'organisateur est déjà inscrit : le bouton du bas mène à son trajet. */
@@ -41,6 +43,7 @@ export function OrganizerDashboard({
   overview,
   eventsCount,
   onSwitchEvent,
+  onBack,
   onShare,
   onRelaunch,
   registeredAs,
@@ -73,6 +76,7 @@ export function OrganizerDashboard({
         )
       }>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+        <BackButton onPress={onBack} />
         <EventSwitcher
           label={t('dashboard.myEvents', { count: eventsCount })}
           onPress={onSwitchEvent}

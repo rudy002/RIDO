@@ -70,4 +70,14 @@ describe('EventInvitation', () => {
     expect(onJoin).toHaveBeenCalledTimes(1);
     expect(onOpenDashboard).toHaveBeenCalledTimes(1);
   });
+
+  it('ne propose le retour que si un écran précède l’invitation', async () => {
+    const onBack = jest.fn();
+    const { rerender } = await render(<EventInvitation event={DEMO_EVENT} {...noop} />);
+    expect(screen.queryByRole('button', { name: 'Retour' })).toBeNull();
+
+    await rerender(<EventInvitation event={DEMO_EVENT} {...noop} onBack={onBack} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Retour' }));
+    expect(onBack).toHaveBeenCalledTimes(1);
+  });
 });

@@ -37,6 +37,7 @@ export default function OrganizerDashboardRoute() {
           overview={overview}
           eventsCount={eventsCount}
           onSwitchEvent={() => router.navigate('/my-events')}
+          onBack={() => (router.canGoBack() ? router.back() : router.replace('/my-events'))}
           onShare={() => shareEvent(summary)}
           onRelaunch={(guest) =>
             void Linking.openURL(

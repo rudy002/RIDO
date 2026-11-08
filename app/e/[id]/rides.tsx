@@ -32,10 +32,12 @@ export default function DriverListRoute() {
   if (me.role === 'driver')
     return <Redirect href={{ pathname: '/e/[id]/my-car', params: { id: event.id } }} />;
 
-  const editDetails = () =>
+  // « Modifier » rouvre l'inscription ; la flèche revient d'où l'on vient (sinon à l'invitation).
+  const editDetails = () => router.push({ pathname: '/e/[id]/join', params: { id: event.id } });
+  const goBack = () =>
     router.canGoBack()
       ? router.back()
-      : router.push({ pathname: '/e/[id]/join', params: { id: event.id } });
+      : router.replace({ pathname: '/e/[id]', params: { id: event.id } });
 
   return (
     <>
@@ -52,6 +54,7 @@ export default function DriverListRoute() {
         directions={directionsOf(event, me)}
         status={status}
         onEdit={editDetails}
+        onBack={goBack}
         onOpenRide={(offer) =>
           router.push({
             pathname: '/e/[id]/ride/[rideId]',

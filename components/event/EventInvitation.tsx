@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
+import { BackButton } from '@/components/ui/BackButton';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -25,6 +26,8 @@ type EventInvitationProps = {
   onJoin: () => void;
   onOpenMyRide: () => void;
   onOpenDashboard: () => void;
+  /** Absent quand l'invitation est le premier écran (lien ouvert depuis WhatsApp). */
+  onBack?: () => void;
 };
 
 /** Écran I1 : invitation à rejoindre le covoiturage d'un événement. */
@@ -35,6 +38,7 @@ export function EventInvitation({
   onJoin,
   onOpenMyRide,
   onOpenDashboard,
+  onBack,
 }: EventInvitationProps) {
   const { t } = useTranslation();
   const { spacing } = useTheme();
@@ -56,9 +60,12 @@ export function EventInvitation({
           </>
         )
       }>
-      <AppText variant="title" accessibilityRole="header">
-        {t('app.name')}
-      </AppText>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+        {onBack ? <BackButton onPress={onBack} /> : null}
+        <AppText variant="title" accessibilityRole="header">
+          {t('app.name')}
+        </AppText>
+      </View>
 
       <EventHeroCard
         type={event.type}

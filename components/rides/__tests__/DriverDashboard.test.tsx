@@ -14,7 +14,12 @@ const INITIAL: Partial<Record<TripDirection, DriverLeg>> = {
 };
 
 /** L'écran ne garde rien lui-même : on rejoue ici ce que fait le stockage. */
-function Harness(handlers: { onContact: jest.Mock; onCancel: jest.Mock; onEdit: jest.Mock }) {
+function Harness(handlers: {
+  onContact: jest.Mock;
+  onCancel: jest.Mock;
+  onEdit: jest.Mock;
+  onBack: jest.Mock;
+}) {
   const [legs, setLegs] = useState(INITIAL);
   const change = (direction: TripDirection, bookings: Booking[]) =>
     setLegs((current) => {
@@ -34,7 +39,12 @@ function Harness(handlers: { onContact: jest.Mock; onCancel: jest.Mock; onEdit: 
 }
 
 async function renderDashboard() {
-  const handlers = { onEdit: jest.fn(), onContact: jest.fn(), onCancel: jest.fn() };
+  const handlers = {
+    onEdit: jest.fn(),
+    onContact: jest.fn(),
+    onCancel: jest.fn(),
+    onBack: jest.fn(),
+  };
   await render(<Harness {...handlers} />);
   return handlers;
 }

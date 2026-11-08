@@ -15,6 +15,7 @@ async function renderDashboard(
 ) {
   const handlers = {
     onSwitchEvent: jest.fn(),
+    onBack: jest.fn(),
     onShare: jest.fn(),
     onRelaunch: jest.fn(),
     onJoin: jest.fn(),
@@ -90,6 +91,7 @@ describe('OrganizerDashboard', () => {
   it('invite à partager le lien tant que personne n’est inscrit', async () => {
     const handlers = {
       onSwitchEvent: jest.fn(),
+      onBack: jest.fn(),
       onShare: jest.fn(),
       onRelaunch: jest.fn(),
       onJoin: jest.fn(),
@@ -119,6 +121,7 @@ describe('OrganizerDashboard', () => {
         eventsCount={2}
         registeredAs="driver"
         onSwitchEvent={jest.fn()}
+        onBack={jest.fn()}
         onShare={jest.fn()}
         onRelaunch={jest.fn()}
         onJoin={jest.fn()}

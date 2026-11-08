@@ -34,6 +34,7 @@ type DriverDashboardProps = {
   /** Passagers de la même zone qui cherchent un trajet. */
   requests: RideRequest[];
   onEdit: () => void;
+  onBack: () => void;
   onContact: (request: RideRequest) => void;
   /** Places notées ou libérées par le conducteur, pour un sens. */
   onBookingsChange: (direction: TripDirection, bookings: Booking[]) => void;
@@ -48,6 +49,7 @@ export function DriverDashboard({
   legs,
   requests,
   onEdit,
+  onBack,
   onContact,
   onBookingsChange,
   onCancel,
@@ -76,7 +78,7 @@ export function DriverDashboard({
 
   return (
     <Screen footer={<LinkButton label={t('myCar.cancel')} onPress={() => setConfirming(true)} />}>
-      <ContextHeader label={contextLabel} onEdit={onEdit} />
+      <ContextHeader label={contextLabel} onEdit={onEdit} onBack={onBack} />
 
       <View style={{ gap: spacing.xs }}>
         <AppText variant="bodyStrong" color="textMuted">

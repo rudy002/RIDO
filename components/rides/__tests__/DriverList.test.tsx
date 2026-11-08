@@ -14,6 +14,7 @@ async function renderList(
   const handlers = {
     onOpenRide: jest.fn(),
     onEdit: jest.fn(),
+    onBack: jest.fn(),
     onFound: jest.fn(),
     onSearchAgain: jest.fn(),
   };
@@ -95,7 +96,7 @@ describe('DriverList', () => {
   });
 
   it('ouvre la fiche trajet et revient à l’inscription', async () => {
-    const { onOpenRide, onEdit } = await renderList();
+    const { onOpenRide, onEdit, onBack } = await renderList();
 
     const card = screen.getByRole('button', { name: /^Myriam Benhamou/ });
     expect(within(card).getByText('1 libre')).toBeOnTheScreen();
@@ -104,6 +105,8 @@ describe('DriverList', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Modifier' }));
     expect(onEdit).toHaveBeenCalledTimes(1);
+    await fireEvent.press(screen.getByRole('button', { name: 'Retour' }));
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 
   it('prévient quand aucun conducteur ne passe près de chez soi', async () => {

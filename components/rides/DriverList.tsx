@@ -36,6 +36,7 @@ type DriverListProps = {
   status: Partial<Record<TripDirection, PassengerLegStatus>>;
   initialDirection?: TripDirection;
   onEdit: () => void;
+  onBack: () => void;
   onOpenRide: (offer: RideOffer) => void;
   /** Place trouvée dans la voiture d'un conducteur de la liste, ou autrement (`null`). */
   onFound: (direction: TripDirection, offerId: string | null) => void;
@@ -83,6 +84,7 @@ export function DriverList({
   status,
   initialDirection,
   onEdit,
+  onBack,
   onOpenRide,
   onFound,
   onSearchAgain,
@@ -142,7 +144,7 @@ export function DriverList({
 
   return (
     <Screen footerDivider footer={footer}>
-      <ContextHeader label={contextLabel} onEdit={onEdit} />
+      <ContextHeader label={contextLabel} onEdit={onEdit} onBack={onBack} />
 
       <View style={{ gap: spacing.xs }}>
         <AppText variant="bodyStrong" color="textMuted">
