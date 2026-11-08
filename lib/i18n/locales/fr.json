@@ -36,7 +36,8 @@
       "return": "Retour seulement"
     },
     "seatsOffered_zero": "place proposée",
-    "guests_zero": "invité inscrit"
+    "guests_zero": "invité inscrit",
+    "notFoundTitle": "Événement introuvable"
   },
   "invitation": {
     "howItWorks": "Comment ça marche",
@@ -44,7 +45,17 @@
     "step2": "Indique d’où tu pars",
     "step3": "Appelle ou écris directement aux personnes de ta zone",
     "join": "Je rejoins le covoiturage",
-    "joinHint": "Sans créer de compte · 1 minute"
+    "joinHint": "Sans créer de compte · 1 minute",
+    "myRide": {
+      "driver": "Voir ma voiture",
+      "passenger": "Voir les conducteurs"
+    },
+    "editRegistration": "Modifier mon inscription",
+    "registered": {
+      "driver": "Inscription enregistrée : tu viens avec ta voiture.",
+      "passenger": "Inscription enregistrée : tu cherches une place."
+    },
+    "openDashboard": "Voir le tableau de bord"
   },
   "join": {
     "title": "Comment viens-tu ?",
@@ -80,7 +91,15 @@
       "label": "Téléphone",
       "countryLabel": "Indicatif"
     },
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "partySize": {
+      "label": "Combien êtes-vous ?",
+      "hint": "Toi compris",
+      "value_one": "{{count}} personne",
+      "value_other": "{{count}} personnes",
+      "decrease": "Une personne de moins",
+      "increase": "Une personne de plus"
+    }
   },
   "phone": {
     "picker": {
@@ -120,7 +139,15 @@
       "nearby": "{{city}}, à {{distance}} km"
     },
     "empty": "Aucun conducteur pour ce trajet pour l’instant.",
-    "found": "J’ai trouvé ma place"
+    "found": "J’ai trouvé ma place",
+    "foundWith": "Tu pars avec {{name}}",
+    "foundElsewhere": "Tu as trouvé ta place",
+    "searchAgain": "Je cherche à nouveau",
+    "foundSheet": {
+      "title": "Avec qui pars-tu ?",
+      "withDriver": "Avec {{name}}",
+      "elsewhere": "Autrement (ami, taxi…)"
+    }
   },
   "rideDetails": {
     "role": "Conducteur",
@@ -141,14 +168,14 @@
     "note": "Contacte {{name}} pour réserver ta place et lui donner ton adresse exacte. Ses places seront mises à jour.",
     "call": "Appeler {{name}}",
     "whatsapp": "Écrire sur WhatsApp",
-    "whatsappMessage": "Bonjour {{name}}, je t’écris via Rido pour une place dans ta voiture.",
-    "notFound": "Ce trajet est introuvable."
+    "whatsappMessage": "Bonjour {{name}}, je t’écris via Rido pour une place dans ta voiture."
   },
   "dev": {
     "language": {
       "label": "Langue (développement)",
       "system": "Tél."
-    }
+    },
+    "resetDemo": "Recharger la démo"
   },
   "car": {
     "title": "Ta voiture",
@@ -165,7 +192,7 @@
     },
     "return": {
       "label": "Retour : tu repars entre",
-      "hint": "Tu pourras indiquer un nombre de places différent au retour."
+      "hint": "Tu pourras modifier tes horaires et tes places à tout moment."
     },
     "window": {
       "and": "et",
@@ -200,7 +227,13 @@
     "people_other": "{{count}} personnes",
     "contact": "Contacter",
     "cancel": "Je ne peux plus conduire",
-    "whatsappMessage": "Bonjour {{name}}, je conduis via Rido et j’ai une place dans ma voiture."
+    "whatsappMessage": "Bonjour {{name}}, je conduis via Rido et j’ai une place dans ma voiture.",
+    "cancelConfirm": {
+      "title": "Ne plus conduire ?",
+      "message": "Ta voiture sera retirée du covoiturage. Les passagers qui avaient une place chez toi chercheront à nouveau.",
+      "confirm": "Retirer ma voiture",
+      "keep": "Garder mon trajet"
+    }
   },
   "createEvent": {
     "header": "Nouvel événement",
@@ -280,7 +313,8 @@
       "requests_zero": "0 demande"
     },
     "join": "Moi aussi, je viens : conducteur ou passager",
-    "registered_zero": "0 inscrit"
+    "registered_zero": "0 inscrit",
+    "noGuests": "Personne n’est encore inscrit. Partage le lien dans le groupe de tes invités pour lancer le covoiturage."
   },
   "trips": {
     "title": "Mes trajets",
@@ -294,7 +328,10 @@
     "stillLooking": "Tu cherches encore",
     "past_one": "{{count}} trajet passé",
     "past_other": "{{count}} trajets passés",
-    "linkHint": "Tu as reçu un lien ? Ouvre-le depuis WhatsApp : l’événement s’ajoutera ici."
+    "linkHint": "Tu as reçu un lien ? Ouvre-le depuis WhatsApp : l’événement s’ajoutera ici.",
+    "found": "Place trouvée",
+    "pastTitle": "Trajets passés",
+    "pastEmpty": "Aucun trajet passé."
   },
   "tabs": {
     "trips": "Mes trajets",
@@ -308,7 +345,9 @@
     "create": "Créer un événement",
     "empty": "Tu n’organises aucun événement",
     "past_one": "{{count}} événement terminé",
-    "past_other": "{{count}} événements terminés"
+    "past_other": "{{count}} événements terminés",
+    "pastTitle": "Événements terminés",
+    "pastEmpty": "Aucun événement terminé."
   },
   "profile": {
     "editHint": "Modifier ton nom et ton téléphone",
@@ -316,7 +355,8 @@
       "title": "Ma voiture",
       "model": "Modèle et couleur",
       "seats": "Places en général",
-      "departure": "Départ habituel"
+      "departure": "Départ habituel",
+      "notSet": "Non renseigné"
     },
     "notifications": {
       "title": "Notifications",
@@ -335,6 +375,18 @@
       "dark": "Sombre"
     },
     "restartNote": "Ferme puis rouvre l’appli pour appliquer le sens de lecture de cette langue.",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "empty": "Ton profil se remplit quand tu rejoins un covoiturage. Tu peux aussi le créer maintenant.",
+    "create": "Créer mon profil",
+    "signOutConfirm": {
+      "title": "Se déconnecter ?",
+      "message": "Sans compte, tout ce que cet appareil a enregistré sera effacé : profil, trajets et événements.",
+      "keep": "Rester connecté"
+    },
+    "form": {
+      "title": "Mon profil",
+      "save": "Enregistrer",
+      "modelPlaceholder": "Toyota Corolla grise"
+    }
   }
 }

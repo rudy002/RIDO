@@ -36,7 +36,10 @@
       "both": "הלוך וחזור",
       "outbound": "הלוך בלבד",
       "return": "חזור בלבד"
-    }
+    },
+    "notFoundTitle": "האירוע לא נמצא",
+    "seatsOffered_many": "מקומות פנויים",
+    "guests_many": "אורחים רשומים"
   },
   "invitation": {
     "howItWorks": "איך זה עובד",
@@ -44,7 +47,17 @@
     "step2": "ציינו מאיפה אתם יוצאים",
     "step3": "התקשרו או כתבו ישירות לאנשים באזור שלכם",
     "join": "מצטרפים להסעות",
-    "joinHint": "בלי לפתוח חשבון · דקה אחת"
+    "joinHint": "בלי לפתוח חשבון · דקה אחת",
+    "myRide": {
+      "driver": "לרכב שלי",
+      "passenger": "לנהגים"
+    },
+    "editRegistration": "עריכת ההרשמה",
+    "registered": {
+      "driver": "ההרשמה נשמרה: מגיעים עם רכב.",
+      "passenger": "ההרשמה נשמרה: מחפשים מקום."
+    },
+    "openDashboard": "ללוח הבקרה"
   },
   "join": {
     "title": "איך מגיעים?",
@@ -80,7 +93,17 @@
       "label": "טלפון",
       "countryLabel": "קידומת"
     },
-    "continue": "המשך"
+    "continue": "המשך",
+    "partySize": {
+      "label": "כמה אתם?",
+      "hint": "כולל אותך",
+      "value_one": "אדם אחד",
+      "value_two": "{{count}} אנשים",
+      "value_other": "{{count}} אנשים",
+      "decrease": "אדם אחד פחות",
+      "increase": "אדם אחד יותר",
+      "value_many": "{{count}} אנשים"
+    }
   },
   "phone": {
     "picker": {
@@ -94,7 +117,8 @@
     "free_one": "{{count}} פנוי",
     "free_two": "{{count}} פנויים",
     "free_other": "{{count}} פנויים",
-    "full": "מלא"
+    "full": "מלא",
+    "free_many": "{{count}} פנויים"
   },
   "rides": {
     "eventLabel": "{{title}} · {{date}}",
@@ -112,7 +136,9 @@
       "outbound_other": "הלוך · {{count}} מקומות",
       "return_one": "חזור · מקום אחד",
       "return_two": "חזור · {{count}} מקומות",
-      "return_other": "חזור · {{count}} מקומות"
+      "return_other": "חזור · {{count}} מקומות",
+      "outbound_many": "הלוך · {{count}} מקומות",
+      "return_many": "חזור · {{count}} מקומות"
     },
     "departure": {
       "window": "יציאה בין {{from}} ל־{{to}}",
@@ -122,7 +148,16 @@
       "nearby": "{{city}}, {{distance}} ק״מ ממך"
     },
     "empty": "עדיין אין נהגים לנסיעה הזו.",
-    "found": "מצאתי מקום"
+    "found": "מצאתי מקום",
+    "foundWith": "נוסעים עם {{name}}",
+    "foundElsewhere": "יש לך מקום",
+    "searchAgain": "לחפש שוב",
+    "foundSheet": {
+      "title": "עם מי נוסעים?",
+      "withDriver": "עם {{name}}",
+      "elsewhere": "בדרך אחרת (חבר, מונית…)"
+    },
+    "nearbySeats_many": "{{count}} מקומות פנויים לידך"
   },
   "rideDetails": {
     "role": "נהג/ת",
@@ -143,14 +178,14 @@
     "note": "כדי לשריין מקום ולמסור את הכתובת המדויקת, צרו קשר עם {{name}}. המקומות הפנויים יעודכנו.",
     "call": "שיחה עם {{name}}",
     "whatsapp": "לכתוב בוואטסאפ",
-    "whatsappMessage": "היי {{name}}, אני פונה דרך Rido לגבי מקום ברכב שלך.",
-    "notFound": "הנסיעה לא נמצאה."
+    "whatsappMessage": "היי {{name}}, אני פונה דרך Rido לגבי מקום ברכב שלך."
   },
   "dev": {
     "language": {
       "label": "שפה (פיתוח)",
       "system": "טלפון"
-    }
+    },
+    "resetDemo": "טעינת ההדגמה מחדש"
   },
   "car": {
     "title": "הרכב שלך",
@@ -160,7 +195,8 @@
       "increase": "מקום אחד יותר",
       "value_one": "מקום פנוי אחד",
       "value_two": "{{count}} מקומות פנויים",
-      "value_other": "{{count}} מקומות פנויים"
+      "value_other": "{{count}} מקומות פנויים",
+      "value_many": "{{count}} מקומות פנויים"
     },
     "outbound": {
       "label": "הלוך: יציאה בין",
@@ -168,7 +204,7 @@
     },
     "return": {
       "label": "חזור: חזרה בין",
-      "hint": "אפשר יהיה לציין מספר מקומות אחר לחזור."
+      "hint": "אפשר לשנות את השעות ואת מספר המקומות בכל רגע."
     },
     "window": {
       "and": "עד",
@@ -205,7 +241,15 @@
     "people_other": "{{count}} אנשים",
     "contact": "יצירת קשר",
     "cancel": "אני כבר לא יכול/ה לנהוג",
-    "whatsappMessage": "היי {{name}}, אני נוהג/ת דרך Rido ויש לי מקום פנוי ברכב."
+    "whatsappMessage": "היי {{name}}, אני נוהג/ת דרך Rido ויש לי מקום פנוי ברכב.",
+    "cancelConfirm": {
+      "title": "לא לנהוג?",
+      "message": "הרכב שלך יוסר מהנסיעות המשותפות. הנוסעים שהיה להם מקום אצלך יחפשו שוב.",
+      "confirm": "הסרת הרכב",
+      "keep": "להשאיר את הנסיעה"
+    },
+    "people_many": "{{count}} אנשים",
+    "free_many": "{{count}} מקומות פנויים"
   },
   "createEvent": {
     "header": "אירוע חדש",
@@ -268,7 +312,10 @@
       "freeSeats_other": "מקומות פנויים",
       "unmatched_one": "בלי נסיעה",
       "unmatched_two": "בלי נסיעה",
-      "unmatched_other": "בלי נסיעה"
+      "unmatched_other": "בלי נסיעה",
+      "drivers_many": "נהגים",
+      "unmatched_many": "בלי נסיעה",
+      "freeSeats_many": "מקומות פנויים"
     },
     "unmatched": {
       "outbound": "עדיין בלי נסיעה הלוך",
@@ -284,9 +331,14 @@
       "seats_other": "{{count}} מקומות",
       "requests_one": "בקשה אחת",
       "requests_two": "{{count}} בקשות",
-      "requests_other": "{{count}} בקשות"
+      "requests_other": "{{count}} בקשות",
+      "requests_many": "{{count}} בקשות",
+      "seats_many": "{{count}} מקומות"
     },
-    "join": "גם אני מגיע/ה: נהג או נוסע"
+    "join": "גם אני מגיע/ה: נהג או נוסע",
+    "myEvents_many": "האירועים שלי · {{count}}",
+    "registered_many": "{{count}} נרשמו",
+    "noGuests": "עדיין אף אחד לא נרשם. שתפו את הקישור בקבוצה של האורחים כדי להתחיל את הנסיעות המשותפות."
   },
   "trips": {
     "title": "הנסיעות שלי",
@@ -301,7 +353,11 @@
     "past_one": "נסיעה אחת שעברה",
     "past_two": "{{count}} נסיעות שעברו",
     "past_other": "{{count}} נסיעות שעברו",
-    "linkHint": "קיבלת קישור? פתחו אותו מוואטסאפ והאירוע יופיע כאן."
+    "linkHint": "קיבלת קישור? פתחו אותו מוואטסאפ והאירוע יופיע כאן.",
+    "found": "נמצא מקום",
+    "pastTitle": "נסיעות שעברו",
+    "pastEmpty": "אין נסיעות שעברו.",
+    "past_many": "{{count}} נסיעות שעברו"
   },
   "tabs": {
     "trips": "הנסיעות שלי",
@@ -316,7 +372,10 @@
     "empty": "אין אירועים שארגנת",
     "past_one": "אירוע אחד שהסתיים",
     "past_two": "{{count}} אירועים שהסתיימו",
-    "past_other": "{{count}} אירועים שהסתיימו"
+    "past_other": "{{count}} אירועים שהסתיימו",
+    "pastTitle": "אירועים שהסתיימו",
+    "pastEmpty": "אין אירועים שהסתיימו.",
+    "past_many": "{{count}} אירועים שהסתיימו"
   },
   "profile": {
     "editHint": "עריכת השם והטלפון",
@@ -324,7 +383,8 @@
       "title": "הרכב שלי",
       "model": "דגם וצבע",
       "seats": "מספר מקומות בדרך כלל",
-      "departure": "נקודת יציאה קבועה"
+      "departure": "נקודת יציאה קבועה",
+      "notSet": "לא צוין"
     },
     "notifications": {
       "title": "התראות",
@@ -343,6 +403,18 @@
       "dark": "כהה"
     },
     "restartNote": "סגרו ופתחו מחדש את האפליקציה כדי להחיל את כיוון הקריאה של השפה.",
-    "signOut": "התנתקות"
+    "signOut": "התנתקות",
+    "empty": "הפרופיל מתמלא כשמצטרפים לנסיעה משותפת. אפשר גם ליצור אותו עכשיו.",
+    "create": "יצירת פרופיל",
+    "signOutConfirm": {
+      "title": "להתנתק?",
+      "message": "בלי חשבון, כל מה שנשמר במכשיר יימחק: פרופיל, נסיעות ואירועים.",
+      "keep": "להישאר מחוברים"
+    },
+    "form": {
+      "title": "הפרופיל שלי",
+      "save": "שמירה",
+      "modelPlaceholder": "טויוטה קורולה אפורה"
+    }
   }
 }

@@ -57,6 +57,22 @@ describe('traductions', () => {
   });
 });
 
+describe('pluriels hébreux', () => {
+  // Selon le moteur JavaScript, l'hébreu demande « two » ou « many » : sans ces formes, i18next
+  // afficherait le texte français.
+  it('a toutes ses formes, pour chaque pluriel', () => {
+    const keys = keysOf(he);
+    keys
+      .filter((key) => key.endsWith('_other'))
+      .forEach((key) => {
+        const base = key.replace(/_other$/, '');
+        expect(keys).toEqual(
+          expect.arrayContaining([`${base}_one`, `${base}_two`, `${base}_many`])
+        );
+      });
+  });
+});
+
 describe('pluriel du zéro en français', () => {
   it('reste au singulier, quel que soit le moteur JavaScript', async () => {
     await i18n.changeLanguage('fr');

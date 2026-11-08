@@ -3,6 +3,7 @@ import {
   formatSchedule,
   formatShortTime,
   formatTime,
+  formatShortName,
   formatTimeWindow,
 } from '../format';
 
@@ -29,7 +30,15 @@ describe('formatage des dates', () => {
 
   it('utilise le format 24 h et le jour en hébreu', () => {
     expect(formatTime(start, 'he')).toBe('19:30');
-    expect(formatTime(end, 'he')).toBe('1:00');
+    expect(formatTime(end, 'he')).toBe('01:00');
     expect(formatDay(start, 'he')).toContain('14');
+  });
+});
+
+describe('nom court', () => {
+  it('garde le point de l’initiale à sa place en hébreu', () => {
+    expect(formatShortName('Myriam', 'Benhamou')).toBe('Myriam B.');
+    expect(formatShortName('Myriam', 'Benhamou', 'he')).toBe('Myriam B.\u200e');
+    expect(formatShortName('Noa', '')).toBe('Noa');
   });
 });

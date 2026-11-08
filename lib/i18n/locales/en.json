@@ -34,7 +34,8 @@
       "both": "Outbound and return",
       "outbound": "Outbound only",
       "return": "Return only"
-    }
+    },
+    "notFoundTitle": "Event not found"
   },
   "invitation": {
     "howItWorks": "How it works",
@@ -42,7 +43,17 @@
     "step2": "Tell us where you’re leaving from",
     "step3": "Call or message people in your area directly",
     "join": "Join the carpool",
-    "joinHint": "No account needed · 1 minute"
+    "joinHint": "No account needed · 1 minute",
+    "myRide": {
+      "driver": "See my car",
+      "passenger": "See drivers"
+    },
+    "editRegistration": "Edit my sign-up",
+    "registered": {
+      "driver": "Signed up: you’re coming with your car.",
+      "passenger": "Signed up: you’re looking for a seat."
+    },
+    "openDashboard": "Open the dashboard"
   },
   "join": {
     "title": "How are you getting there?",
@@ -78,7 +89,15 @@
       "label": "Phone",
       "countryLabel": "Code"
     },
-    "continue": "Continue"
+    "continue": "Continue",
+    "partySize": {
+      "label": "How many of you?",
+      "hint": "Including you",
+      "value_one": "{{count}} person",
+      "value_other": "{{count}} people",
+      "decrease": "One person less",
+      "increase": "One person more"
+    }
   },
   "phone": {
     "picker": {
@@ -116,7 +135,15 @@
       "nearby": "{{city}}, {{distance}} km away"
     },
     "empty": "No drivers for this trip yet.",
-    "found": "I found a seat"
+    "found": "I found a seat",
+    "foundWith": "Riding with {{name}}",
+    "foundElsewhere": "You have a seat",
+    "searchAgain": "I’m looking again",
+    "foundSheet": {
+      "title": "Who are you riding with?",
+      "withDriver": "With {{name}}",
+      "elsewhere": "Another way (friend, taxi…)"
+    }
   },
   "rideDetails": {
     "role": "Driver",
@@ -137,14 +164,14 @@
     "note": "Contact {{name}} to book your seat and share your exact address. Seats will be updated.",
     "call": "Call {{name}}",
     "whatsapp": "Message on WhatsApp",
-    "whatsappMessage": "Hi {{name}}, I’m reaching out through Rido about a seat in your car.",
-    "notFound": "This ride can’t be found."
+    "whatsappMessage": "Hi {{name}}, I’m reaching out through Rido about a seat in your car."
   },
   "dev": {
     "language": {
       "label": "Language (development)",
       "system": "Phone"
-    }
+    },
+    "resetDemo": "Reload the demo"
   },
   "car": {
     "title": "Your car",
@@ -161,7 +188,7 @@
     },
     "return": {
       "label": "Return: you head back between",
-      "hint": "You’ll be able to set a different number of seats for the return."
+      "hint": "You can change your times and seats at any time."
     },
     "window": {
       "and": "and",
@@ -196,7 +223,13 @@
     "people_other": "{{count}} people",
     "contact": "Contact",
     "cancel": "I can’t drive anymore",
-    "whatsappMessage": "Hi {{name}}, I’m driving through Rido and have a seat in my car."
+    "whatsappMessage": "Hi {{name}}, I’m driving through Rido and have a seat in my car.",
+    "cancelConfirm": {
+      "title": "Stop driving?",
+      "message": "Your car will be removed from the carpool. Passengers who had a seat with you will look again.",
+      "confirm": "Remove my car",
+      "keep": "Keep my ride"
+    }
   },
   "createEvent": {
     "header": "New event",
@@ -270,7 +303,8 @@
       "requests_one": "{{count}} request",
       "requests_other": "{{count}} requests"
     },
-    "join": "I’m coming too: driver or passenger"
+    "join": "I’m coming too: driver or passenger",
+    "noGuests": "Nobody has signed up yet. Share the link in your guests’ group to get the carpool going."
   },
   "trips": {
     "title": "My rides",
@@ -284,7 +318,10 @@
     "stillLooking": "Still looking",
     "past_one": "{{count}} past ride",
     "past_other": "{{count}} past rides",
-    "linkHint": "Got a link? Open it from WhatsApp: the event will show up here."
+    "linkHint": "Got a link? Open it from WhatsApp: the event will show up here.",
+    "found": "Seat found",
+    "pastTitle": "Past rides",
+    "pastEmpty": "No past rides."
   },
   "tabs": {
     "trips": "My rides",
@@ -298,7 +335,9 @@
     "create": "Create an event",
     "empty": "You’re not organizing any event",
     "past_one": "{{count}} past event",
-    "past_other": "{{count}} past events"
+    "past_other": "{{count}} past events",
+    "pastTitle": "Past events",
+    "pastEmpty": "No past events."
   },
   "profile": {
     "editHint": "Edit your name and phone",
@@ -306,7 +345,8 @@
       "title": "My car",
       "model": "Model and color",
       "seats": "Usual seats",
-      "departure": "Usual departure"
+      "departure": "Usual departure",
+      "notSet": "Not set"
     },
     "notifications": {
       "title": "Notifications",
@@ -325,6 +365,18 @@
       "dark": "Dark"
     },
     "restartNote": "Close and reopen the app to apply this language’s reading direction.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "empty": "Your profile fills in when you join a carpool. You can also create it now.",
+    "create": "Create my profile",
+    "signOutConfirm": {
+      "title": "Sign out?",
+      "message": "Without an account, everything saved on this device will be erased: profile, rides and events.",
+      "keep": "Stay signed in"
+    },
+    "form": {
+      "title": "My profile",
+      "save": "Save",
+      "modelPlaceholder": "Grey Toyota Corolla"
+    }
   }
 }
