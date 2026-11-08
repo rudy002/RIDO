@@ -1,7 +1,7 @@
 import { CarFront, User } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View, type TextInputInstance } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
@@ -81,9 +81,9 @@ export function JoinRideForm({
   );
   const [partySize, setPartySize] = useState(initial?.partySize ?? 1);
 
-  const lastNameRef = useRef<TextInput>(null);
-  const firstNameRef = useRef<TextInput>(null);
-  const phoneRef = useRef<TextInput>(null);
+  const lastNameRef = useRef<TextInputInstance>(null);
+  const firstNameRef = useRef<TextInputInstance>(null);
+  const phoneRef = useRef<TextInputInstance>(null);
 
   const draft = rideDraftSchema.safeParse({
     role,

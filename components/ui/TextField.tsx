@@ -1,5 +1,12 @@
 import { useState, type Ref } from 'react';
-import { TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from 'react-native';
+import {
+  TextInput,
+  View,
+  type StyleProp,
+  type TextInputProps,
+  type ViewStyle,
+  type TextInputInstance,
+} from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 
@@ -30,7 +37,7 @@ type TextFieldProps = Pick<
   labelHidden?: boolean;
   /** Aide affichée sous le champ. */
   hint?: string;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
   style?: StyleProp<ViewStyle>;
 };
 

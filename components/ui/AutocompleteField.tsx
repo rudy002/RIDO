@@ -1,6 +1,6 @@
 import { PenLine, type LucideIcon } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, View, type TextInputProps } from 'react-native';
+import { Pressable, View, type TextInputProps, type ViewInstance } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 
@@ -55,7 +55,7 @@ export function AutocompleteField({
   const { colors, components, spacing, sizes, radius } = useTheme();
   const [focused, setFocused] = useState(false);
 
-  const containerRef = useRef<View>(null);
+  const containerRef = useRef<ViewInstance>(null);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(

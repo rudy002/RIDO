@@ -17,7 +17,7 @@ const TABS = [
 export default function TabsLayout() {
   const { t } = useTranslation();
 
-  const renderTabBar = ({ state, navigation }: TabBarProps) => (
+  const renderTabBar = ({ state, emitter, navigateToTab }: TabBarProps) => (
     <TabBar
       items={TABS.map((tab) => {
         const index = state.routes.findIndex((route) => route.name === tab.name);
@@ -28,12 +28,13 @@ export default function TabsLayout() {
           icon: tab.icon,
           selected: state.index === index,
           onPress: () => {
-            const event = navigation.emit({
+            if (!route) return;
+            const event = emitter.emit({
               type: 'tabPress',
-              target: route?.key,
+              target: route.key,
               canPreventDefault: true,
             });
-            if (state.index !== index && !event.defaultPrevented) navigation.navigate(tab.name);
+            if (state.index !== index && !event.defaultPrevented) navigateToTab(route.key);
           },
         };
       })}

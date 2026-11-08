@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View, type TextInputInstance } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
@@ -67,7 +67,7 @@ export function CreateEventForm({
     initial?.directions ?? [...TRIP_DIRECTIONS]
   );
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const venueRef = useRef<TextInput>(null);
+  const venueRef = useRef<TextInputInstance>(null);
 
   const day = date ?? firstDay;
   const missingTrips = directions.length === 0;

@@ -1,7 +1,7 @@
 import { ChevronDown } from 'lucide-react-native';
 import { useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, View, type TextInputInstance } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 import { countryOf, examplePhoneOf, sanitizePhoneInput, type PhoneInput } from '@/lib/phone/phone';
@@ -16,7 +16,7 @@ type PhoneFieldProps = {
   countryLabel: string;
   value: PhoneInput;
   onChange: (value: PhoneInput) => void;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 };
 
 const PRESSED_OPACITY = 0.85;

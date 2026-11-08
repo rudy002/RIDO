@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View, type TextInputInstance } from 'react-native';
 
 import { ZoneField, type ZoneInput } from '@/components/rides/ZoneField';
 import { AppText } from '@/components/ui/AppText';
@@ -45,8 +45,8 @@ export function ProfileForm({ profile, country, onClose, onSave }: ProfileFormPr
   const [zone, setZone] = useState<ZoneInput>(
     usual ? { text: usual.name, zone: usual } : { text: '', zone: null }
   );
-  const lastNameRef = useRef<TextInput>(null);
-  const phoneRef = useRef<TextInput>(null);
+  const lastNameRef = useRef<TextInputInstance>(null);
+  const phoneRef = useRef<TextInputInstance>(null);
 
   const international = toInternational(phone);
   const ready = firstName.trim() !== '' && lastName.trim() !== '' && international !== null;
