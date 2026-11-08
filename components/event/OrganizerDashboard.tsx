@@ -1,4 +1,4 @@
-import { Share2 } from 'lucide-react-native';
+import { Pencil, Share2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -30,6 +30,7 @@ type OrganizerDashboardProps = {
   onSwitchEvent: () => void;
   onBack: () => void;
   onShare: () => void;
+  onEditEvent: () => void;
   onRelaunch: (guest: UnmatchedGuest) => void;
   /** L'organisateur est déjà inscrit : le bouton du bas mène à son trajet. */
   registeredAs?: RideRole;
@@ -45,6 +46,7 @@ export function OrganizerDashboard({
   onSwitchEvent,
   onBack,
   onShare,
+  onEditEvent,
   onRelaunch,
   registeredAs,
   onJoin,
@@ -79,8 +81,10 @@ export function OrganizerDashboard({
         <BackButton onPress={onBack} />
         <EventSwitcher
           label={t('dashboard.myEvents', { count: eventsCount })}
+          count={eventsCount > 1 ? eventsCount : undefined}
           onPress={onSwitchEvent}
         />
+        <IconButton icon={Pencil} label={t('dashboard.editEvent')} onPress={onEditEvent} />
         <IconButton icon={Share2} label={t('dashboard.share')} onPress={onShare} tone="primary" />
       </View>
 

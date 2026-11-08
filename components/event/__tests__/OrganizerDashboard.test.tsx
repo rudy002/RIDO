@@ -17,6 +17,7 @@ async function renderDashboard(
     onSwitchEvent: jest.fn(),
     onBack: jest.fn(),
     onShare: jest.fn(),
+    onEditEvent: jest.fn(),
     onRelaunch: jest.fn(),
     onJoin: jest.fn(),
     onOpenMyRide: jest.fn(),
@@ -93,6 +94,7 @@ describe('OrganizerDashboard', () => {
       onSwitchEvent: jest.fn(),
       onBack: jest.fn(),
       onShare: jest.fn(),
+      onEditEvent: jest.fn(),
       onRelaunch: jest.fn(),
       onJoin: jest.fn(),
       onOpenMyRide: jest.fn(),
@@ -123,6 +125,7 @@ describe('OrganizerDashboard', () => {
         onSwitchEvent={jest.fn()}
         onBack={jest.fn()}
         onShare={jest.fn()}
+        onEditEvent={jest.fn()}
         onRelaunch={jest.fn()}
         onJoin={jest.fn()}
         onOpenMyRide={onOpenMyRide}

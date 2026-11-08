@@ -296,3 +296,89 @@ export function updateProfile(data: AppData, profile: UserProfile): AppData {
 export function signOut(_data: AppData): AppData {
   return emptyData(createId('user'));
 }
+
+const shift = (date: Date, ms: number) => new Date(date.getTime() + ms);
+
+/**
+ * Modification d'un événement par l'organisateur. Les départs des conducteurs suivent le
+ * changement d'horaire (aller : décalage du début ; retour : décalage de la fin) ; un trajet
+ * retiré emporte ses inscriptions, et une personne qui n'a plus aucun trajet est désinscrite.
+ */
+export function updateEvent(data: AppData, eventId: string, draft: EventDraft): AppData {
+  const event = data.events.find((e) => e.id === eventId);
+  if (!event) return data;
+  const startShift = draft.startsAt.getTime() - event.startsAt.getTime();
+  const endShift = draft.endsAt.getTime() - event.endsAt.getTime();
+  const removed = event.directions.filter((direction) => !draft.directions.includes(direction));
+
+  let next: AppData = {
+    ...data,
+    events: data.events.map((e) =>
+      e.id === eventId
+        ? {
+            ...e,
+            type: draft.type,
+            title: draft.name,
+            venue: draft.venue,
+            startsAt: draft.startsAt,
+            endsAt: draft.endsAt,
+            directions: draft.directions,
+          }
+        : e
+    ),
+    driverLegs: data.driverLegs.map((leg) => {
+      if (leg.eventId !== eventId) return leg;
+      const ms = leg.direction === 'outbound' ? startShift : endShift;
+      if (ms === 0) return leg;
+      const departure = leg.departure.to
+        ? { from: shift(leg.departure.from, ms), to: shift(leg.departure.to, ms) }
+        : { from: shift(leg.departure.from, ms) };
+      return { ...leg, departure };
+    }),
+  };
+
+  if (removed.length > 0) {
+    const inEvent = <T extends { eventId: string; direction: TripDirection }>(leg: T) =>
+      leg.eventId === eventId && removed.includes(leg.direction);
+    next = removeDriverLegs(
+      next,
+      next.driverLegs.filter(inEvent).map((leg) => leg.id)
+    );
+    next = removePassengerLegs(
+      next,
+      next.passengerLegs.filter(inEvent).map((leg) => leg.id)
+    );
+    next = {
+      ...next,
+      participants: next.participants
+        .map((p) =>
+          p.eventId === eventId
+            ? { ...p, directions: p.directions.filter((d) => !removed.includes(d)) }
+            : p
+        )
+        .filter((p) => p.directions.length > 0),
+    };
+  }
+  return next;
+}
+
+/** Nombre de personnes inscrites aux trajets qu'une modification retirerait (pour prévenir). */
+export function registrationsLostBy(data: AppData, eventId: string, draft: EventDraft): number {
+  const event = data.events.find((e) => e.id === eventId);
+  if (!event) return 0;
+  const removed = event.directions.filter((direction) => !draft.directions.includes(direction));
+  return data.participants.filter(
+    (p) => p.eventId === eventId && p.directions.some((d) => removed.includes(d))
+  ).length;
+}
+
+/** Suppression d'un événement et de tout ce qui s'y rattache. */
+export function deleteEvent(data: AppData, eventId: string): AppData {
+  return {
+    ...data,
+    events: data.events.filter((e) => e.id !== eventId),
+    participants: data.participants.filter((p) => p.eventId !== eventId),
+    driverLegs: data.driverLegs.filter((leg) => leg.eventId !== eventId),
+    passengerLegs: data.passengerLegs.filter((leg) => leg.eventId !== eventId),
+  };
+}

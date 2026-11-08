@@ -1,12 +1,15 @@
 import {
   cancelDriving,
+  deleteEvent,
   createEvent,
   joinEvent,
   markFound,
   publishCar,
+  registrationsLostBy,
   searchAgain,
   setBookings,
   signOut,
+  updateEvent,
 } from '../actions';
 import { buildDemoData, DEMO_EVENT_ID } from '../demo';
 import { eventOverview, myParticipant, passengerStatusOf } from '../selectors';
@@ -126,5 +129,54 @@ describe('actions', () => {
     expect(out.userId).not.toBe('me');
     expect(out.profile).toBeNull();
     expect(out.events).toEqual([]);
+  });
+});
+
+describe('modification d’un événement', () => {
+  const data = buildDemoData(NOW);
+  const wedding = data.events.find((e) => e.id === DEMO_EVENT_ID)!;
+  const draft = {
+    type: wedding.type,
+    name: 'Mariage de Léa et Samuel',
+    venue: 'Nouveau domaine',
+    startsAt: new Date(2025, 5, 21, 20, 30),
+    endsAt: new Date(2025, 5, 22, 2, 0),
+    directions: ['outbound' as const, 'return' as const],
+  };
+
+  it('décale les départs des conducteurs avec l’horaire de l’événement', () => {
+    const edited = updateEvent(data, DEMO_EVENT_ID, draft);
+    const event = edited.events.find((e) => e.id === DEMO_EVENT_ID)!;
+    expect(event).toMatchObject({ venue: 'Nouveau domaine', startsAt: draft.startsAt });
+    // Début décalé d'une semaine + 1 h, fin d'une semaine + 1 h : 18h00 → 19h00 le 21.
+    expect(edited.driverLegs.find((l) => l.id === 'd-david-out')?.departure).toEqual({
+      from: new Date(2025, 5, 21, 19, 0),
+      to: new Date(2025, 5, 21, 19, 30),
+    });
+    expect(edited.driverLegs.find((l) => l.id === 'd-david-ret')?.departure.from).toEqual(
+      new Date(2025, 5, 22, 1, 30)
+    );
+  });
+
+  it('retire les inscriptions d’un trajet supprimé, et prévient avant', () => {
+    const outboundOnly = { ...draft, directions: ['outbound' as const] };
+    expect(registrationsLostBy(data, DEMO_EVENT_ID, outboundOnly)).toBe(9);
+    const edited = updateEvent(data, DEMO_EVENT_ID, outboundOnly);
+    expect(
+      edited.driverLegs.some((l) => l.eventId === DEMO_EVENT_ID && l.direction === 'return')
+    ).toBe(false);
+    expect(
+      edited.passengerLegs.some((l) => l.eventId === DEMO_EVENT_ID && l.direction === 'return')
+    ).toBe(false);
+    // Sarah Levy ne conduisait qu'au retour : elle n'est plus inscrite.
+    expect(edited.participants.some((p) => p.id === 'p-sarahl')).toBe(false);
+    expect(edited.participants.find((p) => p.id === 'p-david')?.directions).toEqual(['outbound']);
+  });
+
+  it('supprime l’événement et tout ce qui s’y rattache', () => {
+    const deleted = deleteEvent(data, DEMO_EVENT_ID);
+    expect(deleted.events.some((e) => e.id === DEMO_EVENT_ID)).toBe(false);
+    expect(deleted.participants.some((p) => p.eventId === DEMO_EVENT_ID)).toBe(false);
+    expect(deleted.driverLegs.some((l) => l.eventId === DEMO_EVENT_ID)).toBe(false);
   });
 });

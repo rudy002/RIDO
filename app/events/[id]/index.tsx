@@ -39,6 +39,9 @@ export default function OrganizerDashboardRoute() {
           onSwitchEvent={() => router.navigate('/my-events')}
           onBack={() => (router.canGoBack() ? router.back() : router.replace('/my-events'))}
           onShare={() => shareEvent(summary)}
+          onEditEvent={() =>
+            router.push({ pathname: '/events/[id]/edit', params: { id: summary.id } })
+          }
           onRelaunch={(guest) =>
             void Linking.openURL(
               whatsappUrl(

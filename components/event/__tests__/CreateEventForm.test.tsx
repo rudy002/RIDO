@@ -89,4 +89,39 @@ describe('CreateEventForm', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Fermer' }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('modifie un événement existant, sans perdre ce qui ne change pas', async () => {
+    const onCreate = jest.fn();
+    const onDelete = jest.fn();
+    const initial = {
+      type: 'wedding' as const,
+      name: 'Mariage de Léa et Samuel',
+      venue: 'Domaine des Oliviers',
+      startsAt: new Date(2025, 5, 14, 19, 30),
+      endsAt: new Date(2025, 5, 15, 1, 0),
+      directions: ['outbound' as const, 'return' as const],
+    };
+    await render(
+      <CreateEventForm
+        initial={initial}
+        onClose={jest.fn()}
+        onCreate={onCreate}
+        onDelete={onDelete}
+        today={TODAY}
+      />
+    );
+
+    expect(screen.getByRole('header', { name: 'Modifier l’événement' })).toBeOnTheScreen();
+    expect(screen.getByLabelText('Lieu')).toHaveDisplayValue('Domaine des Oliviers');
+    expect(screen.getByRole('button', { name: 'Date, Sam. 14/06' })).toBeOnTheScreen();
+
+    await fireEvent.changeText(screen.getByLabelText('Lieu'), 'Salle des fêtes');
+    await fireEvent.press(screen.getByRole('button', { name: 'Enregistrer' }));
+    expect(onCreate).toHaveBeenCalledWith({ ...initial, venue: 'Salle des fêtes' });
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Supprimer l’événement' }));
+    expect(onDelete).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Supprimer' }));
+    expect(onDelete).toHaveBeenCalledTimes(1);
+  });
 });

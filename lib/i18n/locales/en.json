@@ -260,7 +260,26 @@
       "missing": "Pick at least one ride: outbound, return or both."
     },
     "submit": "Create and get the link",
-    "otherType": "Other"
+    "otherType": "Other",
+    "edit": {
+      "header": "Edit",
+      "title": "Edit the event",
+      "submit": "Save",
+      "delete": "Delete the event",
+      "deleteConfirm": {
+        "title": "Delete the event?",
+        "message": "The event and every sign-up will be erased. The link will stop working.",
+        "confirm": "Delete",
+        "keep": "Keep the event"
+      },
+      "removeTrips": {
+        "title": "Remove a ride?",
+        "message_one": "{{count}} person signed up for this ride will lose their sign-up.",
+        "message_other": "{{count}} people signed up for this ride will lose their sign-up.",
+        "confirm": "Save anyway",
+        "keep": "Cancel"
+      }
+    }
   },
   "calendar": {
     "previous": "Previous month",
@@ -277,7 +296,7 @@
   },
   "dashboard": {
     "myEvents_one": "My event",
-    "myEvents_other": "My events · {{count}}",
+    "myEvents_other": "My events",
     "share": "Share the link",
     "registered_one": "{{count}} signed up",
     "registered_other": "{{count}} signed up",
@@ -307,7 +326,8 @@
       "requests_other": "{{count}} requests"
     },
     "join": "I’m coming too: driver or passenger",
-    "noGuests": "Nobody has signed up yet. Share the link in your guests’ group to get the carpool going."
+    "noGuests": "Nobody has signed up yet. Share the link in your guests’ group to get the carpool going.",
+    "editEvent": "Edit the event"
   },
   "trips": {
     "title": "My rides",

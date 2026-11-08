@@ -1,26 +1,28 @@
 import { ChevronDown } from 'lucide-react-native';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
 import { Icon } from '@/components/ui/Icon';
 import { useTheme } from '@/lib/design/use-theme';
 
 type EventSwitcherProps = {
-  /** « Mes événements · 2 ». */
+  /** « Mes événements » (coupé si la place manque). */
   label: string;
+  /** Nombre d'événements, toujours visible ; absent s'il n'y en a qu'un. */
+  count?: number;
   onPress: () => void;
 };
 
 const PRESSED_OPACITY = 0.85;
 
 /** Pilule pour passer d'un de ses événements à l'autre. */
-export function EventSwitcher({ label, onPress }: EventSwitcherProps) {
+export function EventSwitcher({ label, count, onPress }: EventSwitcherProps) {
   const { colors, spacing, sizes, radius } = useTheme();
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={count ? `${label} · ${count}` : label}
       onPress={onPress}
       style={({ pressed }) => [
         {
@@ -35,9 +37,11 @@ export function EventSwitcher({ label, onPress }: EventSwitcherProps) {
         },
         pressed && { opacity: PRESSED_OPACITY },
       ]}>
-      <AppText variant="label" numberOfLines={1} style={{ flex: 1 }}>
+      <AppText variant="label" numberOfLines={1} style={{ flexShrink: 1 }}>
         {label}
       </AppText>
+      {count ? <AppText variant="label">{`· ${count}`}</AppText> : null}
+      <View style={{ flex: 1 }} />
       <Icon as={ChevronDown} />
     </Pressable>
   );
