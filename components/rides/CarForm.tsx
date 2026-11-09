@@ -28,6 +28,8 @@ type CarFormProps = {
   defaults: Record<TripDirection, TimeWindow>;
   /** Places déjà publiées, ou celles du profil. */
   initialSeats?: number;
+  /** Places déjà prises : on ne peut pas descendre en dessous. */
+  minSeats?: number;
   /** Aide sous l'aller (« L'événement commence à 19h30. »), selon le contexte du trajet. */
   outboundHint?: string;
   onBack: () => void;
@@ -43,6 +45,7 @@ export function CarForm({
   directions,
   defaults,
   initialSeats = DEFAULT_SEATS,
+  minSeats = MIN_FREE_SEATS,
   outboundHint,
   onBack,
   onSubmit,
@@ -104,7 +107,7 @@ export function CarForm({
         <AppText variant="label">{t('car.seats.label')}</AppText>
         <Stepper
           value={seats}
-          min={MIN_FREE_SEATS}
+          min={minSeats}
           max={MAX_FREE_SEATS}
           onChange={setSeats}
           valueLabel={t('car.seats.value', { count: seats })}

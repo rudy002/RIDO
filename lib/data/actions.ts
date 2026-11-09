@@ -2,6 +2,7 @@ import { eventSlug, uniqueSlug } from '@/lib/events/slug';
 import type { EventDraft } from '@/lib/events/types';
 import type { CountryCode } from '@/lib/phone/phone';
 import type { UserProfile } from '@/lib/profile/types';
+import { bookedSeats, freeSeats } from '@/lib/rides/bookings';
 import type { Booking, CarDraft, RideDraft, TripDirection } from '@/lib/rides/types';
 
 import { emptyData } from './demo';
@@ -89,6 +90,38 @@ function removePassengerLegs(data: AppData, legIds: string[]): AppData {
 }
 
 /**
+ * Adapte la réservation d'un passager à la taille de son groupe. Si le groupe ne tient plus dans
+ * la voiture, la réservation est retirée et il cherche à nouveau, plutôt que de surcharger.
+ */
+function resizeBooking(data: AppData, passengerLegId: string, seats: number): AppData {
+  const car = data.driverLegs.find((leg) =>
+    leg.bookings.some((booking) => booking.passengerLegId === passengerLegId)
+  );
+  const booking = car?.bookings.find((b) => b.passengerLegId === passengerLegId);
+  if (!car || !booking || booking.seats === seats) return data;
+  if (seats > booking.seats + freeSeats(car.bookings, car.totalSeats)) {
+    const next = removeBookingOf(data, passengerLegId);
+    return {
+      ...next,
+      passengerLegs: next.passengerLegs.map((p) => (p.id === passengerLegId ? withoutFound(p) : p)),
+    };
+  }
+  return {
+    ...data,
+    driverLegs: data.driverLegs.map((leg) =>
+      leg.id === car.id
+        ? {
+            ...leg,
+            bookings: leg.bookings.map((b) =>
+              b.passengerLegId === passengerLegId ? { ...b, seats } : b
+            ),
+          }
+        : leg
+    ),
+  };
+}
+
+/**
  * Inscription (ou modification) de l'utilisateur à un événement (I2). Changer de rôle ou de trajets
  * retire ce qui ne s'applique plus, sans perdre le reste (places déjà trouvées, voiture déjà publiée).
  */
@@ -139,16 +172,19 @@ export function joinEvent(data: AppData, eventId: string, registration: RideDraf
     next = {
       ...next,
       passengerLegs: [...next.passengerLegs, ...added],
-      // Le nombre de personnes a pu changer : les places déjà réservées suivent.
+      // Le nombre de personnes a pu changer : les places réservées suivent, si tout le groupe tient.
       driverLegs: next.driverLegs.map((leg) => ({
         ...leg,
         bookings: leg.bookings.map((booking) =>
           myPassengerLegs.some((own) => own.id === booking.passengerLegId)
-            ? { ...booking, name: participant.firstName, seats: participant.partySize }
+            ? { ...booking, name: participant.firstName }
             : booking
         ),
       })),
     };
+    for (const own of next.passengerLegs.filter((leg) => leg.participantId === participant.id)) {
+      next = resizeBooking(next, own.id, participant.partySize);
+    }
   } else {
     next = removePassengerLegs(
       next,
@@ -198,7 +234,8 @@ export function publishCar(data: AppData, eventId: string, draft: CarDraft): App
       participantId: me.id,
       direction,
       departure: window ? { from: window.from, to: window.to } : existing!.departure,
-      totalSeats: draft.seats,
+      // Jamais moins que les places déjà prises : personne ne perd sa place sans le savoir.
+      totalSeats: Math.max(draft.seats, bookedSeats(existing?.bookings ?? [])),
       bookings: existing?.bookings ?? [],
     };
   });
@@ -242,6 +279,9 @@ export function markFound(
   if (!me || !leg) return data;
   let next = removeBookingOf(data, leg.id);
   if (driverLegId) {
+    const car = next.driverLegs.find((d) => d.id === driverLegId);
+    // La voiture a pu se remplir entre-temps : on ne réserve pas au-delà des places.
+    if (!car || freeSeats(car.bookings, car.totalSeats) < me.partySize) return data;
     const booking: Booking = {
       id: `booking-${leg.id}`,
       name: me.firstName,

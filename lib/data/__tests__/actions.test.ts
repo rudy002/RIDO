@@ -180,3 +180,46 @@ describe('modification d’un événement', () => {
     expect(deleted.driverLegs.some((l) => l.eventId === DEMO_EVENT_ID)).toBe(false);
   });
 });
+
+describe('capacité des voitures', () => {
+  const ESTHER_LEG = 's-esther-out';
+
+  it('ne descend jamais sous les places déjà prises', () => {
+    const edited = publishCar(buildDemoData(NOW), DEMO_EVENT_ID, {
+      seats: 1,
+      legs: { outbound: { from: new Date(2025, 5, 14, 18), to: new Date(2025, 5, 14, 18, 30) } },
+    });
+    expect(edited.driverLegs.find((leg) => leg.id === 'd-david-out')?.totalSeats).toBe(2);
+    expect(legOf(edited, ESTHER_LEG)?.foundWith).toBe('d-david-out');
+  });
+
+  it('refuse une réservation pour laquelle il manque des places', () => {
+    const data = buildDemoData(NOW);
+    const full = setBookings(data, 'd-noa-yoni-ret', [{ id: 'm', seats: 3 }]);
+    const refused = markFound(full, 'noa', 'return', 'd-noa-yoni-ret');
+    expect(refused).toBe(full);
+    expect(legOf(refused, 's-noa-me-ret')?.foundWith).toBeUndefined();
+  });
+
+  const noaMe = (data: ReturnType<typeof buildDemoData>) =>
+    data.participants.find((p) => p.id === 'p-noa-me')!;
+
+  it('suit la taille du groupe si elle tient, sinon remet le passager en recherche', () => {
+    const base = buildDemoData(NOW);
+    const me = noaMe(base);
+    const registration2 = {
+      role: 'passenger' as const,
+      directions: me.directions,
+      zone: me.zone,
+      firstName: me.firstName,
+      lastName: me.lastName,
+      phone: me.phone,
+    };
+    const grown = joinEvent(base, 'noa', { ...registration2, partySize: 3 });
+    expect(grown.driverLegs.find((l) => l.id === 'd-noa-myriam-out')?.bookings[0].seats).toBe(3);
+
+    const tooMany = joinEvent(base, 'noa', { ...registration2, partySize: 5 });
+    expect(tooMany.driverLegs.find((l) => l.id === 'd-noa-myriam-out')?.bookings).toEqual([]);
+    expect(legOf(tooMany, 's-noa-me-out')?.foundWith).toBeUndefined();
+  });
+});

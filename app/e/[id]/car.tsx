@@ -8,8 +8,9 @@ import { useEventContext } from '@/lib/data/hooks';
 import { directionsOf, driverLegsOf } from '@/lib/data/selectors';
 import { updateAppData } from '@/lib/data/store';
 import { formatTime } from '@/lib/i18n/format';
+import { bookedSeats } from '@/lib/rides/bookings';
 import { addMinutes } from '@/lib/rides/time-slots';
-import type { Departure, TimeWindow } from '@/lib/rides/types';
+import { MIN_FREE_SEATS, type Departure, type TimeWindow } from '@/lib/rides/types';
 
 /** Créneau d'une demi-heure par défaut. */
 const WINDOW_MINUTES = 30;
@@ -59,6 +60,10 @@ export default function CarRoute() {
             : { from: addMinutes(summary.returnAround, -WINDOW_MINUTES), to: summary.returnAround },
         }}
         initialSeats={anyLeg?.totalSeats ?? data.profile?.car.seats}
+        minSeats={Math.max(
+          MIN_FREE_SEATS,
+          ...Object.values(published).map((leg) => bookedSeats(leg.bookings))
+        )}
         outboundHint={t('car.outbound.hint', { time: formatTime(event.startsAt, language) })}
         onBack={goBack}
         onSubmit={(draft) => {
