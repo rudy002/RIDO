@@ -5,7 +5,6 @@ import { signOut, updateProfile } from '@/lib/data/actions';
 import { updateAppData, useAppData } from '@/lib/data/store';
 import { setAppearance, useAppearance } from '@/lib/design/appearance';
 import { changeAppLanguage } from '@/lib/i18n/change-language';
-import { reloadForDirection } from '@/lib/i18n/restart';
 
 /** A3 : « Profil ». */
 export default function ProfileRoute() {
@@ -19,12 +18,7 @@ export default function ProfileRoute() {
       profile={data.profile}
       appearance={appearance}
       onAppearanceChange={(value) => void setAppearance(value)}
-      onLanguageChange={async (language) => {
-        const result = await changeAppLanguage(language);
-        // Quand l'appli peut se recharger seule, inutile de demander de la rouvrir.
-        if (result.needsRestart && (await reloadForDirection())) return { needsRestart: false };
-        return result;
-      }}
+      onLanguageChange={(language) => void changeAppLanguage(language)}
       onNotificationsChange={(notifications) =>
         updateAppData((current) =>
           current.profile ? updateProfile(current, { ...current.profile, notifications }) : current

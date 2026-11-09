@@ -52,7 +52,7 @@ export function TextField({
   onBlur,
   ...inputProps
 }: TextFieldProps) {
-  const { components, colors, spacing } = useTheme();
+  const { components, colors, spacing, isRTL } = useTheme();
   const [focused, setFocused] = useState(false);
 
   return (
@@ -76,6 +76,8 @@ export function TextField({
         style={[
           components.input.container,
           components.input.text,
+          // Un TextInput ne suit pas le sens de son parent : alignement explicite selon la langue.
+          { textAlign: isRTL ? 'right' : 'left' },
           focused && { borderColor: colors.inverse },
         ]}
       />

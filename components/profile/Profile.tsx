@@ -24,8 +24,7 @@ type ProfileProps = {
   profile: UserProfile | null;
   appearance: Appearance;
   onAppearanceChange: (appearance: Appearance) => void;
-  /** Indique si le changement ne s'appliquera qu'au prochain lancement (passage à l'hébreu). */
-  onLanguageChange: (language: Language) => Promise<{ needsRestart: boolean }>;
+  onLanguageChange: (language: Language) => void;
   onNotificationsChange: (notifications: UserProfile['notifications']) => void;
   onEditProfile: () => void;
   onEditCar: (field: CarField) => void;
@@ -50,17 +49,10 @@ export function Profile({
   const { t } = useTranslation();
   const { spacing, radius, language } = useTheme();
   const [sheet, setSheet] = useState<Sheet>(null);
-  const [restartNote, setRestartNote] = useState(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   const toggle = (key: keyof UserProfile['notifications'], value: boolean) => {
     if (profile) onNotificationsChange({ ...profile.notifications, [key]: value });
-  };
-
-  const chooseLanguage = async (next: Language) => {
-    const { needsRestart } = await onLanguageChange(next);
-    if (needsRestart) setRestartNote(true);
-    else setSheet(null);
   };
 
   return (
@@ -185,12 +177,11 @@ export function Profile({
         title={t('profile.app.language')}
         value={language}
         options={LANGUAGES.map((value) => ({ value, label: LANGUAGE_NAMES[value] }))}
-        onSelect={(value) => void chooseLanguage(value)}
-        onClose={() => {
+        onSelect={(value) => {
+          onLanguageChange(value);
           setSheet(null);
-          setRestartNote(false);
         }}
-        note={restartNote ? t('profile.restartNote') : undefined}
+        onClose={() => setSheet(null)}
       />
     </Screen>
   );

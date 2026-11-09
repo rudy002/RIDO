@@ -1,9 +1,7 @@
-import { Info } from 'lucide-react-native';
 import { View } from 'react-native';
 
 import { useTheme } from '@/lib/design/use-theme';
 
-import { InfoNote } from './InfoNote';
 import { OptionRow } from './OptionRow';
 import { PickerSheet } from './PickerSheet';
 
@@ -16,8 +14,6 @@ type OptionSheetProps<T extends string> = {
   value: T;
   onSelect: (value: T) => void;
   onClose: () => void;
-  /** Message sous la liste (ex. : redémarrage nécessaire). */
-  note?: string;
 };
 
 /** Fenêtre de choix parmi quelques options (apparence, langue). */
@@ -28,7 +24,6 @@ export function OptionSheet<T extends string>({
   value,
   onSelect,
   onClose,
-  note,
 }: OptionSheetProps<T>) {
   const { spacing } = useTheme();
 
@@ -44,11 +39,6 @@ export function OptionSheet<T extends string>({
           />
         ))}
       </View>
-      {note ? (
-        <View style={{ padding: spacing.screen }} accessibilityLiveRegion="polite">
-          <InfoNote icon={Info} text={note} />
-        </View>
-      ) : null}
     </PickerSheet>
   );
 }

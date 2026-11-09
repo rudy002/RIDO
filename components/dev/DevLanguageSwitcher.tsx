@@ -1,7 +1,7 @@
 import { Languages, RotateCcw } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DevSettings, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/Icon';
@@ -18,7 +18,6 @@ const CHOICES: Choice[] = [...LANGUAGES, null];
 /**
  * Outil de développement (jamais affiché dans l'appli publiée) : change la langue d'un geste,
  * et remet les données de démonstration (↺).
- * Passer de/vers l'hébreu redémarre l'appli, seul moyen d'appliquer le sens RTL.
  */
 export function DevLanguageSwitcher() {
   const { t } = useTranslation();
@@ -28,8 +27,7 @@ export function DevLanguageSwitcher() {
 
   const choose = async (choice: Choice) => {
     setOpen(false);
-    const { needsRestart } = await changeAppLanguage(choice);
-    if (needsRestart) DevSettings.reload();
+    await changeAppLanguage(choice);
   };
 
   const item = (key: string, label: string, onPress: () => void, active = false) => (

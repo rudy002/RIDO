@@ -6,10 +6,10 @@ import { DEMO } from '@/lib/data/__fixtures__/demo';
 
 import { Profile } from '../Profile';
 
-async function renderProfile(needsRestart = false, profile = DEMO.profile) {
+async function renderProfile(profile = DEMO.profile) {
   const handlers = {
     onAppearanceChange: jest.fn(),
-    onLanguageChange: jest.fn(() => Promise.resolve({ needsRestart })),
+    onLanguageChange: jest.fn(),
     onNotificationsChange: jest.fn(),
     onEditProfile: jest.fn(),
     onEditCar: jest.fn(),
@@ -61,18 +61,14 @@ describe('Profile', () => {
     expect(onAppearanceChange).toHaveBeenCalledWith('dark');
   });
 
-  it('prévient qu’un redémarrage est nécessaire pour l’hébreu', async () => {
-    const { onLanguageChange } = await renderProfile(true);
+  it('change de langue dans une feuille, sans redémarrage', async () => {
+    const { onLanguageChange } = await renderProfile();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Langue, Français' }));
     await fireEvent.press(screen.getByRole('button', { name: 'עברית' }));
 
     expect(onLanguageChange).toHaveBeenCalledWith('he');
-    expect(
-      screen.getByText(
-        'Ferme puis rouvre l’appli pour appliquer le sens de lecture de cette langue.'
-      )
-    ).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'עברית' })).toBeNull();
   });
 
   it('transmet les autres actions', async () => {
@@ -95,7 +91,7 @@ describe('Profile', () => {
   });
 
   it('propose de créer un profil quand il n’y en a pas', async () => {
-    const handlers = await renderProfile(false, null);
+    const handlers = await renderProfile(null);
 
     expect(screen.queryByRole('button', { name: 'Se déconnecter' })).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Créer mon profil' }));

@@ -19,7 +19,7 @@ type PickerSheetProps = {
 /** Fenêtre plein écran de choix (pays, heure…) : titre, bouton fermer, contenu. */
 export function PickerSheet({ visible, title, onClose, children }: PickerSheetProps) {
   const { t } = useTranslation();
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, isRTL } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -32,6 +32,8 @@ export function PickerSheet({ visible, title, onClose, children }: PickerSheetPr
       <View
         style={{
           flex: 1,
+          // Une fenêtre Modal est hors de l'arbre principal : elle reprend le sens de lecture.
+          direction: isRTL ? 'rtl' : 'ltr',
           backgroundColor: colors.background,
           paddingTop: insets.top,
           paddingBottom: insets.bottom,
