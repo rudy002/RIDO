@@ -13,8 +13,10 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
-    "test": "jest"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:db",
+    "test": "jest",
+    "test:db": "node --test supabase/tests/schema.test.mjs",
+    "test:live": "node --test --test-concurrency=1 supabase/tests/live.test.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/nunito": "^0.4.2",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@electric-sql/pglite": "^0.5.15",
     "@testing-library/react-native": "^14.1.0",
     "@types/jest": "30.0.0",
     "@types/react": "~19.3.0",
@@ -75,6 +78,10 @@
     },
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@rn-primitives/.*|react-native-svg)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/supabase/"
     ]
   }
 }
