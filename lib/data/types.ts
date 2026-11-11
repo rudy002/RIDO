@@ -84,6 +84,18 @@ export const profileSchema = z.object({
   notifications: z.object({ nearbyRequests: z.boolean(), departureReminder: z.boolean() }),
 });
 
+/**
+ * Ce que le serveur montre d'un événement à qui n'a que le lien (pas encore inscrit) : aucune
+ * donnée personnelle, seulement des totaux et les lieux (identifiants de la liste de l'appli).
+ */
+export const eventPreviewSchema = z.object({
+  /** Son organisateur n'est pas communiqué : `organizerId` est vide. */
+  event: storedEventSchema,
+  guestsCount: z.number().int().min(0),
+  seatsOffered: z.number().int().min(0),
+  zones: z.array(z.object({ placeId: z.string(), count: z.number().int().min(1) })),
+});
+
 export const DATA_VERSION = 1;
 
 export const appDataSchema = z.object({
@@ -95,8 +107,11 @@ export const appDataSchema = z.object({
   participants: z.array(participantSchema),
   driverLegs: z.array(driverLegSchema),
   passengerLegs: z.array(passengerLegSchema),
+  /** Événements ouverts par un lien, où l'on n'est pas encore inscrit. */
+  previews: z.array(eventPreviewSchema).default([]),
 });
 
+export type EventPreview = z.infer<typeof eventPreviewSchema>;
 export type StoredEvent = z.infer<typeof storedEventSchema>;
 export type Participant = z.infer<typeof participantSchema>;
 export type DriverLegRecord = z.infer<typeof driverLegSchema>;

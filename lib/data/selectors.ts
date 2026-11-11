@@ -14,14 +14,17 @@ import {
   type RideOffer,
   type RideRequest,
   type TripDirection,
+  type Zone,
   type ZoneActivity,
 } from '@/lib/rides/types';
+import { findPlace } from '@/lib/places/places';
 import type { PassengerLeg, Trip } from '@/lib/trips/types';
 
 import { cityKeyOf, describeZone, isNearby, relateZones } from './matching';
 import type {
   AppData,
   DriverLegRecord,
+  EventPreview,
   Participant,
   PassengerLegRecord,
   StoredEvent,
@@ -30,8 +33,28 @@ import type {
 /** Le créneau conseillé pour l'aller : l'heure et demie avant le début. */
 const OUTBOUND_LEAD_MS = 90 * 60_000;
 
+/** Un événement où l'on est inscrit (ou qu'on organise), sinon celui d'un lien reçu (aperçu). */
 export function eventById(data: AppData, id: string): StoredEvent | undefined {
-  return data.events.find((event) => event.id === id);
+  return data.events.find((event) => event.id === id) ?? previewOf(data, id)?.event;
+}
+
+/** L'aperçu d'un événement où l'on n'est pas inscrit (lien reçu). */
+function previewOf(data: AppData, id: string): EventPreview | undefined {
+  if (data.events.some((event) => event.id === id)) return undefined;
+  return data.previews.find((preview) => preview.event.id === id);
+}
+
+/** Ajoute des personnes à une zone de départ, regroupées par ville. */
+function addToZone(
+  zones: Map<string, ZoneActivity>,
+  zone: Zone,
+  people: number,
+  language: Language
+): void {
+  const key = cityKeyOf(zone);
+  const activity = zones.get(key) ?? { zone: describeZone(zone, language).city, count: 0 };
+  activity.count += people;
+  zones.set(key, activity);
 }
 
 export function participantById(data: AppData, id: string): Participant | undefined {
@@ -75,17 +98,30 @@ const isSearching = (leg: PassengerLegRecord) => leg.foundWith === undefined;
 export function eventSummary(data: AppData, event: StoredEvent, language: Language): EventSummary {
   const participants = data.participants.filter((participant) => participant.eventId === event.id);
   const firstDirection = TRIP_DIRECTIONS.find((direction) => event.directions.includes(direction));
+  const preview = previewOf(data, event.id);
 
   const zones = new Map<string, ZoneActivity>();
-  for (const participant of participants) {
-    const key = cityKeyOf(participant.zone);
-    const zone = zones.get(key) ?? {
-      zone: describeZone(participant.zone, language).city,
-      count: 0,
-    };
-    zone.count += participant.partySize;
-    zones.set(key, zone);
+  if (preview) {
+    // Le serveur ne donne que des identifiants de lieux : les noms viennent de la liste de l'appli.
+    // Un identifiant inconnu de cette liste n'est pas affiché.
+    for (const { placeId, count } of preview.zones) {
+      const place = findPlace(placeId);
+      if (place) addToZone(zones, { placeId, name: place.names.en }, count, language);
+    }
+  } else {
+    for (const participant of participants) {
+      addToZone(zones, participant.zone, participant.partySize, language);
+    }
   }
+
+  const seatsOffered = preview
+    ? preview.seatsOffered
+    : firstDirection
+      ? driverLegsOfEvent(data, event.id, firstDirection).reduce(
+          (sum, leg) => sum + leg.totalSeats,
+          0
+        )
+      : 0;
 
   return {
     id: event.id,
@@ -96,13 +132,10 @@ export function eventSummary(data: AppData, event: StoredEvent, language: Langua
     venue: event.venue,
     country: event.country,
     organizerName: event.organizerName,
-    seatsOffered: firstDirection
-      ? driverLegsOfEvent(data, event.id, firstDirection).reduce(
-          (sum, leg) => sum + leg.totalSeats,
-          0
-        )
-      : 0,
-    guestsCount: participants.reduce((sum, participant) => sum + participant.partySize, 0),
+    seatsOffered,
+    guestsCount: preview
+      ? preview.guestsCount
+      : participants.reduce((sum, participant) => sum + participant.partySize, 0),
     outboundWindow: {
       from: new Date(event.startsAt.getTime() - OUTBOUND_LEAD_MS),
       to: event.startsAt,

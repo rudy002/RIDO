@@ -86,6 +86,7 @@ function builder(): Builder {
     participants: [],
     driverLegs: [],
     passengerLegs: [],
+    previews: [],
   };
   const participant = (id: string): Participant => {
     const found = data.participants.find((p) => p.id === id);
@@ -502,5 +503,6 @@ export function emptyData(userId: string): AppData {
     participants: [],
     driverLegs: [],
     passengerLegs: [],
+    previews: [],
   };
 }

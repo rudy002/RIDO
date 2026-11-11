@@ -16,7 +16,7 @@
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:db",
     "test": "jest",
     "test:db": "node --test supabase/tests/schema.test.mjs",
-    "test:live": "node --test --test-concurrency=1 supabase/tests/live.test.mjs"
+    "test:live": "node --test --test-concurrency=1 supabase/tests/live.test.mjs && RIDO_LIVE_TESTS=1 jest -c jest.live.config.js"
   },
   "dependencies": {
     "@expo-google-fonts/nunito": "^0.4.2",
@@ -83,7 +83,8 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "<rootDir>/supabase/"
+      "<rootDir>/supabase/",
+      "\\.live\\.test\\.ts$"
     ]
   }
 }
