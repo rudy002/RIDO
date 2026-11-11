@@ -2,14 +2,24 @@
 // Supabase fournit : les rôles « anon » / « authenticated » et auth.uid().
 // Lancer avec : npm run test:db
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { basename } from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { PGlite } from '@electric-sql/pglite';
 
-// `MIGRATION_FILE` permet de tester une autre version du schéma (vérifier que les tests détectent une faille).
-const MIGRATION =
-  process.env.MIGRATION_FILE ?? new URL('../migrations/20261109000000_init.sql', import.meta.url);
+// Toutes les mises à jour de la base, dans l'ordre (comme sur Supabase).
+// `MIGRATION_FILE` remplace la mise à jour du même nom par une autre version (pour vérifier que les
+// tests détectent une faille).
+const MIGRATIONS_DIR = new URL('../migrations/', import.meta.url);
+const MIGRATIONS = readdirSync(MIGRATIONS_DIR)
+  .filter((name) => name.endsWith('.sql'))
+  .sort()
+  .map((name) =>
+    process.env.MIGRATION_FILE && basename(process.env.MIGRATION_FILE) === name
+      ? process.env.MIGRATION_FILE
+      : new URL(name, MIGRATIONS_DIR)
+  );
 
 const db = new PGlite();
 
@@ -111,7 +121,7 @@ const legOf = (participantFirstName, direction) =>
 
 before(async () => {
   await db.exec(SUPABASE_STUBS);
-  await db.exec(readFileSync(MIGRATION, 'utf8'));
+  for (const file of MIGRATIONS) await db.exec(readFileSync(file, 'utf8'));
   for (const name of ['olivia', 'ben', 'carol', 'dan', 'eve']) await newUser(name);
 });
 
@@ -212,9 +222,9 @@ describe('confidentialité', () => {
     const preview = await as('carol', () => rpc('event_preview', eventId));
     assert.equal(preview.title, EVENT.title);
     assert.equal(preview.guests_count, 1);
-    assert.deepEqual(preview.zones, [{ place_id: '295629', name: 'Ashdod', count: 1 }]);
+    assert.deepEqual(preview.zones, [{ place_id: '295629', count: 1 }]);
     const text = JSON.stringify(preview);
-    assert.doesNotMatch(text, /972521110001|Ben/);
+    assert.doesNotMatch(text, /972521110001|Ben|Ashdod/);
     assert.equal(await as('carol', () => rpc('event_preview', 'inconnu-0000000000')), null);
   });
 
@@ -661,8 +671,35 @@ describe('données personnelles', () => {
     await join('carol', eventId, 'passenger', { first: 'Carol' });
     const preview = await as('dan', () => rpc('event_preview', eventId));
     assert.equal(preview.guests_count, 2);
-    assert.deepEqual(preview.zones, [{ place_id: '295629', name: 'Ashdod', count: 1 }]);
+    assert.deepEqual(preview.zones, [{ place_id: '295629', count: 1 }]);
     assert.doesNotMatch(JSON.stringify(preview), /Lilas/);
+  });
+
+  it('ne met jamais dans l’aperçu un texte déguisé en lieu (appli modifiée)', async () => {
+    const eventId = await createEvent('olivia');
+    // Faux identifiant numérique, nom inventé : seul l'identifiant sort, jamais le texte.
+    await join('ben', eventId, 'passenger', { placeId: '999999999', zone: '12 rue des Lilas' });
+    const preview = await as('dan', () => rpc('event_preview', eventId));
+    assert.deepEqual(preview.zones, [{ place_id: '999999999', count: 1 }]);
+    assert.doesNotMatch(JSON.stringify(preview), /Lilas/);
+  });
+
+  it('refuse un identifiant de lieu qui n’est pas un numéro', async () => {
+    const eventId = await createEvent('olivia');
+    await assert.rejects(
+      join('ben', eventId, 'passenger', { placeId: '12 rue des Lilas' }),
+      /participants_zone_place_id_digits/
+    );
+    await assert.rejects(
+      as('ben', () =>
+        q(
+          `insert into public.profiles (user_id, first_name, last_name, phone, usual_zone_place_id)
+           values ($1, 'Ben', 'Test', '+972521234567', 'chez moi')`,
+          [users.ben]
+        )
+      ),
+      /profiles_usual_zone_place_id_digits/
+    );
   });
 
   it('efface vraiment un utilisateur, sans toucher aux autres', async () => {

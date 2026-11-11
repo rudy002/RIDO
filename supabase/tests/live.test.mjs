@@ -307,6 +307,12 @@ describe('Supabase en conditions réelles', { skip: SKIP }, () => {
         placeId: '',
         zone: '12 rue Secrète',
       });
+      // Appli modifiée : faux identifiant de lieu, texte inventé à la place du nom.
+      await join(u.p3, ev, 'passenger', {
+        phone: '+972525555550',
+        placeId: '999999999',
+        zone: 'Rue Déguisée',
+      });
       other = await newEvent(u.d2, { slug: 'autre-fete' });
       await join(u.d2, other, 'driver', { phone: '+972524444444' });
     });
@@ -323,17 +329,16 @@ describe('Supabase en conditions réelles', { skip: SKIP }, () => {
     it('montre l’invitation à qui a le lien, sans nom, numéro ni adresse', async () => {
       const preview = await rpc(u.x, 'event_preview', { p_id: ev });
       assert.equal(preview.title, 'Test Rido');
-      assert.equal(preview.guests_count, 4);
+      assert.equal(preview.guests_count, 5);
       assert.equal(preview.seats_offered, 3);
-      assert.deepEqual(
-        preview.zones.map((z) => [z.name, z.count]),
-        [
-          ['Tel Aviv', 2],
-          ['Ashdod', 1],
-        ]
-      );
+      // Identifiants de lieux seulement : l'appli affiche les noms depuis sa propre liste.
+      assert.deepEqual(preview.zones, [
+        { place_id: '293397', count: 2 },
+        { place_id: '295629', count: 1 },
+        { place_id: '999999999', count: 1 },
+      ]);
       const text = JSON.stringify(preview);
-      for (const secret of ['97252', 'Secretnom', 'Testeur', 'Secrète']) {
+      for (const secret of ['97252', 'Secretnom', 'Testeur', 'Secrète', 'Déguisée', 'Ashdod']) {
         assert.ok(!text.includes(secret), `l’aperçu contient « ${secret} »`);
       }
     });
@@ -364,13 +369,14 @@ describe('Supabase en conditions réelles', { skip: SKIP }, () => {
         '+972521111111',
         '+972522222222',
         '+972523333333',
+        '+972525555550',
       ]);
       assert.equal((await select(u.p2, `driver_legs?event_id=eq.${enc(ev)}&select=id`)).length, 1);
     });
 
     it('montre son événement à l’organisateur, même s’il ne s’y inscrit pas', async () => {
       assert.equal((await select(u.org, `events?id=eq.${enc(ev)}&select=id`)).length, 1);
-      assert.equal((await participantsOf(u.org, ev)).length, 3);
+      assert.equal((await participantsOf(u.org, ev)).length, 4);
     });
 
     it('ne montre pas les autres événements à un participant', async () => {
@@ -438,7 +444,7 @@ describe('Supabase en conditions réelles', { skip: SKIP }, () => {
       }
       const [event] = await select(u.org, `events?id=eq.${enc(ev)}&select=title`);
       assert.equal(event.title, 'Test Rido');
-      assert.equal((await participantsOf(u.org, ev)).length, 3);
+      assert.equal((await participantsOf(u.org, ev)).length, 4);
     });
 
     it('réserve la modification et la suppression à l’organisateur', async () => {
@@ -591,6 +597,10 @@ describe('Supabase en conditions réelles', { skip: SKIP }, () => {
       await refused(u.p1, 'join_event', joinArgs(ev, 'passenger', { party: 9 }));
       await refused(u.p1, 'join_event', joinArgs(ev, 'passenger', { party: 0 }));
       await refused(u.p1, 'join_event', joinArgs(ev, 'chauffeur'));
+      assert.match(
+        await refused(u.p1, 'join_event', joinArgs(ev, 'passenger', { placeId: 'chez moi' })),
+        /zone_place_id_digits/
+      );
       assert.match(
         await refused(u.p1, 'join_event', joinArgs(ev, 'passenger', { directions: ['return'] })),
         /direction not offered/
