@@ -12,6 +12,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { DevLanguageSwitcher } from '@/components/dev/DevLanguageSwitcher';
 
+import { ensureSession, isBackendConfigured } from '@/lib/backend/supabase';
 import { FONT_ASSETS } from '@/lib/design/fonts';
 import { loadAppData } from '@/lib/data/store';
 import { loadAppearance } from '@/lib/design/appearance';
@@ -41,6 +42,9 @@ export default function RootLayout() {
       loadAppearance(),
       loadAppData(),
     ]).finally(() => setPreferencesReady(true));
+    // Compte invisible de cet appareil, préparé dès le lancement sans retarder l'affichage.
+    // Sans réseau, il sera créé au prochain essai.
+    if (isBackendConfigured()) void ensureSession().catch(() => undefined);
   }, []);
 
   useEffect(() => {
