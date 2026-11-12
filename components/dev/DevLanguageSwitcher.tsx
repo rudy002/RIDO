@@ -5,7 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/Icon';
-import { resetDemoData } from '@/lib/data/store';
+import { isBackendConnected, resetDemoData } from '@/lib/data/store';
 import { useTheme } from '@/lib/design/use-theme';
 import { LANGUAGES, type Language } from '@/lib/i18n';
 import { changeAppLanguage } from '@/lib/i18n/change-language';
@@ -76,21 +76,24 @@ export function DevLanguageSwitcher() {
               choice === language
             )
           )}
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('dev.resetDemo')}
-            onPress={() => {
-              setOpen(false);
-              resetDemoData();
-            }}
-            style={{
-              width: sizes.touchMin,
-              height: sizes.touchMin,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Icon as={RotateCcw} color="onInverse" />
-          </Pressable>
+          {/* La démo n'existe que sans serveur : avec lui, les données sont les vraies. */}
+          {isBackendConnected() ? null : (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('dev.resetDemo')}
+              onPress={() => {
+                setOpen(false);
+                resetDemoData();
+              }}
+              style={{
+                width: sizes.touchMin,
+                height: sizes.touchMin,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Icon as={RotateCcw} color="onInverse" />
+            </Pressable>
+          )}
         </>
       ) : (
         <Pressable

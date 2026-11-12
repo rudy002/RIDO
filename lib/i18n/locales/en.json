@@ -8,7 +8,14 @@
     "close": "Close",
     "copy": "Copy",
     "copied": "Copied",
-    "comingSoon": "This screen is coming soon."
+    "comingSoon": "This screen is coming soon.",
+    "loading": "Loading…"
+  },
+  "sync": {
+    "offline": "No internet connection: nothing was saved. Try again once you're back online.",
+    "full": "There aren't enough free seats left in this car.",
+    "gone": "This event or ride changed in the meantime. The screen has been updated.",
+    "unknown": "That didn't work. Try again in a moment."
   },
   "notFound": {
     "title": "Page not found",

@@ -7,14 +7,15 @@ import { ThemeProvider } from 'expo-router/react-navigation';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { AppState, View } from 'react-native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { DevLanguageSwitcher } from '@/components/dev/DevLanguageSwitcher';
+import { SyncErrorBanner } from '@/components/sync/SyncErrorBanner';
 
-import { ensureSession, isBackendConfigured } from '@/lib/backend/supabase';
+import { isBackendConfigured, supabaseBackend } from '@/lib/backend/supabase';
 import { FONT_ASSETS } from '@/lib/design/fonts';
-import { loadAppData } from '@/lib/data/store';
+import { connectBackend, loadAppData, refresh } from '@/lib/data/store';
 import { loadAppearance } from '@/lib/design/appearance';
 import { navigationTheme } from '@/lib/design/navigation-theme';
 import { useTheme } from '@/lib/design/use-theme';
@@ -27,6 +28,10 @@ export {
 } from 'expo-router';
 
 void SplashScreen.preventAutoHideAsync();
+
+// Les données viennent du serveur quand il est configuré (.env.local) ; sinon tout reste sur
+// l'appareil, avec la démo. Le compte invisible de l'appareil est créé au premier besoin.
+connectBackend(isBackendConfigured() ? supabaseBackend : null);
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(FONT_ASSETS);
@@ -42,9 +47,11 @@ export default function RootLayout() {
       loadAppearance(),
       loadAppData(),
     ]).finally(() => setPreferencesReady(true));
-    // Compte invisible de cet appareil, préparé dès le lancement sans retarder l'affichage.
-    // Sans réseau, il sera créé au prochain essai.
-    if (isBackendConfigured()) void ensureSession().catch(() => undefined);
+    // De retour dans l'appli : les données sont relues (d'autres ont pu s'inscrire ou réserver).
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') void refresh().catch(() => undefined);
+    });
+    return () => subscription.remove();
   }, []);
 
   useEffect(() => {
@@ -79,6 +86,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
           <PortalHost />
+          <SyncErrorBanner />
           {__DEV__ ? <DevLanguageSwitcher /> : null}
         </ThemeProvider>
       </View>

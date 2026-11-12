@@ -14,7 +14,7 @@ export default function RideDetailsRoute() {
   const { id, rideId } = useLocalSearchParams<{ id: string; rideId: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { data, event, language } = useEventContext(id);
+  const { data, event, language, loading } = useEventContext(id);
   const leg = data.driverLegs.find((d) => d.id === rideId && d.eventId === id);
   const offer = leg ? offerView(data, leg, language) : undefined;
   const other = leg ? otherLegOf(data, leg) : undefined;
@@ -51,7 +51,7 @@ export default function RideDetailsRoute() {
           }
         />
       ) : (
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       )}
     </>
   );

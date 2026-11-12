@@ -29,10 +29,14 @@ export function takeSeat(bookings: Booking[], total: number): Booking[] {
   return [...bookings, { id: `manual-${Date.now()}-${bookings.length}`, seats: 1 }];
 }
 
-/** Libère la dernière place prise. */
+/**
+ * Le conducteur libère une place : d'abord la dernière place notée à la main, sinon la dernière
+ * réservation d'un passager (tout son groupe, qui cherche alors à nouveau). Même règle que le
+ * serveur (fonction `release_seat`).
+ */
 export function releaseSeat(bookings: Booking[]): Booking[] {
-  const last = bookings.at(-1);
-  if (!last) return bookings;
-  const rest = bookings.slice(0, -1);
-  return last.seats > 1 ? [...rest, { ...last, seats: last.seats - 1 }] : rest;
+  const manual = bookings.findLastIndex((booking) => !booking.passengerLegId);
+  const index = manual >= 0 ? manual : bookings.length - 1;
+  if (index < 0) return bookings;
+  return bookings.filter((_, i) => i !== index);
 }

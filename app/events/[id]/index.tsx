@@ -18,7 +18,7 @@ export default function OrganizerDashboardRoute() {
   const router = useRouter();
   const { t } = useTranslation();
   const shareEvent = useShareEvent();
-  const { data, event, summary, me, language } = useEventContext(id);
+  const { data, event, summary, me, language, loading } = useEventContext(id);
   const overview = useMemo(
     () => (event ? eventOverview(data, event, language) : {}),
     [data, event, language]
@@ -59,7 +59,7 @@ export default function OrganizerDashboardRoute() {
           onOpenMyRide={() => router.push(myRidePath(data, summary.id))}
         />
       ) : (
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       )}
     </>
   );

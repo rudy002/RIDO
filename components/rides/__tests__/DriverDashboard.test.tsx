@@ -75,9 +75,13 @@ describe('DriverDashboard', () => {
     expect(screen.getByText('Prise')).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Une place prise' })).toBeDisabled();
 
+    // D'abord la place notée à la main…
     await fireEvent.press(screen.getByRole('button', { name: 'Libérer une place' }));
+    expect(screen.queryByText('Prise')).toBeNull();
+    expect(screen.getByText('1 place libre')).toBeOnTheScreen();
+    // … puis la réservation du dernier passager, avec tout son groupe (comme le serveur).
     await fireEvent.press(screen.getByRole('button', { name: 'Libérer une place' }));
-    expect(screen.getByText('2 places libres')).toBeOnTheScreen();
+    expect(screen.getByText('3 places libres')).toBeOnTheScreen();
   });
 
   it('liste les passagers proches du sens choisi et permet de les contacter', async () => {

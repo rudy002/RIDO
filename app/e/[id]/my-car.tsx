@@ -7,11 +7,10 @@ import { EventNotFound } from '@/components/event/EventNotFound';
 import { useEventLabel } from '@/components/event/use-event-label';
 import { DriverDashboard } from '@/components/rides/DriverDashboard';
 import { whatsappUrl } from '@/lib/contact/contact';
-import { cancelDriving, setBookings } from '@/lib/data/actions';
-import { useEventContext } from '@/lib/data/hooks';
+import { cancelDriving, changeSeats } from '@/lib/data/commands';
+import { useEventContext, useSingleFlight } from '@/lib/data/hooks';
 import { describeZone } from '@/lib/data/matching';
 import { driverLegsOf, nearbyRequests } from '@/lib/data/selectors';
-import { updateAppData } from '@/lib/data/store';
 import type { DriverLeg, TripDirection } from '@/lib/rides/types';
 
 /** C3 — la voiture du conducteur, après publication. */
@@ -19,7 +18,8 @@ export default function MyCarRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { data, event, summary, me, language } = useEventContext(id);
+  const once = useSingleFlight();
+  const { data, event, summary, me, language, loading } = useEventContext(id);
   const contextLabel = useEventLabel(summary);
   const records = useMemo(() => (me ? driverLegsOf(data, me) : {}), [data, me]);
   const requests = useMemo(
@@ -31,7 +31,7 @@ export default function MyCarRoute() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       </>
     );
   }
@@ -72,12 +72,15 @@ export default function MyCarRoute() {
         }
         onBookingsChange={(direction, bookings) => {
           const record = records[direction];
-          if (record) updateAppData((current) => setBookings(current, record.id, bookings));
+          if (record) void changeSeats(record.id, record.bookings, bookings);
         }}
-        onCancel={() => {
-          updateAppData((current) => cancelDriving(current, event.id));
-          router.replace({ pathname: '/e/[id]', params: { id: event.id } });
-        }}
+        onCancel={() =>
+          void once(async () => {
+            if (await cancelDriving(event.id)) {
+              router.replace({ pathname: '/e/[id]', params: { id: event.id } });
+            }
+          })
+        }
       />
     </>
   );

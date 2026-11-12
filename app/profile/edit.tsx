@@ -1,8 +1,8 @@
 import { Stack, useRouter } from 'expo-router';
 
 import { ProfileForm } from '@/components/profile/ProfileForm';
-import { updateProfile } from '@/lib/data/actions';
-import { updateAppData, useAppData } from '@/lib/data/store';
+import { updateProfile } from '@/lib/data/commands';
+import { useAppData } from '@/lib/data/store';
 import { deviceCountry } from '@/lib/phone/phone';
 import { defaultEventCountry } from '@/lib/places/places';
 
@@ -20,7 +20,8 @@ export default function EditProfileRoute() {
         country={defaultEventCountry(deviceCountry())}
         onClose={close}
         onSave={(profile) => {
-          updateAppData((current) => updateProfile(current, profile));
+          // Affiché aussitôt ; un refus du serveur est signalé et le profil revient en arrière.
+          void updateProfile(profile);
           close();
         }}
       />

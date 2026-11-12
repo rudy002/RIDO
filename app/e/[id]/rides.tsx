@@ -4,17 +4,16 @@ import { useMemo } from 'react';
 import { EventNotFound } from '@/components/event/EventNotFound';
 import { useEventLabel } from '@/components/event/use-event-label';
 import { DriverList } from '@/components/rides/DriverList';
-import { markFound, searchAgain } from '@/lib/data/actions';
+import { markFound, searchAgain } from '@/lib/data/commands';
 import { useEventContext } from '@/lib/data/hooks';
 import { describeZone } from '@/lib/data/matching';
 import { directionsOf, matchesFor, passengerStatusOf } from '@/lib/data/selectors';
-import { updateAppData } from '@/lib/data/store';
 
 /** P1 — conducteurs disponibles pour un passager. */
 export default function DriverListRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { data, event, summary, me, language } = useEventContext(id);
+  const { data, event, summary, me, language, loading } = useEventContext(id);
   const contextLabel = useEventLabel(summary);
   const matches = useMemo(() => (me ? matchesFor(data, me, language) : []), [data, me, language]);
   const status = useMemo(() => (me ? passengerStatusOf(data, me) : {}), [data, me]);
@@ -23,7 +22,7 @@ export default function DriverListRoute() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       </>
     );
   }
@@ -61,12 +60,10 @@ export default function DriverListRoute() {
             params: { id: event.id, rideId: offer.id },
           })
         }
-        onFound={(direction, offerId) =>
-          updateAppData((current) => markFound(current, event.id, direction, offerId))
-        }
-        onSearchAgain={(direction) =>
-          updateAppData((current) => searchAgain(current, event.id, direction))
-        }
+        // Affiché aussitôt ; si le serveur refuse (voiture pleine…), l'écran revient en arrière et
+        // la raison est affichée.
+        onFound={(direction, offerId) => void markFound(event.id, direction, offerId)}
+        onSearchAgain={(direction) => void searchAgain(event.id, direction)}
       />
     </>
   );

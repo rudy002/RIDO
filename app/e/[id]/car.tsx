@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import { EventNotFound } from '@/components/event/EventNotFound';
 import { CarForm } from '@/components/rides/CarForm';
-import { publishCar } from '@/lib/data/actions';
-import { useEventContext } from '@/lib/data/hooks';
+import { publishCar } from '@/lib/data/commands';
+import { useEventContext, useSingleFlight } from '@/lib/data/hooks';
 import { directionsOf, driverLegsOf } from '@/lib/data/selectors';
-import { updateAppData } from '@/lib/data/store';
 import { formatTime } from '@/lib/i18n/format';
 import { bookedSeats } from '@/lib/rides/bookings';
 import { addMinutes } from '@/lib/rides/time-slots';
@@ -24,13 +23,14 @@ export default function CarRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { data, event, summary, me, language } = useEventContext(id);
+  const once = useSingleFlight();
+  const { data, event, summary, me, language, loading } = useEventContext(id);
 
   if (!event || !summary) {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       </>
     );
   }
@@ -66,11 +66,13 @@ export default function CarRoute() {
         )}
         outboundHint={t('car.outbound.hint', { time: formatTime(event.startsAt, language) })}
         onBack={goBack}
-        onSubmit={(draft) => {
-          updateAppData((current) => publishCar(current, event.id, draft));
-          // Revient à la voiture si on venait de « Modifier », sinon l'ouvre.
-          router.dismissTo({ pathname: '/e/[id]/my-car', params: { id: event.id } });
-        }}
+        onSubmit={(draft) =>
+          void once(async () => {
+            if (!(await publishCar(event.id, draft))) return;
+            // Revient à la voiture si on venait de « Modifier », sinon l'ouvre.
+            router.dismissTo({ pathname: '/e/[id]/my-car', params: { id: event.id } });
+          })
+        }
       />
     </>
   );

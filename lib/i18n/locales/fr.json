@@ -8,7 +8,14 @@
     "close": "Fermer",
     "copy": "Copier",
     "copied": "Copié",
-    "comingSoon": "Cet écran arrive bientôt."
+    "comingSoon": "Cet écran arrive bientôt.",
+    "loading": "Chargement…"
+  },
+  "sync": {
+    "offline": "Pas de connexion à Internet : rien n'a été enregistré. Réessaie quand tu as du réseau.",
+    "full": "Il n'y a plus assez de places libres dans cette voiture.",
+    "gone": "Cet événement ou ce trajet a changé entre-temps. L'écran a été mis à jour.",
+    "unknown": "Ça n'a pas marché. Réessaie dans un instant."
   },
   "notFound": {
     "title": "Page introuvable",

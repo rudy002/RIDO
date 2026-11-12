@@ -67,6 +67,20 @@ export function ensureSession(): Promise<Session> {
   return session;
 }
 
+/** Le serveur, tel que les données de l'appli l'utilisent (lib/data/store.ts). */
+export const supabaseBackend = {
+  /** Le client et le compte de cet appareil (créé au besoin). */
+  async user(): Promise<{ client: SupabaseClient; userId: string }> {
+    const { user } = await ensureSession();
+    return { client: getSupabase(), userId: user.id };
+  },
+  /** Oublie le compte de cet appareil (après l'avoir effacé) : le prochain appel en crée un neuf. */
+  async forget(): Promise<void> {
+    session = null;
+    await getSupabase().auth.signOut({ scope: 'local' });
+  },
+};
+
 type SessionAuth = Pick<SupabaseClient['auth'], 'getSession' | 'signInAnonymously'>;
 
 /** Reprend la session enregistrée, ou crée le compte invisible s'il n'y en a pas. */

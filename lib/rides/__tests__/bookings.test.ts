@@ -21,9 +21,12 @@ describe('réservations', () => {
     expect(takeSeat(full, 3)).toBe(full);
   });
 
-  it('libère la dernière place prise', () => {
-    expect(releaseSeat([ESTHER])).toEqual([{ ...ESTHER, seats: 1 }]);
-    expect(releaseSeat([{ ...ESTHER, seats: 1 }])).toEqual([]);
+  it('libère d’abord une place notée à la main, puis le dernier passager avec tout son groupe', () => {
+    const paul: Booking = { id: 'paul', name: 'Paul', seats: 1, passengerLegId: 'leg-paul' };
+    const manual: Booking = { id: 'manual', seats: 1 };
+    const esther: Booking = { ...ESTHER, passengerLegId: 'leg-esther' };
+    expect(releaseSeat([paul, manual, esther])).toEqual([paul, esther]);
+    expect(releaseSeat([paul, esther])).toEqual([paul]);
     expect(releaseSeat([])).toEqual([]);
   });
 });

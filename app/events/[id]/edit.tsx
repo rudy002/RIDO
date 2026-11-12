@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { CreateEventForm } from '@/components/event/CreateEventForm';
 import { EventNotFound } from '@/components/event/EventNotFound';
 import { ConfirmSheet } from '@/components/ui/ConfirmSheet';
-import { deleteEvent, registrationsLostBy, updateEvent } from '@/lib/data/actions';
-import { useEventContext } from '@/lib/data/hooks';
-import { getAppData, updateAppData } from '@/lib/data/store';
+import { registrationsLostBy } from '@/lib/data/actions';
+import { deleteEvent, updateEvent } from '@/lib/data/commands';
+import { useEventContext, useSingleFlight } from '@/lib/data/hooks';
+import { getAppData } from '@/lib/data/store';
 import type { EventDraft } from '@/lib/events/types';
 
 /** Modification d'un événement par l'organisateur (depuis O3). */
@@ -15,7 +16,8 @@ export default function EditEventRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { event } = useEventContext(id);
+  const once = useSingleFlight();
+  const { event, loading } = useEventContext(id);
   // Modification en attente de confirmation (un trajet retiré efface des inscriptions).
   const [pending, setPending] = useState<{ draft: EventDraft; lost: number } | null>(null);
 
@@ -28,15 +30,15 @@ export default function EditEventRoute() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       </>
     );
   }
 
-  const save = (draft: EventDraft) => {
-    updateAppData((current) => updateEvent(current, event.id, draft));
-    close();
-  };
+  const save = (draft: EventDraft) =>
+    void once(async () => {
+      if (await updateEvent(event.id, draft)) close();
+    });
 
   return (
     <>
@@ -56,10 +58,11 @@ export default function EditEventRoute() {
           if (lost > 0) setPending({ draft, lost });
           else save(draft);
         }}
-        onDelete={() => {
-          updateAppData((current) => deleteEvent(current, event.id));
-          router.dismissTo('/my-events');
-        }}
+        onDelete={() =>
+          void once(async () => {
+            if (await deleteEvent(event.id)) router.dismissTo('/my-events');
+          })
+        }
       />
       <ConfirmSheet
         visible={pending !== null}

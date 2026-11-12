@@ -11,7 +11,7 @@ import { eventShareUrl } from '@/lib/events/share';
 export default function EventShareRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { summary } = useEventContext(id);
+  const { summary, loading } = useEventContext(id);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function EventShareRoute() {
           }
         />
       ) : (
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       )}
     </>
   );

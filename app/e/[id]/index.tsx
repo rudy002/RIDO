@@ -10,7 +10,7 @@ import { isOrganizer } from '@/lib/data/selectors';
 export default function EventInvitationRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { data, event, summary, me } = useEventContext(id);
+  const { data, event, summary, me, loading } = useEventContext(id);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function EventInvitationRoute() {
           }
         />
       ) : (
-        <EventNotFound />
+        <EventNotFound loading={loading} />
       )}
     </>
   );
