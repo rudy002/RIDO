@@ -68,8 +68,13 @@ export function myParticipant(data: AppData, eventId: string): Participant | und
   );
 }
 
+/**
+ * L'utilisateur organise-t-il cet événement ? Jamais pour un aperçu (organisateur non communiqué)
+ * ni tant que le compte de l'appareil n'est pas encore connu : deux identifiants vides ne
+ * désignent personne.
+ */
 export function isOrganizer(data: AppData, event: StoredEvent): boolean {
-  return event.organizerId === data.userId;
+  return event.organizerId !== '' && event.organizerId === data.userId;
 }
 
 /** Sens réellement concernés : ceux de l'inscription, parmi ceux que l'organisateur a ouverts. */

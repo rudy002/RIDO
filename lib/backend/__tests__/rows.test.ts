@@ -9,6 +9,7 @@ import {
   driverLegsOf,
   eventById,
   eventSummary,
+  isOrganizer,
   matchesFor,
   passengerStatusOf,
   tripsOf,
@@ -232,6 +233,15 @@ const previewRow: PreviewRow = {
 
 describe('invitation reçue par lien (pas encore inscrit)', () => {
   const preview: EventPreview = toEventPreview(previewRow);
+
+  it('ne fait jamais passer l’invité pour l’organisateur, même avant que son compte soit prêt', () => {
+    for (const userId of ['', 'user-1']) {
+      const data = toAppData({ ...serverRows(), events: [] }, userId, [preview]);
+      const event = eventById(data, preview.event.id);
+      if (!event) throw new Error('aperçu absent');
+      expect(isOrganizer(data, event)).toBe(false);
+    }
+  });
 
   it('donne l’événement sans son organisateur', () => {
     expect(preview.event).toMatchObject({

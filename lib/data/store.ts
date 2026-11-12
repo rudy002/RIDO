@@ -131,6 +131,9 @@ function setData(data: AppData): void {
 export function connectBackend(next: Backend | null): void {
   stopLiveUpdates();
   backend = next;
+  // Avec le serveur, jamais la démo, même le temps du premier affichage (ni dans la page web
+  // préparée sur le serveur) : on part de rien, la copie de l'appareil et le serveur suivent.
+  if (next && current.userId === DEMO_USER_ID) current = emptyData('');
 }
 
 export function isBackendConnected(): boolean {
