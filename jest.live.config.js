@@ -14,6 +14,8 @@ if (existsSync(envFile)) {
 
 module.exports = {
   testEnvironment: 'node',
+  // Les connexions en direct de Supabase gardent des minuteurs internes après leur fermeture.
+  forceExit: true,
   testMatch: ['<rootDir>/lib/**/*.live.test.ts'],
   transform: { '^.+\\.[jt]sx?$': ['babel-jest', { presets: ['babel-preset-expo'] }] },
   moduleNameMapper: {

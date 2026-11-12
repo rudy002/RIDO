@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { BackendError } from '@/lib/backend/errors';
+import type { LiveHandlers } from '@/lib/backend/realtime';
 import * as remote from '@/lib/backend/remote';
 import { fetchEventPreview, fetchServerData } from '@/lib/backend/sync';
 import { buildDemoData, DEMO_USER_ID, emptyData } from '@/lib/data/demo';
@@ -27,7 +28,18 @@ const fetchPreview = jest.mocked(fetchEventPreview);
 const server = jest.mocked(remote);
 
 const client = {} as SupabaseClient;
-const backend = { user: jest.fn(), forget: jest.fn() };
+const unsubscribe = jest.fn();
+const backend = {
+  user: jest.fn(),
+  forget: jest.fn(),
+  subscribe: jest.fn<() => void, [LiveHandlers]>(() => unsubscribe),
+};
+/** Ce que le serveur appellerait en direct (dernier abonnement). */
+const live = (): LiveHandlers => {
+  const handlers = backend.subscribe.mock.calls.at(-1)?.[0];
+  if (!handlers) throw new Error('pas d’abonnement');
+  return handlers;
+};
 
 /** Données « du serveur » : la démo, au nom d'un vrai compte. */
 function serverData(userId = 'user-1'): AppData {
@@ -317,5 +329,60 @@ describe('lien reçu', () => {
   it('un lien inconnu ne mène à rien', async () => {
     fetchPreview.mockResolvedValue(null);
     await expect(loadEventPreview('inconnu')).resolves.toBe(false);
+  });
+});
+
+describe('mises à jour en direct', () => {
+  beforeEach(async () => {
+    await loadAppData();
+    await refresh();
+    fetchData.mockClear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  /** Laisse passer le délai de regroupement, puis la relecture. */
+  async function settle() {
+    await jest.advanceTimersByTimeAsync(1000);
+  }
+
+  it('s’abonne au démarrage et relit quand les autres changent quelque chose', async () => {
+    expect(backend.subscribe).toHaveBeenCalled();
+    live().onChange({ kind: 'changed' });
+    live().onChange({ kind: 'changed' });
+    live().onChange({ kind: 'changed' });
+    await settle();
+    // Plusieurs changements rapprochés (une réservation touche plusieurs tables) : une relecture.
+    expect(fetchData).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignore la suppression d’une ligne inconnue de l’appareil', async () => {
+    live().onChange({ kind: 'deleted', id: 'ligne-d-un-autre-evenement' });
+    await settle();
+    expect(fetchData).not.toHaveBeenCalled();
+  });
+
+  it('relit quand une ligne connue est supprimée', async () => {
+    const booking = getAppData().driverLegs.flatMap((leg) => leg.bookings)[0];
+    if (!booking) throw new Error('réservation absente');
+    live().onChange({ kind: 'deleted', id: booking.id });
+    await settle();
+    expect(fetchData).toHaveBeenCalledTimes(1);
+  });
+
+  it('relit après une reconnexion (des changements ont pu être manqués)', async () => {
+    live().onConnected();
+    await settle();
+    expect(fetchData).toHaveBeenCalledTimes(1);
+  });
+
+  it('se réabonne avec le nouveau compte après « Se déconnecter »', async () => {
+    jest.useRealTimers();
+    server.deleteAccount.mockResolvedValue(undefined);
+    const before = backend.subscribe.mock.calls.length;
+    await commands.signOut();
+    expect(unsubscribe).toHaveBeenCalled();
+    expect(backend.subscribe.mock.calls.length).toBe(before + 1);
   });
 });

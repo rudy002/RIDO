@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { useSyncExternalStore } from 'react';
 
 import { BackendError, toBackendError, type BackendErrorKind } from '@/lib/backend/errors';
+import type { LiveChange, LiveHandlers } from '@/lib/backend/realtime';
 import { deleteAccount } from '@/lib/backend/remote';
 import { fetchEventPreview, fetchServerData } from '@/lib/backend/sync';
 
@@ -15,7 +16,8 @@ import { appDataSchema, type AppData } from './types';
  *
  * Avec le serveur (`connectBackend`) : il fait foi. Chaque action s'affiche aussitôt à l'écran, part
  * au serveur, puis les données sont relues ; si le serveur refuse, l'écran revient à la vérité du
- * serveur et la raison est signalée (`useSyncError`).
+ * serveur et la raison est signalée (`useSyncError`). Les changements faits par les autres arrivent
+ * en direct (lib/backend/realtime.ts) et déclenchent une relecture.
  * Sans serveur (tests, développement hors ligne) : tout reste sur l'appareil, avec la démo.
  */
 
@@ -39,7 +41,52 @@ function withTimeout<T>(task: Promise<T>): Promise<T> {
 export type Backend = {
   user(): Promise<{ client: SupabaseClient; userId: string }>;
   forget(): Promise<void>;
+  /** Mises à jour en direct ; renvoie de quoi se désabonner. */
+  subscribe(handlers: LiveHandlers): () => void;
 };
+
+/** Plusieurs changements rapprochés (une réservation touche plusieurs tables) : une seule relecture. */
+const LIVE_REFRESH_DELAY_MS = 300;
+let stopLive: (() => void) | null = null;
+let liveTimer: ReturnType<typeof setTimeout> | null = null;
+
+function scheduleLiveRefresh(): void {
+  if (liveTimer) clearTimeout(liveTimer);
+  liveTimer = setTimeout(() => {
+    liveTimer = null;
+    void refresh().catch(() => undefined);
+  }, LIVE_REFRESH_DELAY_MS);
+}
+
+/** Une ligne que l'appareil connaît (seules ses suppressions le concernent). */
+function isKnown(id: string): boolean {
+  return (
+    current.events.some((event) => event.id === id) ||
+    current.participants.some((participant) => participant.id === id) ||
+    current.passengerLegs.some((leg) => leg.id === id) ||
+    current.driverLegs.some(
+      (leg) => leg.id === id || leg.bookings.some((booking) => booking.id === id)
+    )
+  );
+}
+
+function onLiveChange(change: LiveChange): void {
+  if (change.kind === 'deleted' && change.id !== null && !isKnown(change.id)) return;
+  scheduleLiveRefresh();
+}
+
+/** (Ré)abonne l'appareil aux changements du serveur, pour le compte actuel. */
+function startLiveUpdates(server: Backend): void {
+  stopLiveUpdates();
+  stopLive = server.subscribe({ onChange: onLiveChange, onConnected: scheduleLiveRefresh });
+}
+
+function stopLiveUpdates(): void {
+  stopLive?.();
+  stopLive = null;
+  if (liveTimer) clearTimeout(liveTimer);
+  liveTimer = null;
+}
 
 type Remote<T> = (client: SupabaseClient, userId: string) => Promise<T>;
 
@@ -82,6 +129,7 @@ function setData(data: AppData): void {
 
 /** Relie les données au serveur (au démarrage, avant `loadAppData`). `null` : sans serveur. */
 export function connectBackend(next: Backend | null): void {
+  stopLiveUpdates();
   backend = next;
 }
 
@@ -110,6 +158,7 @@ export async function loadAppData(now: Date = new Date()): Promise<void> {
     current = stored && stored.userId !== DEMO_USER_ID ? stored : emptyData('');
     emit();
     void refresh().catch(() => undefined);
+    startLiveUpdates(backend);
     return;
   }
   current = stored ?? buildDemoData(now);
@@ -226,6 +275,8 @@ export async function eraseAccount(): Promise<void> {
   }
   setData(emptyData(''));
   await refresh().catch(() => undefined);
+  // Nouveau compte : l'abonnement repart avec lui.
+  startLiveUpdates(server);
 }
 
 export function getAppData(): AppData {

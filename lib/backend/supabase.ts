@@ -9,6 +9,8 @@ import {
 } from '@supabase/supabase-js';
 import { AppState, Platform } from 'react-native';
 
+import { subscribeToChanges, type LiveHandlers } from './realtime';
+
 /*
  * Connexion au serveur (Supabase). L'adresse et la clé publique viennent de `.env.local`
  * (EXPO_PUBLIC_…) : elles sont faites pour être dans l'appli, la sécurité est assurée par les
@@ -78,6 +80,20 @@ export const supabaseBackend = {
   async forget(): Promise<void> {
     session = null;
     await getSupabase().auth.signOut({ scope: 'local' });
+  },
+  /** Mises à jour en direct, une fois le compte prêt. Renvoie de quoi se désabonner. */
+  subscribe(handlers: LiveHandlers): () => void {
+    let stop: (() => void) | null = null;
+    let cancelled = false;
+    void ensureSession()
+      .then(() => {
+        if (!cancelled) stop = subscribeToChanges(getSupabase(), handlers);
+      })
+      .catch(() => undefined); // sans réseau : relu au retour dans l'appli
+    return () => {
+      cancelled = true;
+      stop?.();
+    };
   },
 };
 
