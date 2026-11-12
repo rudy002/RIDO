@@ -780,6 +780,26 @@ describe('notifications', () => {
     await assert.rejects(as('pia', () => rpc('notify_user', users.otto, 'booked', '{}', '/')));
   });
 
+  it('ne laisse personne s’approprier le jeton d’un autre téléphone', async () => {
+    await as('quinn', () => rpc('register_push_token', token('otto'), 'en'));
+    const [row] = await q('select user_id, language from public.push_tokens where token = $1', [
+      token('otto'),
+    ]);
+    assert.deepEqual(row, { user_id: users.otto, language: 'fr' });
+  });
+
+  it('libère le jeton quand le compte est effacé', async () => {
+    await newUser('rita');
+    await as('rita', () => rpc('register_push_token', token('rita'), 'fr'));
+    await as('rita', () => rpc('delete_my_account'));
+    await newUser('sam');
+    await as('sam', () => rpc('register_push_token', token('rita'), 'he'));
+    const [row] = await q('select user_id from public.push_tokens where token = $1', [
+      token('rita'),
+    ]);
+    assert.equal(row.user_id, users.sam);
+  });
+
   it('prévient le conducteur d’une réservation, pas le passager qui l’a faite', async () => {
     await as('pia', () => rpc('mark_found', eventId, 'outbound', car));
     const [booked] = await sentTo('otto');

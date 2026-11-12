@@ -328,10 +328,14 @@ as $$
 declare
   v_uid uuid := public.require_user();
 begin
+  -- Un jeton déjà rattaché à un autre compte n'est jamais repris : connaître le jeton d'un autre
+  -- téléphone ne permet pas de détourner ses notifications. Un téléphone qui change de compte
+  -- (« Se déconnecter ») a vu l'ancien effacé, et son jeton avec.
   insert into public.push_tokens (token, user_id, language)
   values (p_token, v_uid, coalesce(p_language, 'fr'))
   on conflict (token) do update
-    set user_id = excluded.user_id, language = excluded.language, updated_at = now();
+    set language = excluded.language, updated_at = now()
+    where public.push_tokens.user_id = v_uid;
 end
 $$;
 
