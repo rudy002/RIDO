@@ -6,6 +6,7 @@ import { joinEvent } from '@/lib/data/commands';
 import { useEventContext, useSingleFlight } from '@/lib/data/hooks';
 import { driverLegsOf, myParticipant } from '@/lib/data/selectors';
 import { getAppData } from '@/lib/data/store';
+import { askForNotifications } from '@/lib/notifications/use-notifications';
 
 /** I2 — étape 1 du parcours invité : comment viens-tu ? (aussi pour modifier son inscription) */
 export default function JoinRideRoute() {
@@ -54,6 +55,8 @@ export default function JoinRideRoute() {
           void once(async () => {
             // Refusé (pas de réseau, événement supprimé…) : on reste ici, la raison est affichée.
             if (!(await joinEvent(event.id, draft))) return;
+            // Utile maintenant : être prévenu des réservations et du départ.
+            askForNotifications();
             // dismissTo : revient à l'écran s'il est déjà ouvert (« Modifier »), sinon l'ouvre.
             if (draft.role === 'passenger') {
               router.dismissTo({ pathname: '/e/[id]/rides', params: { id: event.id } });

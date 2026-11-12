@@ -413,5 +413,13 @@
       "save": "Save",
       "modelPlaceholder": "Grey Toyota Corolla"
     }
+  },
+  "notifications": {
+    "channel": "Rides",
+    "reminder": {
+      "title": "Leaving in one hour",
+      "driver": "You leave around {{time}} for “{{event}}”. Remember to tell your passengers.",
+      "passenger": "{{driver}} leaves around {{time}} for “{{event}}”. Get ready!"
+    }
   }
 }

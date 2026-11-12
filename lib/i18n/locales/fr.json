@@ -423,5 +423,13 @@
       "save": "Enregistrer",
       "modelPlaceholder": "Toyota Corolla grise"
     }
+  },
+  "notifications": {
+    "channel": "Trajets",
+    "reminder": {
+      "title": "Départ dans une heure",
+      "driver": "Tu pars vers {{time}} pour « {{event}} ». Pense à prévenir tes passagers.",
+      "passenger": "{{driver}} part vers {{time}} pour « {{event}} ». Sois prêt·e !"
+    }
   }
 }

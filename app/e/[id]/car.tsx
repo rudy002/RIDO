@@ -10,6 +10,7 @@ import { formatTime } from '@/lib/i18n/format';
 import { bookedSeats } from '@/lib/rides/bookings';
 import { addMinutes } from '@/lib/rides/time-slots';
 import { MIN_FREE_SEATS, type Departure, type TimeWindow } from '@/lib/rides/types';
+import { askForNotifications } from '@/lib/notifications/use-notifications';
 
 /** Créneau d'une demi-heure par défaut. */
 const WINDOW_MINUTES = 30;
@@ -69,6 +70,7 @@ export default function CarRoute() {
         onSubmit={(draft) =>
           void once(async () => {
             if (!(await publishCar(event.id, draft))) return;
+            askForNotifications();
             // Revient à la voiture si on venait de « Modifier », sinon l'ouvre.
             router.dismissTo({ pathname: '/e/[id]/my-car', params: { id: event.id } });
           })

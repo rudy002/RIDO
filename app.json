@@ -9,13 +9,15 @@
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rudyhaddad.rido"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.rudyhaddad.rido"
     },
     "web": {
       "bundler": "metro",
@@ -35,7 +37,13 @@
       "expo-status-bar",
       "expo-image",
       "expo-font",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "color": "#1D2840"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

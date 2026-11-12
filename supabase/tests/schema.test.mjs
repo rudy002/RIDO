@@ -744,3 +744,142 @@ describe('données personnelles', () => {
     );
   });
 });
+
+describe('notifications', () => {
+  const token = (name) => `ExponentPushToken[${name}-0123456789]`;
+  let eventId;
+  let car;
+
+  /** Notifications préparées pour un utilisateur, de la plus ancienne à la plus récente. */
+  const sentTo = (name) =>
+    q('select kind, title, body, url from public.push_outbox where user_id = $1 order by id', [
+      users[name],
+    ]);
+  const register = (name, language = 'fr') =>
+    as(name, () => rpc('register_push_token', token(name), language));
+
+  before(async () => {
+    for (const name of ['nina', 'otto', 'pia', 'quinn']) await newUser(name);
+    await register('nina');
+    await register('otto');
+    await register('pia');
+    // quinn n'a pas de téléphone enregistré.
+    eventId = await createEvent('nina', { title: 'Fête de Nina' });
+    await join('otto', eventId, 'driver', { first: 'Otto', directions: ['outbound'] });
+    await publish('otto', eventId, 3, outboundLeg);
+    car = await legOf('Otto', 'outbound');
+    await join('pia', eventId, 'passenger', { first: 'Pia', directions: ['outbound'], party: 2 });
+    await join('quinn', eventId, 'passenger', { first: 'Quinn', directions: ['outbound'] });
+  });
+
+  it('garde les jetons hors de portée des applis', async () => {
+    await assert.rejects(as('pia', () => rpc('register_push_token', 'pas-un-jeton', 'fr')));
+    await assert.rejects(as('pia', () => q('select * from public.push_tokens')));
+    await assert.rejects(as('pia', () => q('select * from public.push_outbox')));
+    await assert.rejects(as(null, () => rpc('register_push_token', token('x'), 'fr')));
+    await assert.rejects(as('pia', () => rpc('notify_user', users.otto, 'booked', '{}', '/')));
+  });
+
+  it('prévient le conducteur d’une réservation, pas le passager qui l’a faite', async () => {
+    await as('pia', () => rpc('mark_found', eventId, 'outbound', car));
+    const [booked] = await sentTo('otto');
+    assert.deepEqual(booked, {
+      kind: 'booked',
+      title: 'Nouvelle réservation',
+      body: 'Pia a réservé 2 places dans ta voiture (aller) · Fête de Nina',
+      url: `/e/${eventId}/my-car`,
+    });
+    assert.deepEqual(await sentTo('pia'), []);
+  });
+
+  it('écrit dans la langue du téléphone', async () => {
+    await register('otto', 'he');
+    await as('quinn', () => rpc('mark_found', eventId, 'outbound', car));
+    const last = (await sentTo('otto')).at(-1);
+    assert.equal(last.title, 'הזמנה חדשה');
+    assert.match(last.body, /Quinn .* מקום אחד .*\(הלוך\)/);
+    await register('otto', 'fr');
+  });
+
+  it('prévient le conducteur quand un passager rend sa place', async () => {
+    await as('quinn', () => rpc('search_again', eventId, 'outbound'));
+    const last = (await sentTo('otto')).at(-1);
+    assert.equal(last.kind, 'seat_released');
+    assert.equal(last.body, 'Quinn a libéré sa place dans ta voiture (aller) · Fête de Nina');
+  });
+
+  it('prévient le passager quand le conducteur libère sa place', async () => {
+    await as('otto', () => rpc('release_seat', car));
+    const last = (await sentTo('pia')).at(-1);
+    assert.equal(last.kind, 'seat_released_by_driver');
+    assert.match(last.body, /^Otto a libéré ta place \(aller\) · Fête de Nina/);
+    assert.equal(last.url, `/e/${eventId}/rides`);
+  });
+
+  it('ne prévient personne pour une place notée à la main', async () => {
+    const before = (await sentTo('otto')).length;
+    await as('otto', () => rpc('take_seat', car));
+    await as('otto', () => rpc('release_seat', car));
+    assert.equal((await sentTo('otto')).length, before);
+  });
+
+  it('prévient le passager quand le conducteur ne conduit plus', async () => {
+    await as('pia', () => rpc('mark_found', eventId, 'outbound', car));
+    await as('otto', () => rpc('cancel_driving', eventId));
+    const last = (await sentTo('pia')).at(-1);
+    assert.equal(last.kind, 'ride_cancelled');
+    assert.match(last.body, /\(aller\) · Fête de Nina\. Tu cherches à nouveau\.$/);
+  });
+
+  it('prévient les inscrits d’un changement, pas l’organisateur', async () => {
+    await join('otto', eventId, 'driver', { first: 'Otto', directions: ['outbound'] });
+    await join('nina', eventId, 'passenger', { first: 'Nina', directions: ['outbound'] });
+    const before = (await sentTo('pia')).length;
+    await as('nina', () =>
+      rpc('update_event', eventId, 'birthday', 'Fête de Nina', T(14, 20), EVENT.ends, EVENT.venue, [
+        'outbound',
+        'return',
+      ])
+    );
+    const last = (await sentTo('pia')).at(-1);
+    assert.equal((await sentTo('pia')).length, before + 1);
+    assert.equal(last.title, 'Fête de Nina a changé');
+    assert.equal((await sentTo('otto')).at(-1).kind, 'event_changed');
+    assert.equal((await sentTo('nina')).length, 0);
+  });
+
+  it('une suppression envoie une seule notification par personne', async () => {
+    await publish('otto', eventId, 3, outboundLeg);
+    await as('pia', async () =>
+      rpc('mark_found', eventId, 'outbound', await legOf('Otto', 'outbound'))
+    );
+    const before = { pia: (await sentTo('pia')).length, otto: (await sentTo('otto')).length };
+    await as('nina', () => rpc('delete_event', eventId));
+    const pia = (await sentTo('pia')).slice(before.pia);
+    const otto = (await sentTo('otto')).slice(before.otto);
+    assert.deepEqual(
+      pia.map((n) => n.kind),
+      ['event_deleted']
+    );
+    assert.deepEqual(
+      otto.map((n) => n.kind),
+      ['event_deleted']
+    );
+    assert.equal(pia[0].title, 'Fête de Nina est annulé');
+  });
+
+  it('ne prépare rien pour qui n’a pas de téléphone enregistré', async () => {
+    assert.deepEqual(await sentTo('quinn'), []);
+  });
+
+  it('répond « introuvable » (et non « panne ») à un trajet qui n’existe plus', async () => {
+    const otherEvent = await createEvent('nina');
+    await join('quinn', otherEvent, 'passenger', { first: 'Quinn', directions: ['outbound'] });
+    await assert.rejects(
+      as('quinn', () =>
+        rpc('mark_found', otherEvent, 'outbound', '00000000-0000-0000-0000-000000000000')
+      ),
+      (error) => error.code === 'PT404' && /ride not found/.test(error.message)
+    );
+  });
+});

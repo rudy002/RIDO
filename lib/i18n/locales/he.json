@@ -453,5 +453,13 @@
       "save": "שמירה",
       "modelPlaceholder": "טויוטה קורולה אפורה"
     }
+  },
+  "notifications": {
+    "channel": "נסיעות",
+    "reminder": {
+      "title": "יוצאים בעוד שעה",
+      "driver": "יוצאים בסביבות {{time}} ל„{{event}}”. כדאי לעדכן את הנוסעים.",
+      "passenger": "{{driver}} יוצא/ת בסביבות {{time}} ל„{{event}}”. להתכונן!"
+    }
   }
 }

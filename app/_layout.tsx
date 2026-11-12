@@ -20,6 +20,7 @@ import { loadAppearance } from '@/lib/design/appearance';
 import { navigationTheme } from '@/lib/design/navigation-theme';
 import { useTheme } from '@/lib/design/use-theme';
 import { loadLanguageOverride } from '@/lib/i18n/language-override';
+import { useNotifications } from '@/lib/notifications/use-notifications';
 import { applyDocumentDirection } from '@/lib/i18n/rtl';
 
 export {
@@ -38,6 +39,7 @@ export default function RootLayout() {
   const { scheme, language, isRTL, colors, typography } = useTheme();
   // Langue, apparence et données enregistrées : chargées avant d'afficher le premier écran.
   const [preferencesReady, setPreferencesReady] = useState(false);
+  useNotifications();
 
   useEffect(() => {
     void Promise.all([

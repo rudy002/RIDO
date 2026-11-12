@@ -129,6 +129,11 @@ export async function saveProfile(client: SupabaseClient, userId: string, profil
   if (error) throw toBackendError(error);
 }
 
+/** Ce téléphone reçoit les notifications de ce compte, dans cette langue. */
+export function registerPushToken(client: SupabaseClient, token: string, language: string) {
+  return call(client, 'register_push_token', { p_token: token, p_language: language });
+}
+
 /** Efface le compte de cet appareil et tout ce qui lui est lié (« Se déconnecter »). */
 export function deleteAccount(client: SupabaseClient) {
   return call(client, 'delete_my_account', {});

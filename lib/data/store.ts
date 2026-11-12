@@ -233,6 +233,17 @@ export async function perform<T>(
   return result;
 }
 
+/**
+ * Un appel au serveur qui ne change pas les données affichées (enregistrer ce téléphone pour les
+ * notifications…). Sans serveur : rien.
+ */
+export async function callServer<T>(remote: Remote<T>): Promise<T | undefined> {
+  const server = backend;
+  if (!server) return undefined;
+  const { client, userId } = await server.user();
+  return remote(client, userId);
+}
+
 /** Applique un changement sur l'appareil seulement (sans serveur, ou dans les tests). */
 export function updateAppData(change: (data: AppData) => AppData): void {
   setData(change(current));
