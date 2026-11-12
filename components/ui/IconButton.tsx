@@ -12,9 +12,15 @@ type IconButtonProps = {
   onPress: () => void;
   /** Pour les icônes directionnelles (chevron retour) : inversée en RTL. */
   flipInRTL?: boolean;
-  /** Jaune pour l'action principale d'un écran (partager). */
-  tone?: 'surface' | 'primary';
+  /** Jaune pour l'action principale d'un écran (partager, appeler) ; foncé pour l'action voisine. */
+  tone?: 'surface' | 'primary' | 'inverse';
 };
+
+const TONES = {
+  surface: { background: 'surface', icon: 'text' },
+  primary: { background: 'primary', icon: 'onPrimary' },
+  inverse: { background: 'inverse', icon: 'onInverse' },
+} as const;
 
 const PRESSED_OPACITY = 0.85;
 
@@ -38,13 +44,13 @@ export function IconButton({
           width: sizes.touchMin,
           height: sizes.touchMin,
           borderRadius: radius.pill,
-          backgroundColor: tone === 'primary' ? colors.primary : colors.surface,
+          backgroundColor: colors[TONES[tone].background],
           alignItems: 'center',
           justifyContent: 'center',
         },
         pressed && { opacity: PRESSED_OPACITY },
       ]}>
-      <Icon as={icon} flipInRTL={flipInRTL} color={tone === 'primary' ? 'onPrimary' : 'text'} />
+      <Icon as={icon} flipInRTL={flipInRTL} color={TONES[tone].icon} />
     </Pressable>
   );
 }

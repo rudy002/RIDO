@@ -256,7 +256,13 @@
       "keep": "להשאיר את הנסיעה"
     },
     "people_many": "{{count}} אנשים",
-    "free_many": "{{count}} מקומות פנויים"
+    "free_many": "{{count}} מקומות פנויים",
+    "inCar": {
+      "title": "ברכב שלך",
+      "call": "להתקשר אל {{name}}",
+      "whatsapp": "לכתוב אל {{name}} בוואטסאפ",
+      "message": "היי {{name}}, אני הנהג/ת שלך ל„{{event}}” (Rido). נתאם שעה ומקום איסוף?"
+    }
   },
   "createEvent": {
     "header": "אירוע חדש",

@@ -1,6 +1,7 @@
 // Données de démonstration à date fixe, pour les tests des écrans.
 import { buildDemoData, DEMO_EVENT_ID } from '../demo';
 import {
+  carPassengersOf,
   driverLegsOf,
   eventById,
   eventOverview,
@@ -33,6 +34,7 @@ export const ESTHER_STATUS = passengerStatusOf(DEMO, esther);
 const david = myParticipant(DEMO, DEMO_EVENT_ID)!;
 export const DAVID_LEGS = driverLegsOf(DEMO, david);
 export const DAVID_REQUESTS = nearbyRequests(DEMO, david, 'fr');
+export const DAVID_PASSENGERS = carPassengersOf(DEMO, david, 'fr');
 
 export const TRIPS = tripsOf(DEMO, NOW);
 export const ORGANIZED = organizedEvents(DEMO, NOW, 'fr');

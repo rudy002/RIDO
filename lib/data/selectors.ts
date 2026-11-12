@@ -246,6 +246,41 @@ export function driverLegsOf(
   return legs;
 }
 
+/**
+ * Passagers qui ont une place dans la voiture d'un conducteur (C3), sens par sens et dans l'ordre
+ * des réservations : pour les joindre (heure, lieu de rendez-vous). Les places notées à la main
+ * n'ont pas de passager à joindre.
+ */
+export function carPassengersOf(
+  data: AppData,
+  driver: Participant,
+  language: Language
+): Partial<Record<TripDirection, RideRequest[]>> {
+  const passengers: Partial<Record<TripDirection, RideRequest[]>> = {};
+  for (const leg of Object.values(driverLegsOf(data, driver))) {
+    const inCar: RideRequest[] = [];
+    for (const booking of leg.bookings) {
+      const search = data.passengerLegs.find((p) => p.id === booking.passengerLegId);
+      const passenger = search ? participantById(data, search.participantId) : undefined;
+      if (!passenger) continue;
+      inCar.push({
+        id: booking.id,
+        direction: leg.direction,
+        passenger: {
+          id: passenger.id,
+          firstName: passenger.firstName,
+          lastName: passenger.lastName,
+          phone: passenger.phone,
+        },
+        home: describeZone(passenger.zone, language),
+        partySize: booking.seats,
+      });
+    }
+    if (inCar.length > 0) passengers[leg.direction] = inCar;
+  }
+  return passengers;
+}
+
 /** Passagers qui cherchent encore, près de chez le conducteur (C3), les plus proches d'abord. */
 export function nearbyRequests(
   data: AppData,

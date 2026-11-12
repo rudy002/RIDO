@@ -240,6 +240,12 @@
       "message": "Ta voiture sera retirée du covoiturage. Les passagers qui avaient une place chez toi chercheront à nouveau.",
       "confirm": "Retirer ma voiture",
       "keep": "Garder mon trajet"
+    },
+    "inCar": {
+      "title": "Dans ta voiture",
+      "call": "Appeler {{name}}",
+      "whatsapp": "Écrire à {{name}} sur WhatsApp",
+      "message": "Bonjour {{name}}, c’est ton conducteur pour « {{event}} » (Rido). On se met d’accord sur l’heure et le lieu de départ ?"
     }
   },
   "createEvent": {

@@ -33,9 +33,14 @@ type DriverDashboardProps = {
   legs: Partial<Record<TripDirection, DriverLeg>>;
   /** Passagers de la même zone qui cherchent un trajet. */
   requests: RideRequest[];
+  /** Passagers qui ont une place dans la voiture, par sens. */
+  passengers: Partial<Record<TripDirection, RideRequest[]>>;
   onEdit: () => void;
   onBack: () => void;
   onContact: (request: RideRequest) => void;
+  /** Joindre un passager de la voiture. */
+  onCallPassenger: (passenger: RideRequest) => void;
+  onMessagePassenger: (passenger: RideRequest) => void;
   /** Places notées ou libérées par le conducteur, pour un sens. */
   onBookingsChange: (direction: TripDirection, bookings: Booking[]) => void;
   /** Appelé après confirmation : la voiture est retirée. */
@@ -48,9 +53,12 @@ export function DriverDashboard({
   driver,
   legs,
   requests,
+  passengers,
   onEdit,
   onBack,
   onContact,
+  onCallPassenger,
+  onMessagePassenger,
   onBookingsChange,
   onCancel,
 }: DriverDashboardProps) {
@@ -71,6 +79,7 @@ export function DriverDashboard({
   const legBookings = leg?.bookings ?? [];
   const free = leg ? freeSeats(legBookings, leg.totalSeats) : 0;
   const visibleRequests = requests.filter((request) => request.direction === direction);
+  const inCar = passengers[direction] ?? [];
   const zoneParams = { zone: driver.zone, context: elisionContext(driver.zone) };
 
   const update = (change: (current: Booking[]) => Booking[]) =>
@@ -139,6 +148,20 @@ export function DriverDashboard({
             />
           </View>
         </Card>
+      ) : null}
+
+      {inCar.length > 0 ? (
+        <View style={{ gap: spacing.md }}>
+          <AppText variant="heading">{t('myCar.inCar.title')}</AppText>
+          {inCar.map((passenger) => (
+            <PassengerCard
+              key={passenger.id}
+              request={passenger}
+              onCall={() => onCallPassenger(passenger)}
+              onMessage={() => onMessagePassenger(passenger)}
+            />
+          ))}
+        </View>
       ) : null}
 
       <View style={{ gap: spacing.md }}>

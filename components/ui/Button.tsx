@@ -71,7 +71,14 @@ export function Button({
         style,
       ]}>
       {icon}
-      <BaseText style={[text, { textAlign: 'center' }]}>{label}</BaseText>
+      {/*
+        Un libellé de bouton tient sur une ligne. Sans cette limite, Android redessine parfois le
+        texte avec une largeur périmée quand l'écran se réaffiche : le dernier mot passait à la
+        ligne, caché par la hauteur du bouton (« J'ai trouvé ma »).
+      */}
+      <BaseText style={[text, { textAlign: 'center' }]} numberOfLines={1}>
+        {label}
+      </BaseText>
     </Pressable>
   );
 }

@@ -6,11 +6,11 @@ import { Linking } from 'react-native';
 import { EventNotFound } from '@/components/event/EventNotFound';
 import { useEventLabel } from '@/components/event/use-event-label';
 import { DriverDashboard } from '@/components/rides/DriverDashboard';
-import { whatsappUrl } from '@/lib/contact/contact';
+import { callUrl, whatsappUrl } from '@/lib/contact/contact';
 import { cancelDriving, changeSeats } from '@/lib/data/commands';
 import { useEventContext, useSingleFlight } from '@/lib/data/hooks';
 import { describeZone } from '@/lib/data/matching';
-import { driverLegsOf, nearbyRequests } from '@/lib/data/selectors';
+import { carPassengersOf, driverLegsOf, nearbyRequests } from '@/lib/data/selectors';
 import type { DriverLeg, TripDirection } from '@/lib/rides/types';
 
 /** C3 — la voiture du conducteur, après publication. */
@@ -26,6 +26,11 @@ export default function MyCarRoute() {
     () => (me ? nearbyRequests(data, me, language) : []),
     [data, me, language]
   );
+  const passengers = useMemo(
+    () => (me ? carPassengersOf(data, me, language) : {}),
+    [data, me, language]
+  );
+  const open = (url: string) => void Linking.openURL(url).catch(() => undefined);
 
   if (!event || !summary) {
     return (
@@ -59,6 +64,7 @@ export default function MyCarRoute() {
         driver={{ firstName: me.firstName, zone: describeZone(me.zone, language).city }}
         legs={legs}
         requests={requests}
+        passengers={passengers}
         onEdit={() => router.push({ pathname: '/e/[id]/car', params: { id: event.id } })}
         onBack={() =>
           router.canGoBack()
@@ -66,9 +72,18 @@ export default function MyCarRoute() {
             : router.replace({ pathname: '/e/[id]', params: { id: event.id } })
         }
         onContact={({ passenger }) =>
-          void Linking.openURL(
+          open(
             whatsappUrl(passenger.phone, t('myCar.whatsappMessage', { name: passenger.firstName }))
-          ).catch(() => undefined)
+          )
+        }
+        onCallPassenger={({ passenger }) => open(callUrl(passenger.phone))}
+        onMessagePassenger={({ passenger }) =>
+          open(
+            whatsappUrl(
+              passenger.phone,
+              t('myCar.inCar.message', { name: passenger.firstName, event: event.title })
+            )
+          )
         }
         onBookingsChange={(direction, bookings) => {
           const record = records[direction];

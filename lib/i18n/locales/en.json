@@ -236,6 +236,12 @@
       "message": "Your car will be removed from the carpool. Passengers who had a seat with you will look again.",
       "confirm": "Remove my car",
       "keep": "Keep my ride"
+    },
+    "inCar": {
+      "title": "In your car",
+      "call": "Call {{name}}",
+      "whatsapp": "Message {{name}} on WhatsApp",
+      "message": "Hi {{name}}, I’m your driver for “{{event}}” (Rido). Shall we agree on the pick-up time and place?"
     }
   },
   "createEvent": {

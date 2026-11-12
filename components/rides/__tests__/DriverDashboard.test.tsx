@@ -3,7 +3,7 @@ import i18n from '@/lib/i18n';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useState } from 'react';
 
-import { DAVID_LEGS, DAVID_REQUESTS } from '@/lib/data/__fixtures__/demo';
+import { DAVID_LEGS, DAVID_PASSENGERS, DAVID_REQUESTS } from '@/lib/data/__fixtures__/demo';
 import type { Booking, DriverLeg, TripDirection } from '@/lib/rides/types';
 
 import { DriverDashboard } from '../DriverDashboard';
@@ -16,6 +16,8 @@ const INITIAL: Partial<Record<TripDirection, DriverLeg>> = {
 /** L'écran ne garde rien lui-même : on rejoue ici ce que fait le stockage. */
 function Harness(handlers: {
   onContact: jest.Mock;
+  onCallPassenger: jest.Mock;
+  onMessagePassenger: jest.Mock;
   onCancel: jest.Mock;
   onEdit: jest.Mock;
   onBack: jest.Mock;
@@ -32,6 +34,7 @@ function Harness(handlers: {
       driver={{ firstName: 'David', zone: 'Ashdod' }}
       legs={legs}
       requests={DAVID_REQUESTS}
+      passengers={DAVID_PASSENGERS}
       onBookingsChange={change}
       {...handlers}
     />
@@ -42,6 +45,8 @@ async function renderDashboard() {
   const handlers = {
     onEdit: jest.fn(),
     onContact: jest.fn(),
+    onCallPassenger: jest.fn(),
+    onMessagePassenger: jest.fn(),
     onCancel: jest.fn(),
     onBack: jest.fn(),
   };
@@ -65,6 +70,19 @@ describe('DriverDashboard', () => {
     expect(screen.getByText('Esther')).toBeOnTheScreen();
     expect(screen.getByText('Esther +1')).toBeOnTheScreen();
     expect(screen.getByText('Libre')).toBeOnTheScreen();
+  });
+
+  it('montre les passagers de la voiture, à appeler ou à qui écrire', async () => {
+    const { onCallPassenger, onMessagePassenger } = await renderDashboard();
+
+    expect(screen.getByText('Dans ta voiture')).toBeOnTheScreen();
+    expect(screen.getByText('Esther Azria')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Appeler Esther' }));
+    expect(onCallPassenger).toHaveBeenCalledWith(
+      expect.objectContaining({ passenger: expect.objectContaining({ firstName: 'Esther' }) })
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'Écrire à Esther sur WhatsApp' }));
+    expect(onMessagePassenger).toHaveBeenCalledTimes(1);
   });
 
   it('note une place prise puis la libère', async () => {
@@ -93,7 +111,9 @@ describe('DriverDashboard', () => {
 
     await fireEvent.press(screen.getByRole('tab', { name: 'Retour · 00h30–01h00' }));
     expect(screen.getByText('Retour vers Ashdod')).toBeOnTheScreen();
-    expect(screen.queryByText('Nathan Bensoussan')).toBeNull();
+    // Au retour, Nathan n'est plus parmi ceux qui cherchent : il est dans la voiture.
+    expect(screen.getByRole('button', { name: 'Appeler Nathan' })).toBeOnTheScreen();
+    expect(screen.getAllByRole('button', { name: 'Contacter' })).toHaveLength(1);
 
     await fireEvent.press(screen.getByRole('button', { name: 'Contacter' }));
     expect(onContact).toHaveBeenCalledWith(expect.objectContaining({ id: 's-rachel-ret' }));
